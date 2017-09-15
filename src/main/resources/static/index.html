@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>DRWP Example Checkout</title>
+    <link rel="stylesheet" type="text/css" href="payment.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <form id="paymentForm" enctype="application/x-www-form-urlencoded">
+        <h3 class="panel-heading">Sign up</h3>
+        <div class="col-md-2"></div>
+        <div class="col-xs-12 col-md-3">
+            <div class="form-group">
+                <label for="frmEmailA">email</label>
+                <div class="input-group">
+                    <input type="email" name="email" id="frmEmailA" placeholder="name@example.com"
+                           required
+                           autocomplete="email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="frmEmailC">Confirm Email</label>
+                <div class="input-group">
+                    <input type="email" name="emailC" id="frmEmailC" placeholder="name@example.com"
+                           required
+                           autocomplete="email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="frmAddressS">Address</label>
+                <div class="input-group">
+                    <input name="ship-address" optional id="frmAddressS" placeholder="123 Any Street"
+                           autocomplete="shipping street-address">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="frmCityS">City</label>
+                <div class="input-group">
+                    <input name="ship-city" optional id="frmCityS" placeholder="New York"
+                           autocomplete="shipping locality">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="frmStateS">State</label>
+                <div class="input-group">
+                    <input name="ship-state" optional id="frmStateS" placeholder="NY" autocomplete="shipping region">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="frmZipS">Zip</label>
+                <div class="input-group">
+                    <input name="ship-zip" optional id="frmZipS" placeholder="10011"
+                           autocomplete="shipping postal-code">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="frmCountryS">COUNTRY</label>
+                <div class="input-group">
+                    <input name="ship-country" required id="frmCountryS" placeholder="USA"
+                           autocomplete="shipping country">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-4">
+                    <div class="panel panel-default credit-card-box">
+                        <div class="panel-heading display-table">
+                            <div class="row display-tr">
+                                <h3 class="panel-title display-td">Payment Details</h3>
+                                <div class="display-td">
+                                    <img class="img-responsive pull-right" src="img/accepted_c22e0.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="cardNumber">CARD NUMBER</label>
+                                        <div class="input-group">
+                                            <!-- IMPORTANT! The card holder data has NO "name" attribute, in order
+                                            to prevent sending of the data to the merchant. -->
+                                            <input
+                                                    type="tel"
+                                                    class="form-control"
+                                                    chd="cardNumber"
+                                                    placeholder="Valid Card Number"
+                                                    autocomplete="cc-number"
+                                                    required autofocus
+                                            />
+                                            <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-7 col-md-7">
+                                    <div class="form-group">
+                                        <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span
+                                                class="visible-xs-inline">EXP</span> DATE</label>
+                                        <input
+                                                type="tel"
+                                                class="form-control"
+                                                chd="cardExpiry"
+                                                placeholder="MM / YY"
+                                                autocomplete="cc-exp"
+                                                required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 col-md-5 pull-right">
+                                    <div class="form-group">
+                                        <label for="cardCVC">CV CODE</label>
+                                        <input
+                                                type="tel"
+                                                class="form-control"
+                                                chd="cardCVC"
+                                                placeholder="CVC"
+                                                autocomplete="cc-csc"
+                                                required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <button class="btn btn-success btn-lg btn-block" type="submit">Start Subscription
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row" style="display:none;">
+                                <div class="col-xs-12">
+                                    <p class="payment-errors"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="merchant-script.js"></script>
+<!--
+<script src=drwp-script.js"></script>
+-->
+</body>
+</html>
