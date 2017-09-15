@@ -15,49 +15,48 @@
     <form id="paymentForm" enctype="application/x-www-form-urlencoded">
         <h3 class="panel-heading">Sign up</h3>
         <div class="col-md-2"></div>
-        <div class="col-xs-12 col-md-3">
+        <div class="col-xs-12 col-md-3 panel panel-default credit-card-box">
             <div class="form-group">
-                <label for="frmEmailA">email</label>
+                <label for="frmEmailA">EMAIL
+                </label>
                 <div class="input-group">
                     <input type="email" name="email" id="frmEmailA" placeholder="name@example.com"
                            required
+                           class="form-control"
                            autocomplete="email">
                 </div>
             </div>
             <div class="form-group">
-                <label for="frmEmailC">Confirm Email</label>
+                <label for="frmAddressS">ADDRESS</label>
                 <div class="input-group">
-                    <input type="email" name="emailC" id="frmEmailC" placeholder="name@example.com"
-                           required
-                           autocomplete="email">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="frmAddressS">Address</label>
-                <div class="input-group">
-                    <input name="ship-address" optional id="frmAddressS" placeholder="123 Any Street"
+                    <input name="ship-address" id="frmAddressS" placeholder="123 Any Street"
+                           class="form-control"
                            autocomplete="shipping street-address">
                 </div>
             </div>
             <div class="form-group">
-                <label for="frmCityS">City</label>
+                <label for="frmCityS">CITY</label>
                 <div class="input-group">
-                    <input name="ship-city" optional id="frmCityS" placeholder="New York"
+                    <input name="ship-city" id="frmCityS" placeholder="New York"
+                           class="form-control"
                            autocomplete="shipping locality">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="frmStateS">State</label>
+                <label for="frmStateS">STATE</label>
                 <div class="input-group">
-                    <input name="ship-state" optional id="frmStateS" placeholder="NY" autocomplete="shipping region">
+                    <input name="ship-state" id="frmStateS" placeholder="NY"
+                           class="form-control"
+                           autocomplete="shipping region">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="frmZipS">Zip</label>
+                <label for="frmZipS">ZIP</label>
                 <div class="input-group">
-                    <input name="ship-zip" optional id="frmZipS" placeholder="10011"
+                    <input name="ship-zip" id="frmZipS" placeholder="10011"
+                           class="form-control"
                            autocomplete="shipping postal-code">
                 </div>
             </div>
@@ -65,7 +64,8 @@
             <div class="form-group">
                 <label for="frmCountryS">COUNTRY</label>
                 <div class="input-group">
-                    <input name="ship-country" required id="frmCountryS" placeholder="USA"
+                    <input name="ship-country" id="frmCountryS" placeholder="USA"
+                           class="form-control"
                            autocomplete="shipping country">
                 </div>
             </div>
@@ -91,7 +91,7 @@
                                             <!-- IMPORTANT! The card holder data has NO "name" attribute, in order
                                             to prevent sending of the data to the merchant. -->
                                             <input
-                                                    type="tel"
+                                                    type="number"
                                                     class="form-control"
                                                     chd="cardNumber"
                                                     placeholder="Valid Card Number"
@@ -109,7 +109,7 @@
                                         <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span
                                                 class="visible-xs-inline">EXP</span> DATE</label>
                                         <input
-                                                type="tel"
+                                                type="text"
                                                 class="form-control"
                                                 chd="cardExpiry"
                                                 placeholder="MM / YY"
@@ -122,7 +122,7 @@
                                     <div class="form-group">
                                         <label for="cardCVC">CV CODE</label>
                                         <input
-                                                type="tel"
+                                                type="number"
                                                 class="form-control"
                                                 chd="cardCVC"
                                                 placeholder="CVC"
@@ -132,6 +132,10 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default credit-card-box">
+                        <div>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <button class="btn btn-success btn-lg btn-block" type="submit">Start Subscription
