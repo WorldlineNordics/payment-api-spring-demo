@@ -13,6 +13,7 @@ function sendPayment(cardHolderName, cardNo, startMonth, startYear, expMonth, ex
  	    		cvv : cvv,
  	    		encryptedPayload : encryptedPayload});
 	    		
+	 
     
     // Define what happens when response recieved successfully
     xhttp.addEventListener("load", function() {
@@ -32,17 +33,15 @@ function sendPayment(cardHolderName, cardNo, startMonth, startYear, expMonth, ex
     // Set up our request
     xhttp.open("POST", "http://localhost:1234/api/v1/payments",true);
     
-    xhttp.setRequestHeader('Access-Control-Request-Headers', '*');
-    xhttp.setRequestHeader('Access-Control-Request-Origin', '*');
-    
+    xhttp.setRequestHeader('Access-Control-Request-Origin', 'http://localhost:1234/api/v1/payments');
+    xhttp.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type');
     
     
     // Set content type as json
     xhttp.setRequestHeader("Content-type", "application/json");
-    
+    xhttp.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
     // The data sent is what the user provided in the form
-    alert(JSON.stringify(data));
     xhttp.send(data);
 };
 
