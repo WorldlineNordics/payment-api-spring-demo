@@ -17,58 +17,103 @@
         <div class="col-md-2"></div>
         <div class="col-xs-12 col-md-3 panel panel-default credit-card-box">
             <div class="form-group">
-                <label for="frmEmailA">EMAIL <span style="color:red;">*</span>
-                </label>
+                <label for="billingBuyerType">BUYER TYPE<span style="color:red;">*</span></label>
                 <div class="input-group">
-                    <input type="email" name="email" id="frmEmailA" placeholder="name@example.com"
+                    <input type="text" name="billingBuyerType" id="billingBuyerType" placeholder="INDIVIDUAL" value="INDIVIDUAL"
                            required
                            class="form-control"
-                           autocomplete="email">
+                           autocomplete="billingBuyerType">
                 </div>
             </div>
             <div class="form-group">
-                <label for="frmAddressS">ADDRESS</label>
+                <label for="billingFullName">FULL NAME<span style="color:red;">*</span></label>
                 <div class="input-group">
-                    <input name="ship-address" id="frmAddressS" placeholder="123 Any Street"
-                           class="form-control"
-                           autocomplete="shipping street-address">
+                    <input type="text" name="billingFullName" id="billingFullName" placeholder="Usman Afzal" value="Usman Afzal" 
+                           class="form-control" required
+                           autocomplete="billingFullName">
                 </div>
             </div>
             <div class="form-group">
-                <label for="frmCityS">CITY</label>
-                <div class="input-group">
-                    <input name="ship-city" id="frmCityS" placeholder="New York"
-                           class="form-control"
-                           autocomplete="shipping locality">
-                </div>
+	            <label for="billingEmailAddress">EMAIL <span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="email" name="billingEmailAddress" id="billingEmailAddress" placeholder="name@example.com" value="name@example.com"
+	                       required
+	                       class="form-control"
+	                       autocomplete="billingEmailAddress">
+	            </div>
             </div>
-
             <div class="form-group">
-                <label for="frmStateS">STATE</label>
+                <label for="birthDate">BIRTH DATE<span style="color:red;">*</span></label>
                 <div class="input-group">
-                    <input name="ship-state" id="frmStateS" placeholder="NY"
-                           class="form-control"
-                           autocomplete="shipping region">
+                    <input type="text" name="birthDate" id="birthDate" placeholder="yyyy-mm-dd" value="1989-04-21"
+                           class="form-control" required
+                           autocomplete="birthDate">
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="frmZipS">ZIP</label>
+                <label for="billingBuyerVATNumber">BUYER VAT NUMBER<span style="color:red;">*</span></label>
                 <div class="input-group">
-                    <input name="ship-zip" id="frmZipS" placeholder="10011"
-                           class="form-control"
-                           autocomplete="shipping postal-code">
+                    <input type="text" name="billingBuyerVATNumber" id="billingBuyerVATNumber" placeholder="12345678901" value="12345678901"
+                           class="form-control" required
+                           autocomplete="billingBuyerVATNumber">
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="frmCountryS">COUNTRY</label>
+                <label for="billingAddressLine1">ADDRESS LINE 1<span style="color:red;">*</span></label>
                 <div class="input-group">
-                    <input name="ship-country" id="frmCountryS" placeholder="USA"
-                           class="form-control"
-                           autocomplete="shipping country">
+                    <input type="text" name="billingAddressLine1" id="billingAddressLine1" placeholder="AV MIRACATU" value="AV MIRACATU"
+                           class="form-control" required
+                           autocomplete="billingAddressLine1">
                 </div>
-            </div>
+            </div>            
+            <div class="form-group">
+	            <label for="billingAddressLine2">ADDRESS LINE 2<span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="text" name="billingAddressLine2" id="billingAddressLine2" placeholder="123 Baker Street" value="123 Baker Street"
+	                       class="form-control" required
+	                       autocomplete="billingAddressLine2">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label for="billingCity">CITY<span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="text" name="billingCity" id="billingCity" placeholder="CURITIBA" value="CURITIBA"
+	                       class="form-control" required
+	                       autocomplete="billingCity">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label for="billingStateProvince">STATE<span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="text" name="billingStateProvince" id="billingStateProvince" placeholder="BR" value="BR"
+	                       class="form-control" required
+	                       autocomplete="billingStateProvince">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label for="billingZipCode">ZIP CODE<span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="text" name="billingZipCode" id="billingZipCode" placeholder="8150" value="8150"
+	                       class="form-control" required
+	                       autocomplete="billingZipCode">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label for="billingCountryCode">COUNTRY CODE<span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="text" name="billingCountryCode" id="billingCountryCode" placeholder="BR" value="BR"
+	                       class="form-control" required
+	                       autocomplete="billingCountryCode">
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label for="billingMobilePhone">MOBILE PHONE<span style="color:red;">*</span></label>
+	            <div class="input-group">
+	                <input type="text" name="billingMobilePhone" id="billingMobilePhone" placeholder="9988776655" value="9988776655"
+	                       class="form-control" required
+	                       autocomplete="billingMobilePhone">
+	            </div>
+	        </div>
         </div>
         <div class="container">
             <div class="row">

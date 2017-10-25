@@ -24,29 +24,41 @@ public class RegistrationEndpoint {
 	@Path("/registrations")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public RegistrationResponse registerForm(@FormDataParam("ship-address") String shipAddress,
-			@FormDataParam("ship-city") String shipCity, @FormDataParam("ship-zip") String shipZip,
-			@FormDataParam("ship-state") String shipState, @FormDataParam("ship-country") String shipCountry,
-			@FormDataParam("email") String email) {
+	public RegistrationResponse registerForm(@FormDataParam("billingAddress1") String billingAddress1, @FormDataParam("billingAddress2") String billingAddress2,
+			@FormDataParam("billingCity") String billingCity, @FormDataParam("billingZip") String billingZip,
+			@FormDataParam("billingState") String billingState, @FormDataParam("billingCountry") String billingCountry,
+			@FormDataParam("billingEmailAddress") String billingEmailAddress, @FormDataParam("billingBuyerType") String billingBuyerType,  
+			@FormDataParam("billingFullName") String billingFullName,  @FormDataParam("birthdate") String birthdate,  
+			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
 		Properties prop = DemoApplication.prop;
 		PaymentPageRequest details = new PaymentPageRequest();
 
-		details.setShippingAddressLine1(shipAddress);
-		details.setShippingCity(shipCity);
-		details.setShippingZipCode(shipZip);
-		details.setShippingStateProvince(shipState);
-		details.setShippingCountryCode(shipCountry);
-		details.setShippingEmailAddress(email);
+		details.setBillingAddressLine1(billingAddress1);
+		details.setBillingAddressLine2(billingAddress2);
+		details.setBillingCity(billingCity);
+		details.setBillingZipCode(billingZip);
+		details.setBillingStateProvince(billingState);
+		details.setBillingCountryCode(billingCountry);
+		details.setBillingEmailAddress(billingEmailAddress);
+		details.setBillingBuyerType(billingBuyerType);
+		details.setBillingFullName(billingFullName);
+		details.setBirthDate(birthdate);
+		details.setBillingBuyerVatNumber(billingBuyerVATNumber);
+		details.setBillingMobilePhone(billingMobilePhone);
 
 		// Example transaction
 		details.setMid(Long.parseLong(prop.getProperty("merchantId")));
-		details.setPosId(prop.getProperty("orderId"));
-		// Change to: details.setAmount(new BigDecimal..);
-		details.setCurrency("EUR");
-		// details.setTransactionType("authorize");
-		details.setTransactionChannel("Web Online"); // Should default to Web
-														// online
+		details.setPosId(prop.getProperty("posId"));
+		details.setOrderId(prop.getProperty("orderId"));
+		details.setAmount(100.00);
+		details.setCurrency("USD");
+		details.setTransactionType("DEBIT");
+		details.setTransactionChannel("Web Online");
+		details.setPaymentMethodId(1000);
+		
+		// Should default to Web
+	    													// online
 		// details.setAutoCapture(true) // On the PaymentPage Payment API,
 		// tread false as authorize, true is debit
 
@@ -59,10 +71,10 @@ public class RegistrationEndpoint {
 	@Path("/unpackResponse")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String unpackResponse(String encodedResponseString) {
+	public String unpackResponse(String encodedResponseString) {	
 
 		PaymentPageHandler handler = PaymentUtils.getPaymentHandler();
-		PaymentPageResponse decodedResponse = handler.unpackResponse("Payal");
+		PaymentPageResponse decodedResponse = handler.unpackResponse(encodedResponseString);
 
 		return decodedResponse.toString();
 	}

@@ -1,25 +1,25 @@
-function sendPayment(cardHolderName, cardNo, startMonth, startYear, expMonth, expYear, cvv, encryptedPayload) {
+function sendPayment(cardHolderName, cardNumber, startDateMonth, startDateYear, expDateMonth, expDateYear, cvCode, encryptedPayload,ip) {
 	
     var xhttp = new XMLHttpRequest();
        
     // Bind the encrypted object and the elements
     //var  data = 'cardHolderName='+cardHolderName+'&cardNo='+cardNo+'&startMonth='+startMonth+'&startYear='+startYear+'&expMonth='+expMonth+'&expYear='+expYear+'&cvv='+cvv+'&encryptedPayload='+encryptedPayload;
      var data = JSON.stringify({cardHolderName : cardHolderName,
- 	    		cardNo : cardNo,
- 	    		startMonth : startMonth,
- 	    		startYear : startYear,
- 	    		expMonth : expMonth,
- 	    		expYear : expYear,
- 	    		cvv : cvv,
+    	 cardNumber : cardNumber,
+    	 startDateMonth : startDateMonth,
+    	 startDateYear : startDateYear,
+ 	    		expDateMonth : expDateMonth,
+ 	    		expDateYear : expDateYear,
+ 	    		cvCode : cvCode,
  	    		encryptedPayload : encryptedPayload});
 	    		
 	 
     
     // Define what happens when response recieved successfully
     xhttp.addEventListener("load", function() {
-    	if (this.readyState == 4 && this.status == 200) {
-    		var result =  this.responseText;
-            
+    	if (this.readyState == 4 && this.status == 201) {
+    		var result =  JSON.stringify(this.responseText);
+            console.log(result);
             // Call method that calls API to unpack response
     		sendResultToUnpack(result)
     	}
@@ -30,6 +30,7 @@ function sendPayment(cardHolderName, cardNo, startMonth, startYear, expMonth, ex
     	alert(this.status+' '+this.statusText +' Oups.! Something goes wrong.');
     });
     
+    
     // Set up our request
     xhttp.open("POST", "http://localhost:1234/api/v1/payments",true);
     
@@ -39,7 +40,7 @@ function sendPayment(cardHolderName, cardNo, startMonth, startYear, expMonth, ex
     
     // Set content type as json
     xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+    xhttp.setRequestHeader('Access-Control-Allow-Methods', 'POST');
 
     // The data sent is what the user provided in the form
     xhttp.send(data);
