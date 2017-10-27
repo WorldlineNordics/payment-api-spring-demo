@@ -1,12 +1,10 @@
-function sendPayment(cardHolderName, cardNumber, startDateMonth, startDateYear, expDateMonth, expDateYear, cvCode, encryptedPayload,ip) {
+function sendPayment(cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode, encryptedPayload,ip) {
 	
     var xhttp = new XMLHttpRequest();
        
     // Bind the encrypted object and the elements
     var data = JSON.stringify({cardHolderName : cardHolderName,
     						   cardNumber : cardNumber,
-    						   startDateMonth : startDateMonth,
-    						   startDateYear : startDateYear,
     						   expDateMonth : expDateMonth,
     						   expDateYear : expDateYear,
     						   cvCode : cvCode,
@@ -16,7 +14,6 @@ function sendPayment(cardHolderName, cardNumber, startDateMonth, startDateYear, 
     xhttp.addEventListener("load", function() {
     	if (this.readyState == 4 && this.status == 201) {
     		var result =  this.responseText;
-            console.log(result);
             // Call method that calls API to unpack response
     		sendResultToUnpack(result)
     	}

@@ -2,21 +2,12 @@
 var chdElements = document.querySelectorAll('[chd]');
 var cardHolderName = chdElements[0];
 var cardNo = chdElements[1];
-var startMonth = chdElements[2];
-var startYear = chdElements[3];
-var expMonth = chdElements[4];
-var expYear = chdElements[5];
-var cvc = chdElements[6];
+var expMonth = chdElements[2];
+var expYear = chdElements[3];
+var cvc = chdElements[4];
 var errMsg = "";
 
-var year = (new Date()).getFullYear(), selectStart = startYear, selectExp = expYear, option = null, next_year = null;
-for(var i = 10; i >= 0; i--) {
-    option = document.createElement("option");
-    last_year = parseInt(year, 10) - i;
-    option.value = last_year;
-    option.innerHTML = last_year;
-    selectStart.appendChild(option);
-}
+var year = (new Date()).getFullYear(), selectExp = expYear, option = null, next_year = null;
 
 for(var i = 0; i <= 10; i++) {
     option = document.createElement("option");
@@ -43,7 +34,7 @@ function validateCvc() {
 		var str = cvc.value;
 		cvc.value = str.slice(0,4);
 	}else {
-		cvc = chdElements[6];
+		cvc = chdElements[4];
     }
 }
 
@@ -67,9 +58,8 @@ window.addEventListener("load", function () {
         XHR.addEventListener("load", function() {
         	if (this.readyState == 4 && this.status == 200) {
 	        	var response = JSON.parse(this.responseText);
-	        	console.log(response);
 	            // Call drwp-script.js method that calls Device REST API
-	            sendPayment(cardHolderName.value,cardNo.value,startMonth.value,startYear.value,expMonth.value,expYear.value,cvc.value,response.encryptedPayload);
+	            sendPayment(cardHolderName.value,cardNo.value,expMonth.value,expYear.value,cvc.value,response.encryptedPayload);
         	}
         });
 
