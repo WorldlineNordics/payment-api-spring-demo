@@ -83,5 +83,29 @@ window.addEventListener("load", function () {
 
         // The data sent is what the user provided in the form
         XHR.send(FD);
-    }
+    }  
+    
 });
+
+function sendResultToUnpack(transactionResult) {
+    var xhttp = new XMLHttpRequest();
+        
+    // Define what happens when response recieved successfully
+    xhttp.addEventListener("load", function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var res =  this.responseText;
+            console.log(res);
+       }
+    });
+
+    // Define what happens in case of error
+    xhttp.addEventListener("error", function() {
+    	alert(this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+    });
+
+    // Set up our request
+    xhttp.open("POST", "/api/users/unpackResponse");
+
+    // The data sent is what the user provided in the form
+    xhttp.send(transactionResult);
+};

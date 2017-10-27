@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import com.digitalriver.worldpayments.api.PaymentPageHandler;
 import com.digitalriver.worldpayments.api.PaymentPageRequest;
 import com.digitalriver.worldpayments.api.PaymentPageResponse;
+import com.google.gson.Gson;
+
 import io.drwp.demo.utils.PaymentUtils;
 import java.util.Properties;
 
@@ -52,7 +54,7 @@ public class RegistrationEndpoint {
 		details.setPosId(prop.getProperty("posId"));
 		details.setOrderId(prop.getProperty("orderId"));
 		details.setAmount(100.00);
-		details.setCurrency("USD");
+		details.setCurrency("BRL");
 		details.setTransactionType("DEBIT");
 		details.setTransactionChannel("Web Online");
 		details.setPaymentMethodId(1000);
@@ -69,14 +71,15 @@ public class RegistrationEndpoint {
 
 	@POST
 	@Path("/unpackResponse")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String unpackResponse(String encodedResponseString) {	
 
 		PaymentPageHandler handler = PaymentUtils.getPaymentHandler();
 		PaymentPageResponse decodedResponse = handler.unpackResponse(encodedResponseString);
-
-		return decodedResponse.toString();
+		Gson gsonString = new Gson();
+		String upnpacked = gsonString.toJson(decodedResponse);
+		return upnpacked;
 	}
 
 }
