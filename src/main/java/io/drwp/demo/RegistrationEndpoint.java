@@ -2,43 +2,84 @@ package io.drwp.demo;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import com.digitalriver.worldpayments.api.PaymentPageHandler;
+import com.digitalriver.worldpayments.api.PaymentPageRequest;
+import com.digitalriver.worldpayments.api.PaymentPageResponse;
+import com.google.gson.Gson;
+
+import io.drwp.demo.utils.PaymentUtils;
+import java.util.Properties;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
- * Demo endpoint that emulates registration of a user and returns an encrypted payload if
- * the user does not already exist.  The encryptedPayload will later be sent by the client
- * side.
+ * Demo endpoint that emulates registration of a user and returns an encrypted
+ * payload if the user does not already exist. The encryptedPayload will later
+ * be sent by the client side.
  */
 @Component
 @Path("/users")
 public class RegistrationEndpoint {
 
-    @POST
-    @Path("/registrations")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public RegistrationResponse registerForm(@FormDataParam("name") String name,
-                                             @FormDataParam("ship-address") String shipAddress,
-                                             @FormDataParam("ship-city") String shipCity,
-                                             @FormDataParam("ship-zip") String shipZip,
-                                             @FormDataParam("ship-state") String shipState,
-                                             @FormDataParam("ship-country") String shipCountry,
-                                             @FormDataParam("phone-number") String phoneNumber,
-                                             @FormDataParam("email") String email,
-                                             @FormDataParam("emailC") String emailC,
-                                             @FormDataParam("cardNumber") String cardnumber,
-                                             @FormDataParam("cardExpiry") String cardExpiry,
-                                             @FormDataParam("cardCVC") String cardCVC) {
+	@POST
+	@Path("/registrations")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public RegistrationResponse registerForm(@FormDataParam("billingAddress1") String billingAddress1, @FormDataParam("billingAddress2") String billingAddress2,
+			@FormDataParam("billingCity") String billingCity, @FormDataParam("billingZip") String billingZip,
+			@FormDataParam("billingState") String billingState, @FormDataParam("billingCountry") String billingCountry,
+			@FormDataParam("billingEmailAddress") String billingEmailAddress, @FormDataParam("billingBuyerType") String billingBuyerType,  
+			@FormDataParam("billingFullName") String billingFullName,  @FormDataParam("birthdate") String birthdate,  
+			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
-        if (!StringUtils.isEmpty(cardnumber) || !StringUtils.isEmpty((cardExpiry)) || !StringUtils.isEmpty(cardCVC)) {
-            throw new IllegalArgumentException("Card holder data was received.");
-        }
+		Properties prop = DemoApplication.prop;
+		PaymentPageRequest details = new PaymentPageRequest();
 
-        String encryptedPayload = ""; // drwp library (mid, orderid, amount, currency, email);
+		details.setBillingAddressLine1(billingAddress1);
+		details.setBillingAddressLine2(billingAddress2);
+		details.setBillingCity(billingCity);
+		details.setBillingZipCode(billingZip);
+		details.setBillingStateProvince(billingState);
+		details.setBillingCountryCode(billingCountry);
+		details.setBillingEmailAddress(billingEmailAddress);
+		details.setBillingBuyerType(billingBuyerType);
+		details.setBillingFullName(billingFullName);
+		details.setBirthDate(birthdate);
+		details.setBillingBuyerVatNumber(billingBuyerVATNumber);
+		details.setBillingMobilePhone(billingMobilePhone);
 
-        return new RegistrationResponse(encryptedPayload, false);
-    }
+		// Example transaction
+		details.setMid(Long.parseLong(prop.getProperty("merchantId")));
+		details.setPosId(prop.getProperty("posId"));
+		details.setOrderId(prop.getProperty("orderId"));
+		details.setAmount(100.00);
+		details.setCurrency("BRL");
+		details.setTransactionType("DEBIT");
+		details.setTransactionChannel("Web Online");
+		details.setPaymentMethodId(1000);
+		
+		// Should default to Web
+	    													// online
+		// details.setAutoCapture(true) // On the PaymentPage Payment API,
+		// tread false as authorize, true is debit
+
+		PaymentPageHandler handler = PaymentUtils.getPaymentHandler();
+		final String encryptedPayload = handler.encryptRequest(details);
+		return new RegistrationResponse(encryptedPayload, false);
+	}
+
+	@POST
+	@Path("/unpackResponse")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String unpackResponse(String encodedResponseString) {	
+
+		PaymentPageHandler handler = PaymentUtils.getPaymentHandler();
+		PaymentPageResponse decodedResponse = handler.unpackResponse(encodedResponseString);
+		Gson gsonString = new Gson();
+		String upnpacked = gsonString.toJson(decodedResponse);
+		return upnpacked;
+	}
+
 }

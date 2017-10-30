@@ -40,3 +40,12 @@ body { margin:50px auto; width:600px;}
 .credit-card-box .panel-heading img {
     min-width: 180px;
 }
+/* For required fields */
+.required-field::before{
+    content: "*";
+    float: right;
+    color: red;
+}
+.dateMargin{
+  margin-left:-15px;
+}

@@ -18,7 +18,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+repositories {
+    maven { url "${artifactory_url}/libs-beta" }  
 }
 
 
@@ -34,5 +37,6 @@ dependencies {
 
 	// Added for support of XmlHttpRequest multipart POST
 	compile('org.glassfish.jersey.media:jersey-media-multipart')
-
+	compile(group: 'drwp', name: 'PaymentAPI', version: '1.0.0-276e34')
+	
 }
