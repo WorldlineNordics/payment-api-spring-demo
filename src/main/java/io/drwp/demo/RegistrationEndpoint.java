@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import io.drwp.demo.utils.PaymentUtils;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -52,9 +53,9 @@ public class RegistrationEndpoint {
 		// Example transaction
 		details.setMid(Long.parseLong(prop.getProperty("merchantId")));
 		details.setPosId(prop.getProperty("posId"));
-		details.setOrderId(prop.getProperty("orderId"));
+		details.setOrderId(UUID.randomUUID().toString());
 		details.setAmount(100.00);
-		details.setCurrency("BRL");
+		details.setCurrency("USD");
 		details.setTransactionType("DEBIT");
 		details.setTransactionChannel("Web Online");
 		details.setPaymentMethodId(1000);

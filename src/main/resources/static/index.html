@@ -159,13 +159,13 @@
                                         <label for="cardNumber">CARD NUMBER <span style="color:red;">*</span></label>
                                         <div class="input-group">
                                             <input
-                                                    type="number"
+                                                    type="text" maxlength="20"
                                                     class="form-control"
                                                     chd="cardNumber"
                                                     placeholder="Valid Card Number"
                                                     autocomplete="cc-number"
                                                     required autofocus
-                                                    onkeyup="validateCardNo()"
+                                                    onchange="validateCardNo()"
                                             />
                                             <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
                                         </div>
@@ -204,13 +204,13 @@
 		                            <div class="form-group">
 		                                <label for="cardCVC">CV CODE <span style="color:red;">*</span></label>
 		                                <input
-		                                        type="number"
+		                                        type="text" maxlength="4"
 		                                        class="form-control"
 		                                        chd="cardCVC"
 		                                        placeholder="CVC"
 		                                        autocomplete="cc-csc"
 		                                        required
-		                                        onkeyup="validateCvc()"
+		                                        onchange="validateCvc()"
 		                                />
 		                            </div>		                            	
 	                            </div>

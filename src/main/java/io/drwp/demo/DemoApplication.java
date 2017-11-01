@@ -21,19 +21,24 @@ public class DemoApplication {
 
 	private static void loadPropertyFile() {
 		prop = new Properties();
-		InputStream input = null;
+		InputStream input1 = null, input2 = null;
 
 		try {
 			
-			input = new FileInputStream("src/main/resources/devicerestapi.properties");
-			prop.load(input);
+			input1 = new FileInputStream("src/main/resources/devicerestapi.properties");
+			prop.load(input1);
+			input2 = new FileInputStream("src/main/resources/jskkeyhandlerv6.properties");
+			Properties prop2 = new Properties(); 
+			prop2.load(input2);
+			prop.putAll(prop2);
 			
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
-			if (input != null) {
+			if (input1 != null && input2 != null) {
 				try {
-					input.close();
+					input1.close();
+					input2.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

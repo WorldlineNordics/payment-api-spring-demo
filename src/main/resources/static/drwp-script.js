@@ -1,4 +1,5 @@
 function sendPayment(cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode, encryptedPayload,ip) {
+	var path = "http://localhost:9354/api/v1/payments";
 	
     var xhttp = new XMLHttpRequest();
        
@@ -25,7 +26,7 @@ function sendPayment(cardHolderName, cardNumber, expDateMonth, expDateYear, cvCo
     });
         
     // Set up our request
-    xhttp.open("POST", "http://localhost:9354/api/v1/payments",true);
+    xhttp.open("POST", path ,true);
    
     // Set content type as json
     xhttp.setRequestHeader("Content-type", "application/json");
