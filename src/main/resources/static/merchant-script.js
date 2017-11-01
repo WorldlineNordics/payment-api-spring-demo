@@ -97,7 +97,7 @@ function sendResultToUnpack(transactionResult) {
     xhttp.addEventListener("load", function() {
         if (this.readyState == 4 && this.status == 200) {
             var res =  JSON.parse(this.responseText);            
-            alert("transaction completed with Tx Id "+ res.transaction.transactionId);
+            alert("transaction description : "+ res.transaction.transactionDesc +" Tx Id :"+ res.transaction.transactionId);
             console.log(res);
        }
     });

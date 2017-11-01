@@ -8,6 +8,8 @@ import com.digitalriver.worldpayments.api.PaymentPageResponse;
 import com.google.gson.Gson;
 
 import io.drwp.demo.utils.PaymentUtils;
+
+import java.math.BigDecimal;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -54,7 +56,7 @@ public class RegistrationEndpoint {
 		details.setMid(Long.parseLong(prop.getProperty("merchantId")));
 		details.setPosId(prop.getProperty("posId"));
 		details.setOrderId(UUID.randomUUID().toString());
-		details.setAmount(100.00);
+		details.setAmount(new BigDecimal(100));
 		details.setCurrency("USD");
 		details.setTransactionType("DEBIT");
 		details.setTransactionChannel("Web Online");
