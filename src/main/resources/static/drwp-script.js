@@ -1,5 +1,5 @@
 function sendPayment(cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode, encryptedPayload,ip) {
-	var path = "http://localhost:9354/api/v1/payments";
+	var path = server.path;
 	
     var xhttp = new XMLHttpRequest();
        

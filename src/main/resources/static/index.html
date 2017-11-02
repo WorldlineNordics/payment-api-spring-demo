@@ -50,7 +50,7 @@
             <div class="form-group">
                 <label for="birthDate">BIRTH DATE</label>
                 <div class="input-group">
-                    <input type="text" name="birthDate" id="birthDate" placeholder="yyyy-mm-dd" value="1989-04-21"
+                    <input type="text" name="birthDate" id="birthDate" placeholder="yyyy-mm-dd" value="19890421"
                            class="form-control"
                            autocomplete="birthDate">
                 </div>
@@ -204,7 +204,7 @@
 		                            <div class="form-group">
 		                                <label for="cardCVC">CV CODE <span style="color:red;">*</span></label>
 		                                <input
-		                                        type="number"
+		                                		type="text" maxlength="4"
 		                                        class="form-control"
 		                                        chd="cardCVC"
 		                                        placeholder="CVC"
@@ -239,5 +239,6 @@
 </div>
 <script src="merchant-script.js"></script>
 <script src="drwp-script.js"></script>
+<script src="paymentpage-server.js"></script>
 </body>
 </html>
