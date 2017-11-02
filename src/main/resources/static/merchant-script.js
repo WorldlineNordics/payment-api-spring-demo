@@ -16,6 +16,13 @@ for(var i = 0; i <= 10; i++) {
     selectExp.appendChild(option);
 }
 
+
+cardNo.addEventListener("keydown", function (event) {
+	if(event.which == 32){
+		event.preventDefault();
+	}         
+});
+
 //check card no length    
 function validateCardNo() {	
 	var cards = new Array();
@@ -42,12 +49,16 @@ function validateCardNo() {
 
 //check card no length
 function validateCvc() {
-	if(cvc.value.length>="4"){
-		var str = cvc.value;
-		cvc.value = str.slice(0,4);
-	}else {
-		cvc = chdElements[4];
-    }
+	if(cvc){
+		if(cvc.value.length>="4"){
+			var str = cvc.value;
+			cvc.value = str.slice(0,4);
+		}else if(cvc.value.length<"3"){
+			alert("The CV Code should be of 3 or 4 digits");
+	    }else {
+			cvc = chdElements[4];
+	    }
+	}
 }
 
 window.addEventListener("load", function () {	    
