@@ -42,13 +42,12 @@ function validateCardNo() {
 
 //check card no length
 function validateCvc() {
-	if(cvc){
-		if(!cvc.value.match(/^[0-9]{3,4}$/)){
-			if(cvc.value.length<"3"){
-				alert("The CV Code should be 3 or 4 digits");
-			}       
-	    }
-	}
+	if(cvc.value.length>="4"){
+		var str = cvc.value;
+		cvc.value = str.slice(0,4);
+	}else {
+		cvc = chdElements[4];
+    }
 }
 
 window.addEventListener("load", function () {	    

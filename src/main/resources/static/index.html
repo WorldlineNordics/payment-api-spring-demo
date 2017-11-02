@@ -204,13 +204,13 @@
 		                            <div class="form-group">
 		                                <label for="cardCVC">CV CODE <span style="color:red;">*</span></label>
 		                                <input
-		                                        type="text" maxlength="4"
+		                                        type="number"
 		                                        class="form-control"
 		                                        chd="cardCVC"
 		                                        placeholder="CVC"
 		                                        autocomplete="cc-csc"
 		                                        required
-		                                        onchange="validateCvc()"
+		                                        onkeyup="validateCvc()"
 		                                />
 		                            </div>		                            	
 	                            </div>
