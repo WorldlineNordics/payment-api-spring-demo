@@ -5,7 +5,7 @@ var cardNo = chdElements[1];
 var expMonth = chdElements[2];
 var expYear = chdElements[3];
 var cvc = chdElements[4];
-
+var validCard = false, validCvc = false;
 var year = (new Date()).getFullYear(), selectExp = expYear, option = null, next_year = null;
 
 for(var i = 0; i <= 10; i++) {
@@ -46,8 +46,11 @@ function validateCardNo() {
 	        break;
 	      }
 	    }
-	    if(cardName == null){
-			alert("Invalid card number..Please provide valid card number");		
+	    if(cardName != null){
+	    	validCard = true;					
+	    }else{
+	    	validCard = false;
+	    	alert("Invalid card number..Please provide valid card number");
 	    }
     }
 }
@@ -55,7 +58,10 @@ function validateCardNo() {
 //check card no length
 function validateCvc() {
 	if(cvc){
-		if(!cvc.value.match(/^[0-9]{3,4}$/)){
+		if(cvc.value.match(/^[0-9]{3,4}$/)){
+			validCvc = true;
+		}else{
+			validCvc = false;
 			alert("Invalid CV Code..Please provide valid CV Code of 3 or 4 digits");			
 		}
 	}
@@ -67,8 +73,14 @@ window.addEventListener("load", function () {
             
     // ...and take over its submit event.
     form.addEventListener("submit", function (event) {
-        event.preventDefault();        
-        sendDataToMerchant();
+    	event.preventDefault();
+    	// validate card no and cv code...    	
+    	if(validCard==true && validCvc==true){
+	        sendDataToMerchant();
+    	}else{
+    		validateCardNo();
+        	validateCvc();
+    	}
     });
     
     function sendDataToMerchant() {    	
@@ -88,7 +100,7 @@ window.addEventListener("load", function () {
 
         // Define what happens in case of error
         XHR.addEventListener("error", function() {
-        	alert(this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+        	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
         });
                 
         // Set up our request
@@ -114,7 +126,7 @@ function sendResultToUnpack(transactionResult) {
 
     // Define what happens in case of error
     xhttp.addEventListener("error", function() {
-    	alert(this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+    	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
     });
 
     // Set up our request

@@ -11,34 +11,36 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DemoApplication {
 
-	public static Properties prop;
+	private static Properties prop;
 
 	public static void main(String[] args) {
 
 		loadPropertyFile();
 		SpringApplication.run(DemoApplication.class, args);
 	}
+	
+	public static Properties getProperties() {
+	    if(prop == null) {
+	       loadPropertyFile();
+	    }
+	    return prop;
+	}
 
 	private static void loadPropertyFile() {
 		prop = new Properties();
-		InputStream input1 = null, input2 = null;
+		InputStream input = null;
 
 		try {
-			
-			input1 = new FileInputStream("src/main/resources/devicerestapi.properties");
-			prop.load(input1);
-			input2 = new FileInputStream("src/main/resources/jskkeyhandlerv6.properties");
-			Properties prop2 = new Properties(); 
-			prop2.load(input2);
-			prop.putAll(prop2);
+
+			input = new FileInputStream("src/main/resources/application.properties");
+			prop.load(input);
 			
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
-			if (input1 != null && input2 != null) {
+			if (input != null) {
 				try {
-					input1.close();
-					input2.close();
+					input.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

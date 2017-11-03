@@ -39,7 +39,7 @@ public class RegistrationEndpoint {
 			@FormDataParam("billingFullName") String billingFullName,  @FormDataParam("birthDate") String birthDate,  
 			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
-		Properties prop = DemoApplication.prop;
+		Properties prop = DemoApplication.getProperties();
 		PaymentPageRequest details = new PaymentPageRequest();
 
 		details.setBillingAddressLine1(billingAddressLine1);
@@ -56,8 +56,8 @@ public class RegistrationEndpoint {
 		details.setBillingMobilePhone(billingMobilePhone);
 
 		// Example transaction
-		details.setMid(Long.parseLong(prop.getProperty("merchantId")));
-		details.setPosId(prop.getProperty("posId"));
+		details.setMid(Long.parseLong(prop.getProperty("device.rest.api.merchantId")));
+		details.setPosId(prop.getProperty("device.rest.api.posId"));
 		details.setOrderId("DRP_" + System.currentTimeMillis());
 		details.setAmount(new BigDecimal(100));
 		details.setCurrency("BRL");
