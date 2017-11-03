@@ -5,8 +5,7 @@ var cardNo = chdElements[1];
 var expMonth = chdElements[2];
 var expYear = chdElements[3];
 var cvc = chdElements[4];
-var errMsg = "";
-
+var validCard = false, validCvc = false;
 var year = (new Date()).getFullYear(), selectExp = expYear, option = null, next_year = null;
 
 for(var i = 0; i <= 10; i++) {
@@ -17,25 +16,55 @@ for(var i = 0; i <= 10; i++) {
     selectExp.appendChild(option);
 }
 
+cardNo.addEventListener("keydown", function (event) {
+	if(event.which == 32){
+		event.preventDefault();
+	}         
+});
+
+cvc.addEventListener("keydown", function (event) {
+	if(event.which == 32){
+		event.preventDefault();
+	}         
+});
+
 //check card no length    
-function validateCardNo() {
-	if(cardNo.value.length>="16"){
-		//alert("The card number should be 15 or 16 digits");
-		var str = cardNo.value;
-		cardNo.value = str.slice(0,16);
-	}else {
-    	cardNo = chdElements[1];
+function validateCardNo() {	
+	var cards = new Array();
+    cards[0] = { cardName: "VISA", regEx: "^4[0-9]{12}([0-9]{3})?$"};
+    cards[1] = { cardName: "MASTERCARD", regEx: "^5[1-5][0-9]{14}$"};
+    cards[2] = { cardName: "AMEX", regEx: "^3[47][0-9]{13}$"};
+    cards[3] = { cardName: "DINERS", regEx: "^3(0[0-5]|[68][0-9])[0-9]{11}$"};
+    cards[4] = { cardName: "DISCOVER", regEx: "^6011[0-9]{12}$"};
+    var cardNum = cardNo.value;
+    var cardName = null;
+    cardNum = cardNum.replace(/[^0-9]/g,'');
+    if(cardNo){
+	    for (var i=0; i< cards.length; i++) {
+	      if (new RegExp(cards[i]["regEx"]).test(cardNum)) {
+	        cardName =  cards[i]["cardName"];  
+	        break;
+	      }
+	    }
+	    if(cardName != null){
+	    	validCard = true;					
+	    }else{
+	    	validCard = false;
+	    	alert("Invalid card number..Please provide valid card number");
+	    }
     }
 }
 
 //check card no length
 function validateCvc() {
-	if(cvc.value.length>="4"){
-		var str = cvc.value;
-		cvc.value = str.slice(0,4);
-	}else {
-		cvc = chdElements[4];
-    }
+	if(cvc){
+		if(cvc.value.match(/^[0-9]{3,4}$/)){
+			validCvc = true;
+		}else{
+			validCvc = false;
+			alert("Invalid CV Code..Please provide valid CV Code of 3 or 4 digits");			
+		}
+	}
 }
 
 window.addEventListener("load", function () {	    
@@ -44,8 +73,14 @@ window.addEventListener("load", function () {
             
     // ...and take over its submit event.
     form.addEventListener("submit", function (event) {
-        event.preventDefault();        
-        sendDataToMerchant();
+    	event.preventDefault();
+    	// validate card no and cv code...    	
+    	if(validCard==true && validCvc==true){
+	        sendDataToMerchant();
+    	}else{
+    		validateCardNo();
+        	validateCvc();
+    	}
     });
     
     function sendDataToMerchant() {    	
@@ -65,7 +100,7 @@ window.addEventListener("load", function () {
 
         // Define what happens in case of error
         XHR.addEventListener("error", function() {
-        	alert(this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+        	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
         });
                 
         // Set up our request
@@ -84,14 +119,14 @@ function sendResultToUnpack(transactionResult) {
     xhttp.addEventListener("load", function() {
         if (this.readyState == 4 && this.status == 200) {
             var res =  JSON.parse(this.responseText);            
-            alert("transaction completed with Tx Id "+ res.transaction.transactionId);
+            alert("transaction description : "+ res.transaction.transactionDesc +" Tx Id :"+ res.transaction.transactionId);
             console.log(res);
        }
     });
 
     // Define what happens in case of error
     xhttp.addEventListener("error", function() {
-    	alert(this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+    	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
     });
 
     // Set up our request

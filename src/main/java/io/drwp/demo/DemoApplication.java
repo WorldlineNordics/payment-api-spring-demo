@@ -11,12 +11,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DemoApplication {
 
-	public static Properties prop;
+	private static Properties prop;
 
 	public static void main(String[] args) {
 
 		loadPropertyFile();
 		SpringApplication.run(DemoApplication.class, args);
+	}
+	
+	public static Properties getProperties() {
+	    if(prop == null) {
+	       loadPropertyFile();
+	    }
+	    return prop;
 	}
 
 	private static void loadPropertyFile() {
@@ -24,8 +31,8 @@ public class DemoApplication {
 		InputStream input = null;
 
 		try {
-			
-			input = new FileInputStream("src/main/resources/devicerestapi.properties");
+
+			input = new FileInputStream("src/main/resources/application.properties");
 			prop.load(input);
 			
 		} catch (IOException ex) {
