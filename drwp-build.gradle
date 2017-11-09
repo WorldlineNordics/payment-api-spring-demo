@@ -26,9 +26,6 @@ repositories {
 
 }
 
-drwpRelease {
-	jiraProject='DRAPI'
-}
 
 dependencies {
 	// The DRWP Payment API that provides the encryption
