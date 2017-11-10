@@ -16,8 +16,12 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 
-version = '0.0.1'
 sourceCompatibility = 1.8
+
+
+springBoot {
+    executable = true
+}
 
 repositories {
 	maven {
@@ -26,6 +30,39 @@ repositories {
 
 }
 
+task processGradleResources (type: Copy ) {
+  from "${rootDir}/gradle"
+  into "${buildDir}/distributions/gradle"
+}
+
+springBoot {
+	mainClass="DemoApplication"
+}
+
+task toJar (type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+        	'Implementation-Version': project.version,
+        	'Main-Class': 'io.drwp.demo.DemoApplication'
+    }
+    from("${buildDir}/classes/main")
+    from("${buildDir}/resources/main")
+    destinationDir = file("${buildDir}/libs")
+}
+
+task releaseZip ( type: Zip ) {
+   	dependsOn processGradleResources, toJar
+    baseName(project.name)
+    from("${rootDir}/gradlew")
+    from("${rootDir}/drwp-build.gradle")
+    from("${buildDir}/distributions") {
+    	exclude '*.zip'
+    }
+    from("${buildDir}/libs") {
+    	include '*.jar'
+    }
+    destinationDir = file("${buildDir}/distributions") 
+}
 
 dependencies {
 	// The DRWP Payment API that provides the encryption
