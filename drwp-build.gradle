@@ -10,65 +10,25 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("drwp:DrwpGradlePlugins:4.0.0")
 	}
 }
 
-apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'drwp-application'
+apply plugin: 'drwp-release'
 
 sourceCompatibility = 1.8
 
-
-springBoot {
-    executable = true
-}
+mainClassName='io.drwp.demo.DemoApplication'
 
 repositories {
 	maven {
 		url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 	}
-
-}
-
-task processGradleResources (type: Copy ) {
-  from "${rootDir}/gradle"
-  into "${buildDir}/distributions/gradle"
-}
-
-springBoot {
-	mainClass="DemoApplication"
-}
-
-task toJar (type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-        	'Implementation-Version': project.version,
-        	'Main-Class': 'io.drwp.demo.DemoApplication'
-    }
-    from("${buildDir}/classes/main")
-    from("${buildDir}/resources/main")
-    destinationDir = file("${buildDir}/libs")
-}
-
-task releaseZip ( type: Zip ) {
-   	dependsOn processGradleResources, toJar
-    baseName(project.name)
-    from("${rootDir}/gradlew")
-    from("${rootDir}/drwp-build.gradle")
-    from("${buildDir}/distributions") {
-    	exclude '*.zip'
-    }
-    from("${buildDir}/libs") {
-    	include '*.jar'
-    }
-    destinationDir = file("${buildDir}/distributions") 
 }
 
 dependencies {
-	// The DRWP Payment API that provides the encryption
-	// compile('io.drwp:payment-api')
-
-	// Provided by Spring Boot
 	compile('org.springframework.boot:spring-boot-starter-jersey')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	runtime('org.springframework.boot:spring-boot-devtools')
@@ -77,5 +37,4 @@ dependencies {
 	// Added for support of XmlHttpRequest multipart POST
 	compile('org.glassfish.jersey.media:jersey-media-multipart')
 	compile(group: 'drwp', name: 'PaymentAPI', version: '1.0.0')
-	
 }
