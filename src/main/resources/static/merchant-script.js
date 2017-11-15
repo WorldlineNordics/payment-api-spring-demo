@@ -74,6 +74,7 @@ window.addEventListener("load", function () {
     // ...and take over its submit event.
     form.addEventListener("submit", function (event) {
     	event.preventDefault();
+    	displayResult('...','');
     	// validate card no and cv code...    	
     	if(validCard==true && validCvc==true){
 	        sendDataToMerchant();
@@ -100,7 +101,7 @@ window.addEventListener("load", function () {
 
         // Define what happens in case of error
         XHR.addEventListener("error", function() {
-        	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+        	displayResult('','status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
         });
                 
         // Set up our request
@@ -119,14 +120,14 @@ function sendResultToUnpack(transactionResult) {
     xhttp.addEventListener("load", function() {
         if (this.readyState == 4 && this.status == 200) {
             var res =  JSON.parse(this.responseText);            
-            alert("transaction description : "+ res.transaction.transactionDesc +" Tx Id :"+ res.transaction.transactionId);
             console.log(res);
+            displayResult("TransactionId:" + res.transaction.transactionId + "<br>Result: "+ res.transaction.transactionDesc , "");
        }
     });
 
     // Define what happens in case of error
     xhttp.addEventListener("error", function() {
-    	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+    	displayResult("", 'Status: '+this.status+'<br>'+this.statusText);
     });
 
     // Set up our request
@@ -135,3 +136,8 @@ function sendResultToUnpack(transactionResult) {
     // The data sent is what the user provided in the form
     xhttp.send(transactionResult);
 };
+
+function displayResult(result, error) {
+    document.getElementById("payment-result").innerHTML = result;
+    document.getElementById("payment-errors").innerHTML = error;
+}
