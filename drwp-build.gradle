@@ -36,4 +36,8 @@ dependencies {
 	// Added for support of XmlHttpRequest multipart POST
 	compile('org.glassfish.jersey.media:jersey-media-multipart')
 	compile(group: 'drwp', name: 'PaymentAPI', version: '1.0.0')
+	
+	// https://mvnrepository.com/artifact/junit/junit
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+	
 }
