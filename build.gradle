@@ -17,12 +17,16 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven { url "${artifactory_url}/libs-beta" }
 }
 
 
 dependencies {
+
 	// The DRWP Payment API that provides the encryption
-	// compile('io.drwp:payment-api')
+	// FIXME: Change to this when published externally
+	// compile('com.worldline.payments:payment-api')
+	compile('drwp:PaymentAPI:1.0.0-fbd068')
 
 	// Provided by Spring Boot
 	compile('org.springframework.boot:spring-boot-starter-jersey')
@@ -32,6 +36,5 @@ dependencies {
 
 	// Added for support of XmlHttpRequest multipart POST
 	compile('org.glassfish.jersey.media:jersey-media-multipart')
-	compile(group: 'drwp', name: 'PaymentAPI', version: '1.0.0')
-	
+
 }

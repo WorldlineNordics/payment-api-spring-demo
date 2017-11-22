@@ -49,3 +49,7 @@ body { margin:50px auto; width:600px;}
 .dateMargin{
   margin-left:-15px;
 }
+
+.panel-heading-full {
+    width: 100%;
+}
