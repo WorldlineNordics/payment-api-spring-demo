@@ -95,13 +95,13 @@ window.addEventListener("load", function () {
         	if (this.readyState == 4 && this.status == 200) {
 	        	var response = JSON.parse(this.responseText);
 	            // Call drwp-script.js method that calls Device REST API
-	            sendPayment(cardHolderName.value,cardNo.value,expMonth.value,expYear.value,cvc.value,response.encryptedPayload);
-        	}
+	            sendPayment(sendResultToUnpack,showError,response.encryptedPayload,cardHolderName.value,cardNo.value,expMonth.value,expYear.value,cvc.value);
+        	}        	
         });
 
         // Define what happens in case of error
         XHR.addEventListener("error", function() {
-        	displayResult('','status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
+        	displayResult('','Status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
         });
                 
         // Set up our request
@@ -121,7 +121,7 @@ function sendResultToUnpack(transactionResult) {
         if (this.readyState == 4 && this.status == 200) {
             var res =  JSON.parse(this.responseText);            
             console.log(res);
-            displayResult("TransactionId:" + res.transaction.transactionId + "<br>Result: "+ res.transaction.transactionDesc , "");
+            displayResult("TransactionId : " + res.transaction.transactionId + "<br>Result : "+ res.transaction.transactionDesc , "");
        }
     });
 
@@ -135,6 +135,10 @@ function sendResultToUnpack(transactionResult) {
 
     // The data sent is what the user provided in the form
     xhttp.send(transactionResult);
+};
+
+function showError(error) {
+      displayResult("", "Error :" + error);
 };
 
 function displayResult(result, error) {

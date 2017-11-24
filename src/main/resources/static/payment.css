@@ -53,3 +53,10 @@ body { margin:50px auto; width:600px;}
 .panel-heading-full {
     width: 100%;
 }
+.display-errors {
+    font-weight: bold;
+    color: red;
+}
+.display-result {
+    font-weight: bold;
+}

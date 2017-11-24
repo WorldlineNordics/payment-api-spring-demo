@@ -4,17 +4,16 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
 
 import com.digitalriver.worldpayments.api.AuthorizationType;
-import com.digitalriver.worldpayments.api.PaymentPageHandler;
-import com.digitalriver.worldpayments.api.PaymentPageRequest;
+import com.digitalriver.worldpayments.api.PaymentHandler;
 import com.digitalriver.worldpayments.api.PaymentPageResponse;
+import com.digitalriver.worldpayments.api.PaymentRequest;
+import com.digitalriver.worldpayments.api.PaymentRequest.StoreFlag;
 import com.google.gson.Gson;
 
 import io.drwp.demo.utils.PaymentUtils;
 
 import java.math.BigDecimal;
 import java.util.Properties;
-import java.util.Random;
-import java.util.UUID;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -40,7 +39,7 @@ public class RegistrationEndpoint {
 			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
 		Properties prop = DemoApplication.getProperties();
-		PaymentPageRequest details = new PaymentPageRequest();
+		PaymentRequest details = new PaymentRequest();
 
 		details.setBillingAddressLine1(billingAddressLine1);
 		details.setBillingAddressLine2(billingAddressLine2);
@@ -67,6 +66,7 @@ public class RegistrationEndpoint {
 		details.setConsumerCountry("BR");
 		details.setConsumerLanguage("en");
 		details.setAuthorizationType(AuthorizationType.UNDEFINED);
+		details.setStoreFlag(StoreFlag.STORE);
 
 		// Should default to Web
 		// online
@@ -74,7 +74,7 @@ public class RegistrationEndpoint {
 		// On the PaymentPage Payment API,
 		// tread false as authorize, true is debit
 
-		PaymentPageHandler handler = PaymentUtils.getPaymentHandler();
+		PaymentHandler handler = PaymentUtils.getPaymentHandler();
 		final String encryptedPayload = handler.encryptRequest(details);
 		return new RegistrationResponse(encryptedPayload, false);
 	}
@@ -85,7 +85,7 @@ public class RegistrationEndpoint {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String unpackResponse(String encodedResponseString) {	
 
-		PaymentPageHandler handler = PaymentUtils.getPaymentHandler();
+		PaymentHandler handler = PaymentUtils.getPaymentHandler();
 		PaymentPageResponse decodedResponse = handler.unpackResponse(encodedResponseString);
 		Gson gsonString = new Gson();
 		String upnpacked = gsonString.toJson(decodedResponse);
