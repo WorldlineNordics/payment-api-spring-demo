@@ -17,7 +17,6 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
-	maven { url "${artifactory_url}/libs-beta" }
 }
 
 
