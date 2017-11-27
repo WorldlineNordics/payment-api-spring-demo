@@ -1,4 +1,4 @@
-function sendPayment(cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode, encryptedPayload,ip) {
+function sendPayment(success, error, encryptedPayload, cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode) {
 	var path = server.path;
 	
     var xhttp = new XMLHttpRequest();
@@ -16,15 +16,17 @@ function sendPayment(cardHolderName, cardNumber, expDateMonth, expDateYear, cvCo
     	if (this.readyState == 4 && this.status == 201) {
     		var result =  this.responseText;
             // Call method that calls API to unpack response
-    		sendResultToUnpack(result)
+    		success(result);
+    	}
+    	
+    	// Define what happens in case of error
+    	if (this.status == 400 || this.status == 401) {
+    		var result =  this.responseText;
+            // Call method that handles the error
+    		error(result);
     	}
     });
-      
-    // Define what happens in case of error
-    xhttp.addEventListener("error", function() {
-    	alert('status :'+this.status+' '+this.statusText +' Oups.! Something goes wrong.');
-    });
-        
+                   
     // Set up our request
     xhttp.open("POST", path ,true);
    
