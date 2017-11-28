@@ -5,9 +5,10 @@ import org.springframework.stereotype.Component;
 
 import com.digitalriver.worldpayments.api.AuthorizationType;
 import com.digitalriver.worldpayments.api.PaymentHandler;
-import com.digitalriver.worldpayments.api.PaymentPageResponse;
 import com.digitalriver.worldpayments.api.PaymentRequest;
 import com.digitalriver.worldpayments.api.PaymentRequest.StoreFlag;
+import com.digitalriver.worldpayments.api.PaymentRequestBuilder;
+import com.digitalriver.worldpayments.api.PaymentResponse;
 import com.google.gson.Gson;
 
 import io.drwp.demo.utils.PaymentUtils;
@@ -39,40 +40,31 @@ public class RegistrationEndpoint {
 			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
 		Properties prop = DemoApplication.getProperties();
-		PaymentRequest details = new PaymentRequest();
-
-		details.setBillingAddressLine1(billingAddressLine1);
-		details.setBillingAddressLine2(billingAddressLine2);
-		details.setBillingCity(billingCity);
-		details.setBillingZipCode(billingZipCode);
-		details.setBillingStateProvince(billingStateProvince);
-		details.setBillingCountryCode(billingCountryCode);
-		details.setBillingEmailAddress(billingEmailAddress);
-		details.setBillingBuyerType(billingBuyerType);
-		details.setBillingFullName(billingFullName);
-		details.setBirthDate(birthDate);
-		details.setBillingBuyerVatNumber(billingBuyerVATNumber);
-		details.setBillingMobilePhone(billingMobilePhone);
-
-		// Example transaction
-		details.setMid(Long.parseLong(prop.getProperty("device.rest.api.merchantId")));
-		details.setPosId(prop.getProperty("device.rest.api.posId"));
-		details.setOrderId("DRP_" + System.currentTimeMillis());
-		details.setAmount(new BigDecimal(100));
-		details.setCurrency("BRL");
-		details.setTransactionType("DEBIT");
-		details.setTransactionChannel("Web Online");
-		details.setPaymentMethodId(1000);
-		details.setConsumerCountry("BR");
-		details.setConsumerLanguage("en");
-		details.setAuthorizationType(AuthorizationType.UNDEFINED);
-		details.setStoreFlag(StoreFlag.STORE);
-
-		// Should default to Web
-		// online
-		// details.setAutoCapture(true)
-		// On the PaymentPage Payment API,
-		// tread false as authorize, true is debit
+		PaymentRequest details = new PaymentRequestBuilder()
+		.setBillingAddressLine1(billingAddressLine1)
+		.setBillingAddressLine2(billingAddressLine2)
+		.setBillingCity(billingCity)
+		.setBillingZipCode(billingZipCode)
+		.setBillingStateProvince(billingStateProvince)
+		.setBillingCountryCode(billingCountryCode)
+		.setBillingEmailAddress(billingEmailAddress)
+		.setBillingBuyerType(billingBuyerType)
+		.setBillingFullName(billingFullName)
+		.setBirthDate(birthDate)
+		.setBillingMobilePhone(billingMobilePhone)
+		.setMid(Long.parseLong(prop.getProperty("device.rest.api.merchantId")))
+		.setPosId(prop.getProperty("device.rest.api.posId"))
+		.setOrderId("DRP_" + System.currentTimeMillis())
+		.setAmount(new BigDecimal(100))
+		.setCurrency("BRL")
+		.setTransactionChannel("Web Online")
+		.setPaymentMethodId(1000)
+		.setConsumerCountry("BR")
+		.setConsumerLanguage("en")
+		.setAuthorizationType(AuthorizationType.UNDEFINED)
+		.setStoreFlag(StoreFlag.STORE)
+		.setBillingBuyerVATNumber(billingBuyerVATNumber)
+		.createPaymentRequest();
 
 		PaymentHandler handler = PaymentUtils.getPaymentHandler();
 		final String encryptedPayload = handler.encryptRequest(details);
@@ -86,7 +78,7 @@ public class RegistrationEndpoint {
 	public String unpackResponse(String encodedResponseString) {	
 
 		PaymentHandler handler = PaymentUtils.getPaymentHandler();
-		PaymentPageResponse decodedResponse = handler.unpackResponse(encodedResponseString);
+		PaymentResponse decodedResponse = handler.unpackResponse(encodedResponseString);
 		Gson gsonString = new Gson();
 		String upnpacked = gsonString.toJson(decodedResponse);
 		return upnpacked;

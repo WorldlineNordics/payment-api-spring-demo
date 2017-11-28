@@ -14,9 +14,9 @@ function sendPayment(success, error, encryptedPayload, cardHolderName, cardNumbe
     // Define what happens when response recieved successfully
     xhttp.addEventListener("load", function() {
     	if (this.readyState == 4 && this.status == 201) {
-    		var result =  this.responseText;
+    		var result = JSON.parse(this.responseText);
             // Call method that calls API to unpack response
-    		success(result);
+    		success(result.encResponse);
     	}
     	
     	// Define what happens in case of error
