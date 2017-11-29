@@ -1,5 +1,4 @@
-function sendPayment(success, error, encryptedPayload, cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode) {
-	var path = server.path;
+function sendPayment(success, error, encryptedPayload, path, cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode) {
 	
     var xhttp = new XMLHttpRequest();
        

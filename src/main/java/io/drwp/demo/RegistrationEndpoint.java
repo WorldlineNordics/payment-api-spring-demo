@@ -68,7 +68,8 @@ public class RegistrationEndpoint {
 
 		PaymentHandler handler = PaymentUtils.getPaymentHandler();
 		final String encryptedPayload = handler.encryptRequest(details);
-		return new RegistrationResponse(encryptedPayload, false);
+		final String path = prop.getProperty("device.rest.api.server.path");
+		return new RegistrationResponse(encryptedPayload, false, path);
 	}
 
 	@POST
