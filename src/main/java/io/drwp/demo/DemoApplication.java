@@ -32,7 +32,7 @@ public class DemoApplication {
 
 		try {
 
-			input = new FileInputStream("src/main/resources/application.properties");
+			input = new FileInputStream("src/main/config/application.properties");
 			prop.load(input);
 			
 		} catch (IOException ex) {

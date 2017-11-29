@@ -38,7 +38,7 @@ window.addEventListener("load", function () {
         	if (this.readyState == 4 && this.status == 200) {
 	        	var response = JSON.parse(this.responseText);
 	            // Call drwp-script.js method that calls Device REST API
-	            sendPayment(sendResultToUnpack,showError,response.encryptedPayload,cardHolderName.value,cardNo.value,expMonth.value,expYear.value,cvc.value);
+	            sendPayment(sendResultToUnpack,showError,response.encryptedPayload,response.path,cardHolderName.value,cardNo.value,expMonth.value,expYear.value,cvc.value);
         	}        	
         });
 
