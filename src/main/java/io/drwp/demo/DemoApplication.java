@@ -1,8 +1,8 @@
 package io.drwp.demo;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 import org.springframework.boot.SpringApplication;
@@ -32,8 +32,11 @@ public class DemoApplication {
 
 		try {
 
-			input = new FileInputStream("src/main/config/application.properties");
-			prop.load(input);
+			prop = new Properties();
+	        String name = "/cs/application.properties";
+	        URL resource = DemoApplication.class.getResource(name);
+	        System.out.println("Loading properties from '" + resource + "'...");
+	        prop.load(DemoApplication.class.getResourceAsStream(name));
 			
 		} catch (IOException ex) {
 			ex.printStackTrace();
