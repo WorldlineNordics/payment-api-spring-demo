@@ -33,7 +33,7 @@ public class DemoApplication {
 		try {
 
 			prop = new Properties();
-	        String name = "/cs/application.properties";
+	        String name = "/application.properties";
 	        URL resource = DemoApplication.class.getResource(name);
 	        System.out.println("Loading properties from '" + resource + "'...");
 	        prop.load(DemoApplication.class.getResourceAsStream(name));
