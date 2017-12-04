@@ -1,23 +1,20 @@
-package io.drwp.demo;
-
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.springframework.stereotype.Component;
+package com.worldline.payments.demo.merchant;
 
 import com.google.gson.Gson;
-import com.worldline.payments.api.AuthorizationType;
-import com.worldline.payments.api.PaymentHandler;
-import com.worldline.payments.api.PaymentRequest;
+import com.worldline.payments.api.*;
 import com.worldline.payments.api.PaymentRequest.StoreFlag;
-import com.worldline.payments.api.PaymentRequestBuilder;
-import com.worldline.payments.api.PaymentResponse;
+import com.worldline.payments.demo.merchant.utils.DemoConfiguration;
+import com.worldline.payments.demo.merchant.utils.PaymentUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import io.drwp.demo.utils.PaymentUtils;
-
-import java.math.BigDecimal;
-import java.util.Properties;
-
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.math.BigDecimal;
 
 /**
  * Demo endpoint that emulates registration of a user and returns an encrypted
@@ -27,6 +24,9 @@ import javax.ws.rs.core.MediaType;
 @Component
 @Path("/users")
 public class RegistrationEndpoint {
+
+	@Autowired
+	private DemoConfiguration props;
 
 	@POST
 	@Path("/registrations")
@@ -39,7 +39,6 @@ public class RegistrationEndpoint {
 			@FormDataParam("billingFullName") String billingFullName,  @FormDataParam("birthDate") String birthDate,  
 			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
-		Properties prop = DemoApplication.getProperties();
 		PaymentRequest details = new PaymentRequestBuilder()
 		.setBillingAddressLine1(billingAddressLine1)
 		.setBillingAddressLine2(billingAddressLine2)
@@ -52,8 +51,8 @@ public class RegistrationEndpoint {
 		.setBillingFullName(billingFullName)
 		.setBirthDate(birthDate)
 		.setBillingMobilePhone(billingMobilePhone)
-		.setMid(Long.parseLong(prop.getProperty("device.rest.api.merchantId")))
-		.setPosId(prop.getProperty("device.rest.api.posId"))
+		.setMid(Long.parseLong(props.merchantId))
+		.setPosId(props.posId)
 		.setOrderId("DRP_" + System.currentTimeMillis())
 		.setAmount(new BigDecimal(100))
 		.setCurrency("BRL")
@@ -66,10 +65,9 @@ public class RegistrationEndpoint {
 		.setBillingBuyerVATNumber(billingBuyerVATNumber)
 		.createPaymentRequest();
 
-		PaymentHandler handler = PaymentUtils.getPaymentHandler();
+		PaymentHandler handler = PaymentUtils.getPaymentHandler(props);
 		final String encryptedPayload = handler.encryptRequest(details);
-		final String path = prop.getProperty("device.rest.api.server.path");
-		return new RegistrationResponse(encryptedPayload, false, path);
+		return new RegistrationResponse(encryptedPayload, false, props.worldlineURL);
 	}
 
 	@POST
@@ -78,7 +76,7 @@ public class RegistrationEndpoint {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String unpackResponse(String encodedResponseString) {	
 
-		PaymentHandler handler = PaymentUtils.getPaymentHandler();
+		PaymentHandler handler = PaymentUtils.getPaymentHandler(props);
 		PaymentResponse decodedResponse = handler.unpackResponse(encodedResponseString);
 		Gson gsonString = new Gson();
 		String upnpacked = gsonString.toJson(decodedResponse);

@@ -1,5 +1,6 @@
-package io.drwp.demo;
+package com.worldline.payments.demo.merchant.utils;
 
+import com.worldline.payments.demo.merchant.RegistrationEndpoint;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;

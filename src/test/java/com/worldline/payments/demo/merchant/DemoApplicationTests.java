@@ -1,4 +1,4 @@
-package io.drwp.demo;
+package com.worldline.payments.demo.merchant;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
