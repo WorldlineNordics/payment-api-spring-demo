@@ -2,8 +2,8 @@ package io.drwp.demo.utils;
 
 import java.util.Properties;
 
-import com.digitalriver.worldpayments.api.PaymentHandler;
 import com.digitalriver.worldpayments.api.security6.JKSKeyHandlerV6;
+import com.worldline.payments.api.PaymentHandler;
 
 import io.drwp.demo.DemoApplication;
 
