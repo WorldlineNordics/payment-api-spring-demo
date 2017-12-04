@@ -6,6 +6,9 @@ buildscript {
 	   maven {
 	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 		}
+		maven {
+	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/libs-beta"
+		}
 
 	}
 	dependencies {
@@ -27,6 +30,9 @@ repositories {
 	maven {
 		url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 	}
+	maven {
+	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/libs-beta"
+		}
 }
 
 dependencies {
