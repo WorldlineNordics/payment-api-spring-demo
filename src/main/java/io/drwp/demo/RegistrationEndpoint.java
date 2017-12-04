@@ -3,13 +3,13 @@ package io.drwp.demo;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
 
-import com.digitalriver.worldpayments.api.AuthorizationType;
-import com.digitalriver.worldpayments.api.PaymentHandler;
-import com.digitalriver.worldpayments.api.PaymentRequest;
-import com.digitalriver.worldpayments.api.PaymentRequest.StoreFlag;
-import com.digitalriver.worldpayments.api.PaymentRequestBuilder;
-import com.digitalriver.worldpayments.api.PaymentResponse;
 import com.google.gson.Gson;
+import com.worldline.payments.api.AuthorizationType;
+import com.worldline.payments.api.PaymentHandler;
+import com.worldline.payments.api.PaymentRequest;
+import com.worldline.payments.api.PaymentRequest.StoreFlag;
+import com.worldline.payments.api.PaymentRequestBuilder;
+import com.worldline.payments.api.PaymentResponse;
 
 import io.drwp.demo.utils.PaymentUtils;
 
