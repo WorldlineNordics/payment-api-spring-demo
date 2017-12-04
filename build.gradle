@@ -25,7 +25,7 @@ dependencies {
 	// The DRWP Payment API that provides the encryption
 	// FIXME: Change to this when published externally
 	// compile('com.worldline.payments:payment-api')
-	compile('drwp:PaymentAPI:1.1.2-f99762')
+	compile('drwp:PaymentAPI:1.1.3-1e108b')
 
 	// Provided by Spring Boot
 	compile('org.springframework.boot:spring-boot-starter-jersey')
