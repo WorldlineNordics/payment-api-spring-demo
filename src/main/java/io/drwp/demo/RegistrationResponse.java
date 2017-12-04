@@ -3,13 +3,23 @@ package io.drwp.demo;
 public class RegistrationResponse {
     private String encryptedPayload;
     private boolean alreadyRegistered;
+    private String path;
 
-    public RegistrationResponse(String encryptedPayload, boolean alreadyRegistered) {
+    public RegistrationResponse(String encryptedPayload, boolean alreadyRegistered, String path) {
         this.encryptedPayload = encryptedPayload;
         this.alreadyRegistered = alreadyRegistered;
+        this.path = path;
     }
+    
+    public String getPath() {
+		return path;
+	}
 
-    public String getEncryptedPayload() {
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getEncryptedPayload() {
         return encryptedPayload;
     }
 

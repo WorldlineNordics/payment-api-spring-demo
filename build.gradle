@@ -3,10 +3,7 @@ buildscript {
 		springBootVersion = '1.5.7.RELEASE'
 	}
 	repositories {
-	   maven {
-	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
-		}
-
+		mavenCentral()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -16,20 +13,23 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 
-version = '0.0.1'
 sourceCompatibility = 1.8
 
 repositories {
-	maven {
-		url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
-	}
+	mavenCentral()
 
+	maven {
+		url  "https://dl.bintray.com/worldlinenordics/payment-api"
+	}
 }
 
 
 dependencies {
+
 	// The DRWP Payment API that provides the encryption
-	// compile('io.drwp:payment-api')
+	compile 'com.worldline.payments:payment-api:1.1.3'
+	compile 'com.google.code.gson:gson:2.8.2'
+
 
 	// Provided by Spring Boot
 	compile('org.springframework.boot:spring-boot-starter-jersey')
