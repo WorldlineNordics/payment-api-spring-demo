@@ -26,7 +26,7 @@ function sendPayment(success, error, encryptedPayload, path, cardHolderName, car
     	}
     	
     	if (this.status == 405 ) {
-      		displayResult('','Status : '+this.status+' '+', Please check the server path');
+      		displayResult('','Status : '+this.status+' '+', Please verify the Worldline API URL');
      	}
     });
                    
