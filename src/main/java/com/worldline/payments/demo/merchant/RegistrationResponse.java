@@ -1,11 +1,11 @@
-package io.drwp.demo;
+package com.worldline.payments.demo.merchant;
 
 public class RegistrationResponse {
     private String encryptedPayload;
     private boolean alreadyRegistered;
     private String path;
 
-    public RegistrationResponse(String encryptedPayload, boolean alreadyRegistered, String path) {
+    RegistrationResponse(String encryptedPayload, boolean alreadyRegistered, String path) {
         this.encryptedPayload = encryptedPayload;
         this.alreadyRegistered = alreadyRegistered;
         this.path = path;
