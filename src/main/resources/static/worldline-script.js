@@ -24,6 +24,10 @@ function sendPayment(success, error, encryptedPayload, path, cardHolderName, car
             // Call method that handles the error
     		error(result);
     	}
+    	
+    	if (this.status == 405 ) {
+      		displayResult('','Status : '+this.status+' '+', Please check the server path');
+     	}
     });
                    
     // Set up our request
