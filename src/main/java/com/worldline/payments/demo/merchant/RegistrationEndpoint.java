@@ -78,8 +78,9 @@ public class RegistrationEndpoint {
 
 		PaymentHandler handler = PaymentUtils.getPaymentHandler(props);
 		PaymentResponse decodedResponse = handler.unpackResponse(encodedResponseString);
+		UnpackResponse response = PaymentUtils.getUnpackResponse(decodedResponse);
 		Gson gsonString = new Gson();
-		String upnpacked = gsonString.toJson(decodedResponse);
+		String upnpacked = gsonString.toJson(response);
 		return upnpacked;
 	}
 

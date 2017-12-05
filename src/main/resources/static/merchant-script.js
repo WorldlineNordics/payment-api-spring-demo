@@ -64,7 +64,7 @@ function sendResultToUnpack(transactionResult) {
         if (this.readyState == 4 && this.status == 200) {
             var res =  JSON.parse(this.responseText);            
             console.log(res);
-            displayResult("TransactionId : " + res.transaction.transactionId + "<br>Result : "+ res.transaction.transactionDesc , "");
+            displayResult("Status : "+ res.requestStatus+"<br>TransactionId : " + res.response.transaction.transactionId, "");
        }
     });
 
