@@ -20,7 +20,7 @@ sourceCompatibility = 1.8
 
 group 'drwp'
 
-mainClassName='io.drwp.demo.DemoApplication'
+mainClassName='com.worldline.payments.demo.merchant.DemoApplication'
 
 repositories {
 	maven {
