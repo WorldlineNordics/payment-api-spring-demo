@@ -13,16 +13,16 @@
 <body>
 <h3 class="panel-heading">Sign up</h3>
 
-    <form id="paymentForm" enctype="application/x-www-form-urlencoded">
-        <div class="col-xs-12 col-md-2"></div>
-        <div class="container">
-            <div class="col-xs-12 col-md-4">
-                <div class="panel panel-default credit-card-box">
-                    <div class="panel-heading panel-heading-full display-table">
-                        <div class="row display-tr">
-                            <h3 class="panel-title display-td">Billing Information</h3>
-                        </div>
+<form id="paymentForm" enctype="application/x-www-form-urlencoded">
+    <div class="col-xs-12 col-md-2"></div>
+    <div class="container">
+        <div class="col-xs-12 col-md-4">
+            <div class="panel panel-default credit-card-box">
+                <div class="panel-heading panel-heading-full display-table">
+                    <div class="row display-tr">
+                        <h3 class="panel-title display-td">Billing Information</h3>
                     </div>
+                </div>
                 <div class="panel-body">
                     <div class="col-xs-12">
                         <div class="form-group">
@@ -187,7 +187,8 @@
                                         <input
                                                 type="text"
                                                 class="form-control"
-                                                chd="cardHolderName"
+                                                data-chd="cardHolderName"
+                                                id="cardHolderName"
                                                 placeholder="Card Holder Name"
                                                 autocomplete="cc-name"
                                                 required autofocus
@@ -205,7 +206,8 @@
                                         <input
                                                 type="text" maxlength="20"
                                                 class="form-control"
-                                                chd="cardNumber"
+                                                data-chd="cardNumber"
+                                                id="cardNumber"
                                                 placeholder="Valid Card Number"
                                                 autocomplete="cc-number"
                                                 required
@@ -217,10 +219,10 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-8">
-                                <label for="cardExpiry">EXP DATE<span style="color:red;">*</span></label>
+                                <label for="cardExpiryMonth">EXP DATE<span style="color:red;">*</span></label>
                                 <div class="col-xs-6 dateMargin">
                                     <div class="form-group">
-                                        <select class="form-control" chd="cardExpiryMonth">
+                                        <select class="form-control" data-chd="cardExpiryMonth" id="cardExpiryMonth">
                                             <option value="01">01</option>
                                             <option value="02">02</option>
                                             <option value="03">03</option>
@@ -238,7 +240,7 @@
                                 </div>
                                 <div class="col-xs-7 dateMargin">
                                     <div class="form-group">
-                                        <select class="form-control" chd="cardExpiryYear">
+                                        <select class="form-control" data-chd="cardExpiryYear">
                                         </select>
                                     </div>
                                 </div>
@@ -249,7 +251,7 @@
                                     <input
                                             type="text" maxlength="4"
                                             class="form-control"
-                                            chd="cardCVC"
+                                            data-chd="cardCVC" id="cardCVC"
                                             placeholder="CVC"
                                             autocomplete="cc-csc"
                                             required
@@ -261,11 +263,11 @@
                 </div>
 
                 <div class="panel panel-heading-full credit-card-box">
-                    <div >
-                            <div class="col-xs-12">
-                                <button class="btn btn-success btn-lg btn-block" type="submit">Start Subscription
-                                </button>
-                            </div>
+                    <div>
+                        <div class="col-xs-12">
+                            <button class="btn btn-success btn-lg btn-block" type="submit">Start Subscription
+                            </button>
+                        </div>
                     </div>
 
                     <div class="">
@@ -279,7 +281,8 @@
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+</form>
 <script src="merchant-script.js"></script>
 <script src="worldline-script.js"></script>
 </body>
