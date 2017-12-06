@@ -2,10 +2,8 @@ package com.worldline.payments.demo.merchant.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource(value = { "classpath:application.properties" })
 public class DemoConfiguration {
 
     @Value("${worldline.api.keystore.path}")
