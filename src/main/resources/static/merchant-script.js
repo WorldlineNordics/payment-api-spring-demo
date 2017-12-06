@@ -39,7 +39,6 @@ window.addEventListener("load", function () {
         XHR.addEventListener("load", function () {
             if (this.readyState == 4 && this.status == 200) {
                 var response = JSON.parse(this.responseText);
-                // Call drwp-script.js method that calls Device REST API
 
                 new PaymentRequest()
                     .cardHolderName(cardHolderName.value)
@@ -51,8 +50,7 @@ window.addEventListener("load", function () {
                     .path(response.path)
                     .onSuccess(sendResultToUnpack)
                     .onError(showError)
-                    .send
-                //sendPayment(sendResultToUnpack, showError, response.encryptedPayload, response.path, cardHolderName.value, cardNo.value, expMonth.value, expYear.value, cvc.value);
+                    .send()
             }
         });
 
@@ -93,6 +91,7 @@ function sendResultToUnpack(transactionResult) {
     // The data sent is what the user provided in the form
     xhttp.send(transactionResult);
 }
+
 function createRequest() {
     var request;
     if (window.XMLHttpRequest) { // Mozilla, Safari, ...
@@ -116,6 +115,7 @@ function createRequest() {
 function showError(error) {
     displayResult("", "Error :" + error);
 }
+
 function displayResult(result, error) {
     document.getElementById("payment-result").innerHTML = result;
     document.getElementById("payment-errors").innerHTML = error;
