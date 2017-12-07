@@ -44,7 +44,7 @@ var WLPaymentRequest = function () {
                     chd[x.attributes["data-chd"].nodeValue] = x.value;
 
                     if (hasName = x.hasAttribute("name")) {
-                        console.error("PCI Compliancy warning: input field " + x.attributes["data-chd"].nodeValue + " has 'name' attribute");
+                        console.error("Form compliancy warning: input field " + x.attributes[tag].nodeValue + " has 'name' attribute");
                     }
                 });
                 _cardHolderName = chd["cardHolderName"];
