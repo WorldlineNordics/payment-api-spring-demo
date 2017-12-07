@@ -24,6 +24,8 @@ import java.math.BigDecimal;
 @Component
 @Path("/users")
 public class RegistrationEndpoint {
+	
+	Gson gsonString = new Gson();
 
 	@Autowired
 	private DemoConfiguration props;
@@ -78,8 +80,8 @@ public class RegistrationEndpoint {
 
 		PaymentHandler handler = PaymentUtils.getPaymentHandler(props);
 		PaymentResponse decodedResponse = handler.unpackResponse(encodedResponseString);
-		UnpackResponse response = PaymentUtils.getUnpackResponse(decodedResponse);
-		Gson gsonString = new Gson();
+		System.out.println("Decoded Response : "+ gsonString.toJson(decodedResponse));
+		UnpackResponse response = new UnpackResponse(decodedResponse.getStatus(), decodedResponse.getTransaction().getTransactionId(), decodedResponse.getOrderId());
 		String upnpacked = gsonString.toJson(response);
 		return upnpacked;
 	}

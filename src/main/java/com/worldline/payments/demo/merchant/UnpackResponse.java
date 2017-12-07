@@ -1,30 +1,39 @@
 package com.worldline.payments.demo.merchant;
 
-import com.worldline.payments.api.PaymentResponse;
-
 public class UnpackResponse {
-    private PaymentResponse response;
-    private String requestStatus;
+    private String status;
+    private Long transactionId;
+    private String orderId;
     
-	public UnpackResponse(PaymentResponse response, String requestStatus) {
-		this.response = response;
-		this.requestStatus = requestStatus;
+	public UnpackResponse(String status, Long transactionId, String orderId) {
+		super();
+		this.status = status;
+		this.transactionId = transactionId;
+		this.orderId = orderId;
 	}
 
-	public PaymentResponse getResponse() {
-		return response;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setResponse(PaymentResponse response) {
-		this.response = response;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public String getRequestStatus() {
-		return requestStatus;
+	public Long getTransactionId() {
+		return transactionId;
 	}
 
-	public void setRequestStatus(String requestStatus) {
-		this.requestStatus = requestStatus;
+	public void setTransactionId(Long transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 }
