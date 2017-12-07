@@ -14,14 +14,13 @@ window.addEventListener("load", function () {
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        console.log("Sending form to merchant for registration, acquiring endpoint and encrypted data.");
+        console.log("Registration, acquiring endpoint and encrypted data.");
         displayResult('Registering...', '');
         sendDataToMerchant();
     });
 
     function sendDataToMerchant() {
-//        var XHR = new XMLHttpRequest();
-        var XHR = createRequest();
+        var XHR = new XMLHttpRequest();
 
         // Bind the FormData object and the form element
         // FIXME: EXSPRING-23
@@ -60,7 +59,6 @@ window.addEventListener("load", function () {
         console.log("Sending Request to Merchant Server application");
         XHR.send(FD);
     }
-
 });
 
 function sendResultToUnpack(transactionResult) {
