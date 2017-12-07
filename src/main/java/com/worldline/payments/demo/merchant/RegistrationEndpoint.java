@@ -37,10 +37,14 @@ public class RegistrationEndpoint {
 	public RegistrationResponse registerForm(@FormDataParam("billingAddressLine1") String billingAddressLine1, @FormDataParam("billingAddressLine2") String billingAddressLine2,
 			@FormDataParam("billingCity") String billingCity, @FormDataParam("billingZipCode") String billingZipCode,
 			@FormDataParam("billingStateProvince") String billingStateProvince, @FormDataParam("billingCountryCode") String billingCountryCode,
-			@FormDataParam("billingEmailAddress") String billingEmailAddress, @FormDataParam("billingBuyerType") String billingBuyerType,  
-			@FormDataParam("billingFullName") String billingFullName,  @FormDataParam("birthDate") String birthDate,  
+			@FormDataParam("billingEmailAddress") String billingEmailAddress, @FormDataParam("billingBuyerType") String billingBuyerType,
+			@FormDataParam("billingFullName") String billingFullName,  @FormDataParam("birthDate") String birthDate,
 			@FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber,  @FormDataParam("billingMobilePhone") String billingMobilePhone) {
 
+		// First we check if the user is already registered, and similar.
+		boolean alreadyRegistered = false;
+
+		// Build the encrypted PaymentRequest
 		PaymentRequest details = new PaymentRequestBuilder()
 		.setBillingAddressLine1(billingAddressLine1)
 		.setBillingAddressLine2(billingAddressLine2)
@@ -55,7 +59,7 @@ public class RegistrationEndpoint {
 		.setBillingMobilePhone(billingMobilePhone)
 		.setMid(Long.parseLong(props.merchantId))
 		.setPosId(props.posId)
-		.setOrderId("DRP_" + System.currentTimeMillis())
+		.setOrderId("Example_order_" + System.currentTimeMillis())
 		.setAmount(new BigDecimal(100))
 		.setCurrency("BRL")
 		.setTransactionChannel("Web Online")
@@ -67,9 +71,12 @@ public class RegistrationEndpoint {
 		.setBillingBuyerVATNumber(billingBuyerVATNumber)
 		.createPaymentRequest();
 
+		// Encrypt the request
 		PaymentHandler handler = PaymentUtils.getPaymentHandler(props);
 		final String encryptedPayload = handler.encryptRequest(details);
-		return new RegistrationResponse(encryptedPayload, false, props.worldlineURL);
+
+		// Return a JSON object to the form.
+		return new RegistrationResponse(encryptedPayload, alreadyRegistered, props.worldlineURL);
 	}
 
 	@POST

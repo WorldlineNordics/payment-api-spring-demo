@@ -1,12 +1,5 @@
-// Pick the data-chd elements from the form (card, cvv, expdate)
-var chdElements = document.querySelectorAll('[data-chd]');
-var cardHolderName = chdElements[0];
-var cardNo = chdElements[1];
-var expMonth = chdElements[2];
-var expYear = chdElements[3];
-var cvc = chdElements[4];
-var validCard = false, validCvc = false;
-var year = (new Date()).getFullYear(), selectExp = expYear, option = null, next_year = null;
+
+var year = (new Date()).getFullYear(), selectExp = document.getElementById("expYear"), option = null, next_year = null;
 
 for (var i = 0; i <= 10; i++) {
     option = document.createElement("option");
@@ -17,13 +10,12 @@ for (var i = 0; i <= 10; i++) {
 }
 
 window.addEventListener("load", function () {
-    // Access the form element...
     var form = document.getElementById("paymentForm");
 
-    // ...and take over its submit event.
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        displayResult('...', '');
+        console.log("Sending form to merchant for registration, acquiring endpoint and encrypted data.");
+        displayResult('Registering...', '');
         sendDataToMerchant();
     });
 
@@ -32,25 +24,27 @@ window.addEventListener("load", function () {
         var XHR = createRequest();
 
         // Bind the FormData object and the form element
+        // FIXME: EXSPRING-23
         var FD = new FormData(form);
 
         // Define what happens on successful data submission
 
         XHR.addEventListener("load", function () {
-            if (this.readyState == 4 && this.status == 200) {
+            if (this.readyState === 4 && this.status === 200) {
                 var response = JSON.parse(this.responseText);
 
-                new PaymentRequest()
-                    .cardHolderName(cardHolderName.value)
-                    .cardNumber(cardNo.value)
-                    .expDateMonth(expMonth.value)
-                    .expDateYear(expYear.value)
-                    .cvCode(cvc.value)
+                console.log("Sending Payment Request to Worldline");
+
+                var req = new WLPaymentRequest()
+                    .chdForm(document.getElementById("paymentForm"), 'data-chd')
                     .encryptedPayload(response.encryptedPayload)
-                    .path(response.path)
+                    .endpoint(response.path)
                     .onSuccess(sendResultToUnpack)
                     .onError(showError)
-                    .send()
+                    .send();
+
+                console.log("PaymentRequest state: " + WLPaymentRequestState.properties[req.state].name);
+                displayResult("Request " + WLPaymentRequestState.properties[req.state].name, "");
             }
         });
 
@@ -63,6 +57,7 @@ window.addEventListener("load", function () {
         XHR.open("POST", "/api/users/registrations");
 
         // The data sent is what the user provided in the form
+        console.log("Sending Request to Merchant Server application");
         XHR.send(FD);
     }
 
@@ -73,7 +68,7 @@ function sendResultToUnpack(transactionResult) {
 
     // Define what happens when response recieved successfully
     xhttp.addEventListener("load", function () {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState === 4 && this.status === 200) {
             var res = JSON.parse(this.responseText);
             console.log(res);
             displayResult("Status : "+ res.status+"<br>TransactionId : " + res.transactionId+"<br>OrderId : " + res.orderId, "");
@@ -88,6 +83,7 @@ function sendResultToUnpack(transactionResult) {
     // Set up our request
     xhttp.open("POST", "/api/users/unpackResponse");
 
+    console.log("Sending Payment Processing Result to Merchant server.");
     // The data sent is what the user provided in the form
     xhttp.send(transactionResult);
 }
@@ -108,11 +104,11 @@ function createRequest() {
             }
         }
     }
-
     return request;
 }
 
 function showError(error) {
+    console.log("Merchant Server returned error.");
     displayResult("", "Error :" + error);
 }
 
