@@ -37,7 +37,7 @@ window.addEventListener("load", function () {
         XHR.addEventListener("load", function() {
         	if (this.readyState == 4 && this.status == 200) {
 	        	var response = JSON.parse(this.responseText);
-	            // Call drwp-script.js method that calls Device REST API
+	            // Call worldline-script.js method that calls Device REST API
 	            sendPayment(sendResultToUnpack,showError,response.encryptedPayload,response.path,cardHolderName.value,cardNo.value,expMonth.value,expYear.value,cvc.value);
         	}        	
         });
@@ -64,7 +64,7 @@ function sendResultToUnpack(transactionResult) {
         if (this.readyState == 4 && this.status == 200) {
             var res =  JSON.parse(this.responseText);            
             console.log(res);
-            displayResult("Status : "+ res.requestStatus+"<br>TransactionId : " + res.response.transaction.transactionId, "");
+            displayResult("Status : "+ res.status+"<br>TransactionId : " + res.transactionId+"<br>OrderId : " + res.orderId, "");
        }
     });
 
