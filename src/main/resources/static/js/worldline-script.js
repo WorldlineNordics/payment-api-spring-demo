@@ -33,7 +33,7 @@ var WLPaymentRequestState = {
 };
 
 var WLPaymentRequest = function () {
-    var _theForm, _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint;
+    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint;
     var _success, _error;
     var _state = WLPaymentRequestState.NEW;
 
@@ -44,13 +44,13 @@ var WLPaymentRequest = function () {
         },
         chdForm: function (document, tag) {
             _theForm = document;
-            if (typeof document === 'object') {
+            if (tag && document && typeof document === 'object') {
                 var chdElements = document.querySelectorAll('['+tag+']');
                 var chd = {};
                 chdElements.forEach(function (x) {
                     chd[x.attributes["data-chd"].nodeValue] = x.value;
 
-                    if (hasName = x.hasAttribute("name")) {
+                    if (x.hasAttribute("name")) {
                         console.warn("Form compliancy warning: input field " + x.attributes[tag].nodeValue + " has 'name' attribute");
                     }
                 });
