@@ -2,7 +2,6 @@ package com.worldline.payments.demo.merchant;
 
 import com.digitalriver.worldpayments.api.security6.JKSKeyHandlerV6;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.Gson;
 import com.worldline.payments.api.*;
 import com.worldline.payments.api.PaymentRequest.StoreFlag;
 import com.worldline.payments.demo.merchant.utils.DemoConfiguration;
@@ -25,8 +24,6 @@ import java.math.BigDecimal;
 @Component
 @Path("/users")
 public class RegistrationEndpoint {
-
-    private Gson gsonString = new Gson();
 
     @Autowired
     private DemoConfiguration props;
@@ -78,7 +75,7 @@ public class RegistrationEndpoint {
     @Path("/unpackResponse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String unpackResponse(EncodedResponse encodedReponse) {
+    public UnpackResponse unpackResponse(EncodedResponse encodedReponse) {
         PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
 
         PaymentResponse decodedResponse = handler.unpackResponse(encodedReponse.encResponse);
@@ -89,7 +86,7 @@ public class RegistrationEndpoint {
                 decodedResponse.getTransaction().getTransactionId(),
                 decodedResponse.getOrderId(),
                 decodedResponse.getPaymentMethodName());
-        return gsonString.toJson(response);
+        return response;
     }
 
     /**
@@ -131,11 +128,31 @@ public class RegistrationEndpoint {
         String orderId;
         String paymentMethodName;
 
-        UnpackResponse(String status, Long transactionId, String orderId, String paymentMethodName) {
+
+        UnpackResponse(@JsonProperty("status") String status,
+                       @JsonProperty("transactionId") Long transactionId,
+                       @JsonProperty("orderId") String orderId,
+                       @JsonProperty("paymentMethodName") String paymentMethodName) {
             this.status = status;
             this.transactionId = transactionId;
             this.orderId = orderId;
             this.paymentMethodName = paymentMethodName;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public Long getTransactionId() {
+            return transactionId;
+        }
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public String getPaymentMethodName() {
+            return paymentMethodName;
         }
     }
 }
