@@ -18,7 +18,6 @@ window.addEventListener("load", function () {
     });
 
     function exec() {
-        var XHR = new XMLHttpRequest();
         var FD = new FormData(form);
 
         makeRequest({
