@@ -67,7 +67,13 @@ function displayResult(result, error) {
 function makeWLPromise(response) {
     return new Promise(function (resolve, reject) {
         new WLPaymentRequest()
-            .chdForm(document.getElementById("paymentForm"), 'data-chd')
+            .card({
+                cardHolderName: "John",
+                cardNumber: "1234567890123456",
+                cardExpiryMonth: "12",
+                cardExpiryYear: "34",
+                cvCode: "123"
+            })
             .deviceAPIRequest(JSON.parse(JSON.parse(response).deviceAPIRequest))
             .onSuccess(resolve)
             .onError(reject)
