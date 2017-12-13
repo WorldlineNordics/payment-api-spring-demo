@@ -52,7 +52,7 @@ The demo page will then step through:
 5. The Worldline Javascript API passes on the encrypted data together with card holder details
    to the Worldline Device Payment API server.
 6. The Device Payment API processes the transaction, optionally tokenizes, proceeds with fraud
-   screening and routes an authorizaion to the acquiring bank.
+   screening and routes an authorization to the acquiring bank.
    The signature of the response is validated and the result is decrypted using the unpack
    method.  
 7. Lastly, the merchant can display the order confirmation message along with 
