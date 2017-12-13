@@ -1,4 +1,4 @@
-# Worldline Online Payments Acceptance JavaScript  
+# Worldline Online Payments Acceptance JavaScript API
 
 ## Integration with the API
 There are two methods for calling on the API for processing with the Device Payment API
