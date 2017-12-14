@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.worldline.payments.api.*;
 import com.worldline.payments.api.PaymentRequest.StoreFlag;
 import com.worldline.payments.demo.merchant.utils.DemoConfiguration;
+import com.worldline.payments.demo.merchant.utils.DemoUtil;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,7 @@ public class RegistrationEndpoint {
                 .setPosId(props.posId)
                 .setOrderId("Example_order_" + System.currentTimeMillis())
                 .setAmount(new BigDecimal(100))
-                .setCurrency("BRL")
+                .setCurrency("EUR")
                 .setConsumerCountry("BR")
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
@@ -80,10 +81,12 @@ public class RegistrationEndpoint {
 
         PaymentResponse decodedResponse = handler.unpackResponse(encodedReponse.encResponse);
 
-        // The contents of the decodedResponse can be saved in a database, but only select fields are public.
+        // The contents of the decodedResponse can be saved in a database
+        DemoUtil.printDemoResponse(decodedResponse);
 
+        // Only select fields to be returned to the web page
         UnpackResponse response = new UnpackResponse(decodedResponse.getStatus(),
-                decodedResponse.getTransaction().getTransactionId(),
+                decodedResponse.getTransaction() == null ? 0 : decodedResponse.getTransaction().getTransactionId(),
                 decodedResponse.getOrderId(),
                 decodedResponse.getPaymentMethodName());
         return response;
