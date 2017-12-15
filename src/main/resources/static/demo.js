@@ -11,20 +11,20 @@ for (var i = 0; i <= 10; i++) {
 window.addEventListener("load", function () {
     var form = document.getElementById("paymentForm");
 
+    // Prevent form from being submitted
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        displayResult("Check if user registered and get encrypted request.","");
         exec();
     });
 
     function exec() {
-        var FD = new FormData(form);
+        var formAsJson = formToJson(form);
 
         makeRequest({
             method: 'POST',
-            url: '/api/users/registrations',
+            url: '/api/demo/registrations',
             encode: false,
-            params: FD
+            params: formAsJson
         })
             .then(function (response) {
                 displayResult("Tokenization, fraud and compliancy screen, authorization and autocapture.", "");
@@ -34,12 +34,12 @@ window.addEventListener("load", function () {
                 displayResult("Decrypting transaction result.", "");
                 return makeRequest({
                     method: 'POST',
-                    url: '/api/users/unpackResponse',
+                    url: '/api/demo/unpackResponse',
                     encode: true,
-                    params: response
+                    params: JSON.stringify(response)
                 });
             })
-            .then(function(response) {
+            .then(function (response) {
                 response = JSON.parse(response);
                 displayResult("Status: " + response.status
                     + "<br>TransactionId: " + response.transactionId
@@ -52,7 +52,6 @@ window.addEventListener("load", function () {
             });
     }
 });
-
 
 function showError(error) {
     console.error(error);
@@ -96,12 +95,16 @@ function makeRequest(opts) {
             });
         };
 
-        var params = opts.params;
-
-        if (params && typeof params === 'object' && opts.encode) {
-            params = JSON.stringify(opts.params);
-            xhr.setRequestHeader("Content-Type", "application/json");
-        }
-        xhr.send(params);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(opts.params);
     });
+}
+
+function formToJson(form) {
+    var FD = new FormData(form);
+    var object = {};
+    FD.forEach(function (value, key) {
+        object[key] = value;
+    });
+    return JSON.stringify(object);
 }

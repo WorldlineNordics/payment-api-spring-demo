@@ -43,7 +43,6 @@ var WLPaymentRequest = function () {
             return this
         },
         chdForm: function (document, tag) {
-            _theForm = document;
             if (tag && document && typeof document === 'object') {
                 var chdElements = document.querySelectorAll('['+tag+']');
                 var chd = {};
