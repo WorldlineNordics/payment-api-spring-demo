@@ -75,7 +75,7 @@ public class RegistrationEndpoint {
     @Path("/unpackResponse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public UnpackResponse unpackResponse(EncodedResponse encodedReponse) {
+    public UnpackedResponse unpackResponse(EncodedResponse encodedReponse) {
         PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
 
         PaymentResponse decodedResponse = handler.unpackResponse(encodedReponse.encResponse);
@@ -84,7 +84,7 @@ public class RegistrationEndpoint {
         DemoUtil.printDemoResponse(decodedResponse);
 
         // Only select fields to be returned to the web page
-        UnpackResponse response = new UnpackResponse(decodedResponse.getStatus(), decodedResponse.getTransaction() == null ? 0 : decodedResponse
+        UnpackedResponse response = new UnpackedResponse(decodedResponse.getStatus(), decodedResponse.getTransaction() == null ? 0 : decodedResponse
                 .getTransaction()
                 .getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName());
         return response;
@@ -128,14 +128,14 @@ public class RegistrationEndpoint {
         }
     }
 
-    public static class UnpackResponse {
+    public static class UnpackedResponse {
         String status;
         Long transactionId;
         String orderId;
         String paymentMethodName;
 
 
-        UnpackResponse(
+        UnpackedResponse(
                 String status, Long transactionId,
                 String orderId, String paymentMethodName) {
             this.status = status;
