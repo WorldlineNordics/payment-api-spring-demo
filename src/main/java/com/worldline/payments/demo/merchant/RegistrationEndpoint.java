@@ -1,12 +1,10 @@
 package com.worldline.payments.demo.merchant;
 
 import com.digitalriver.worldpayments.api.security6.JKSKeyHandlerV6;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.worldline.payments.api.*;
 import com.worldline.payments.api.PaymentRequest.StoreFlag;
 import com.worldline.payments.demo.merchant.utils.DemoConfiguration;
 import com.worldline.payments.demo.merchant.utils.DemoUtil;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +13,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.math.BigDecimal;
 
 /**
  * Demo endpoint that emulates registration of a user and returns an encrypted
@@ -23,7 +20,7 @@ import java.math.BigDecimal;
  * The second call is used by the demo javascript to decrypt the response payload.
  */
 @Component
-@Path("/users")
+@Path("/demo")
 public class RegistrationEndpoint {
 
     @Autowired
@@ -31,9 +28,9 @@ public class RegistrationEndpoint {
 
     @POST
     @Path("/registrations")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RegistrationResponse registerForm(@FormDataParam("billingAddressLine1") String billingAddressLine1, @FormDataParam("billingAddressLine2") String billingAddressLine2, @FormDataParam("billingCity") String billingCity, @FormDataParam("billingZipCode") String billingZipCode, @FormDataParam("billingStateProvince") String billingStateProvince, @FormDataParam("billingCountryCode") String billingCountryCode, @FormDataParam("billingEmailAddress") String billingEmailAddress, @FormDataParam("billingBuyerType") String billingBuyerType, @FormDataParam("billingFullName") String billingFullName, @FormDataParam("birthDate") String birthDate, @FormDataParam("billingBuyerVATNumber") String billingBuyerVATNumber, @FormDataParam("billingMobilePhone") String billingMobilePhone) {
+    public RegistrationResponse registerForm(RegistrationData request) {
 
         // First we check if the user is already registered, and similar.
         boolean alreadyRegistered = false;
@@ -43,27 +40,29 @@ public class RegistrationEndpoint {
 
         // Build the PaymentRequest.
         PaymentRequest details = new PaymentRequestBuilder()
-                .setBillingAddressLine1(billingAddressLine1)
-                .setBillingAddressLine2(billingAddressLine2)
-                .setBillingCity(billingCity)
-                .setBillingZipCode(billingZipCode)
-                .setBillingStateProvince(billingStateProvince)
-                .setBillingCountryCode(billingCountryCode)
-                .setBillingEmailAddress(billingEmailAddress)
-                .setBillingBuyerType(billingBuyerType)
-                .setBillingFullName(billingFullName)
-                .setBirthDate(birthDate)
-                .setBillingMobilePhone(billingMobilePhone)
-                .setBillingBuyerVATNumber(billingBuyerVATNumber)
+                .setBillingAddressLine1(request.billingAddressLine1)
+                .setBillingAddressLine2(request.billingAddressLine2)
+                .setBillingCity(request.billingCity)
+                .setBillingZipCode(request.billingZipCode)
+                .setBillingStateProvince(request.billingStateProvince)
+                .setBillingCountryCode(request.billingCountryCode)
+                .setBillingEmailAddress(request.billingEmailAddress)
+                .setBillingBuyerType(request.billingBuyerType)
+                .setBillingFullName(request.billingFullName)
+                .setBirthDate(request.birthDate)
+                .setBillingMobilePhone(request.billingMobilePhone)
+                .setBillingBuyerVATNumber(request.billingBuyerVATNumber)
                 .setMid(Long.parseLong(props.merchantId))
                 .setPosId(props.posId)
                 .setOrderId("Example_order_" + System.currentTimeMillis())
-                .setAmount(new BigDecimal(100))
-                .setCurrency("EUR")
+                .setAmount(request.demoAmount)
+                .setCurrency(request.demoCurrency)
+                .setTransactionChannel(request.demoTransactionChannel)
+                .setAutoCapture(Boolean.getBoolean(request.demoAutoCapture))
                 .setConsumerCountry("BR")
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
-                .setStoreFlag(StoreFlag.STORE)
+                .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
                 .createPaymentRequest();
 
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
@@ -85,10 +84,9 @@ public class RegistrationEndpoint {
         DemoUtil.printDemoResponse(decodedResponse);
 
         // Only select fields to be returned to the web page
-        UnpackResponse response = new UnpackResponse(decodedResponse.getStatus(),
-                decodedResponse.getTransaction() == null ? 0 : decodedResponse.getTransaction().getTransactionId(),
-                decodedResponse.getOrderId(),
-                decodedResponse.getPaymentMethodName());
+        UnpackResponse response = new UnpackResponse(decodedResponse.getStatus(), decodedResponse.getTransaction() == null ? 0 : decodedResponse
+                .getTransaction()
+                .getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName());
         return response;
     }
 
@@ -120,7 +118,12 @@ public class RegistrationEndpoint {
     public static class EncodedResponse {
         String encResponse;
 
-        EncodedResponse(@JsonProperty("encResponse") String encResponse) {
+        public String getEncResponse() {
+            return encResponse;
+        }
+
+        EncodedResponse() {}
+        EncodedResponse(String encResponse) {
             this.encResponse = encResponse;
         }
     }
@@ -132,10 +135,9 @@ public class RegistrationEndpoint {
         String paymentMethodName;
 
 
-        UnpackResponse(@JsonProperty("status") String status,
-                       @JsonProperty("transactionId") Long transactionId,
-                       @JsonProperty("orderId") String orderId,
-                       @JsonProperty("paymentMethodName") String paymentMethodName) {
+        UnpackResponse(
+                String status, Long transactionId,
+                String orderId, String paymentMethodName) {
             this.status = status;
             this.transactionId = transactionId;
             this.orderId = orderId;

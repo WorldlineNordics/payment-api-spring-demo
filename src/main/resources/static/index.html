@@ -11,9 +11,67 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-<h3 class="panel-heading">Sign up</h3>
-
+<h3 class="panel-heading">Sample form combined sign up and payment</h3>
 <form id="paymentForm" enctype="application/x-www-form-urlencoded">
+
+    <div id="openModal" class="modalDialog">
+        <div>
+            <h2 id="democonfig">DEMO BOX</h2>
+            <p>This is a demo form for the Device Payment API.</p>
+            <p>On a checkout page, the currency, amount and merchant details are normally set on the server side,
+                but for the purpose of demonstration, we put a limited number of parameters
+                that controls the payment here.</p>
+            <div class="form-group">
+                <label for="currency">Currency</label>
+                <div class="input-group">
+                    <select name="demoCurrency" id="currency">
+                        <option value="BRL">BRL</option>
+                        <option value="EUR" selected>EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <div class="input-group">
+                    <input name="demoAmount" id="amount" value="100.00"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="transactionchannel">Transaction Channel</label>
+                <div class="input-group">
+                    <select name="demoTransactionChannel" id="transactionchannel">
+                        <option value="Web Online">Web Online</option>
+                        <option value="Cash Register">Cash Register</option>
+                        <option value="Mail">Mail</option>
+                        <option value="Telephone">Telephone</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="demoAutoCapture" checked> Auto Capture
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tokenization">Tokenization</label>
+                <div class="input-group">
+                    <select name="demoTokenization" id="tokenization">
+                        <option value="NO_STORE">Payment only</option>
+                        <option value="STORE" selected>Payment and Tokenization</option>
+                        <option value="STORE_ONLY">Tokenization only</option>
+                    </select>
+                </div>
+            </div>
+            <div><a href="#closeModal" class="btn btn-primary nounderline">Close</a></div>
+        </div>
+    </div>
+
     <div class="col-xs-12 col-md-2"></div>
     <div class="container">
         <div class="col-xs-12 col-md-4">
@@ -28,7 +86,8 @@
                         <div class="form-group">
                             <label for="billingBuyerType">BUYER TYPE</label>
                             <div class="input-group">
-                                <select name="billingBuyerType" id="billingBuyerType" class="form-control" autocomplete="billing type">
+                                <select name="billingBuyerType" id="billingBuyerType" class="form-control"
+                                        autocomplete="billing type">
                                     <option value="INDIVIDUAL" selected>Individual</option>
                                     <option value="BUSINESS">Business</option>
                                 </select>
@@ -222,7 +281,8 @@
                                 <label for="cardExpiryMonth">EXP DATE<span style="color:red;">*</span></label>
                                 <div class="col-xs-6 dateMargin">
                                     <div class="form-group">
-                                        <select class="form-control" data-chd="cardExpiryMonth" id="cardExpiryMonth" autocomplete="cc-exp-month">
+                                        <select class="form-control" data-chd="cardExpiryMonth" id="cardExpiryMonth"
+                                                autocomplete="cc-exp-month">
                                             <option value="01">01</option>
                                             <option value="02">02</option>
                                             <option value="03">03</option>
@@ -234,13 +294,14 @@
                                             <option value="09">09</option>
                                             <option value="10">10</option>
                                             <option value="11">11</option>
-                                            <option value="12" selected>12</option>
+                                            <option value="12">12</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-xs-7 dateMargin">
                                     <div class="form-group">
-                                        <select class="form-control" id="expYear" data-chd="cardExpiryYear" autocomplete="cc-exp-year">
+                                        <select class="form-control" id="expYear" data-chd="cardExpiryYear"
+                                                autocomplete="cc-exp-year">
                                         </select>
                                     </div>
                                 </div>
@@ -265,19 +326,28 @@
                 <div class="panel panel-heading-full credit-card-box">
                     <div>
                         <div class="col-xs-12">
-                            <button class="btn btn-success btn-lg btn-block" type="submit">Start Subscription
-                            </button>
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Start Subscription</button>
                         </div>
                     </div>
 
                     <div class="">
                         <div>
                             <div class="col-xs-12">
-                                <p class="display-errors" id="payment-errors"></p>
-                                <p class="display-result" id="payment-result"></p>
+                                <p class="warning display-errors" id="payment-errors"></p>
+                                <p class="success display-result" id="payment-result"></p>
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <div class="col-xs-12">
+                            <hr>
+                        </div>
+                        <div class="col-xs-12">
+                            <a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
