@@ -58,7 +58,7 @@ public class RegistrationEndpoint {
                 .setAmount(request.demoAmount)
                 .setCurrency(request.demoCurrency)
                 .setTransactionChannel(request.demoTransactionChannel)
-                .setAutoCapture(request.demoAutoCapture == null || request.demoAutoCapture.equals("on"))
+                .setAutoCapture(request.demoAutoCapture != null && request.demoAutoCapture.equals("on"))
                 .setConsumerCountry("BR")
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
