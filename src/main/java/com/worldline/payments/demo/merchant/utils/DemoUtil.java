@@ -28,7 +28,7 @@ public class DemoUtil {
             }
             System.out.printf("%-25s: %-60s\n", "Currency", decodedResponse.getCurrency());
             System.out.printf("%-25s: %-60s\n", "Captured Amount", decodedResponse.getCapturedAmount());
-            System.out.printf("%-25s: %-60s\n", "Order amount", decodedResponse.getOrderAmount());
+            System.out.printf("%-25s: %-60s\n", "Order Amount", decodedResponse.getOrderAmount());
             System.out.printf("%-25s: %-60s\n", "Fulfillment Amount", decodedResponse.getFulfillmentAmount());
             System.out.printf("%-25s: %-60s\n", "Refunded Amount", decodedResponse.getRefundedAmount());
             System.out.printf("%-25s: %-60s\n", "Transaction State", decodedResponse.getTransaction().getTransactionState());
