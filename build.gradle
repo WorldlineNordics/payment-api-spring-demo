@@ -15,6 +15,7 @@ apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
 
+
 repositories {
 	jcenter()
 }
