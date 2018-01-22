@@ -41,7 +41,7 @@ dependencies {
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
-	compile(group: 'drwp', name: 'PaymentAPI', version: '1.4.0-3e869e')
+	compile(group: 'drwp', name: 'PaymentAPI', version: '1.4.0-9229a9')
 	
 	// https://mvnrepository.com/artifact/junit/junit
 	testCompile group: 'junit', name: 'junit', version: '4.12'
