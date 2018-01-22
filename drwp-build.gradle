@@ -6,9 +6,7 @@ buildscript {
 	   maven {
 	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 		}
-		maven {
-	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/libs-beta"
-		}
+
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -29,9 +27,7 @@ repositories {
 	maven {
 		url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 	}
-	maven {
-	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/libs-beta"
-		}
+
 }
 
 dependencies {
@@ -41,7 +37,7 @@ dependencies {
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
-	compile(group: 'drwp', name: 'PaymentAPI', version: '1.4.0-9229a9')
+	compile(group: 'drwp', name: 'PaymentAPI', version: '1.4.0')
 	
 	// https://mvnrepository.com/artifact/junit/junit
 	testCompile group: 'junit', name: 'junit', version: '4.12'
