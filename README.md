@@ -59,9 +59,50 @@ The demo page will then step through:
    the status of the transaction.
 8. Optionally, the merchant can call upon Worldline for follow-up requests for Cancellations, Refunds,
    Settlements or Recurring charges.
+9. The demo server will display more results of the payment transaction E.g.
+   ````
+     ------------------------------ Response ------------------------------
+     Status                   : OK                                                                             
+     Client Answer Code       : 0                                                           
+     Masked Card              : 411234XXXXXX4113                                            
+     Payment Method Name      : Visa                                                        
+     Auth Code                : 123456                                                      
+     TransactionId            : 5022892566                                                  
+     TransactionDesc          : Transaction Accepted                                        
+     Token                    : 9000037339084113                                            
+     Token Masked Card        : 411234XXXXXX4113                                            
+     Token expiry date        : 03-2018                                                     
+     Currency                 : BRL                                                         
+     Order Amount             : 100.00                                                      
+     Fulfilment Amount        : 100.00                                                      
+     Captured Amount          : 100.00                                                                  
+     Refunded Amount          : 0.00                                                        
+     Transaction State        : Processed                                                   
+````
+
+*Overview or response fields:*
+
+* The **TransactionID** is the reference from Worldline on this transaction, and the **Transaction State** is
+the result of the transaction. 
+* If tokenization was requested, the Token is the reference to be used in 
+subsequent recurring transactions. The Token Masked Card, Payment Method name and Token expiry date
+can be used to present options for chosing this payment method in future interactions.
+* The **Status** **OK** indicates that the request was successful. If the
+**Status** instead was **PENDING**, **RETRY** or **ERROR*, the **Client Answer Code** indicates
+the reason.
+* The last four amounts tells about the sum of transactions that has been processed on this order.
+** The **Order Amount** shows what is expected to be paid on this order.
+** The **Fulfilment Amount** shows what the acquirer has reported as successfully as the reserved (authorized) amount. 
+** If the transaction was captured, in this API with auto-capture, the **Captured Amount** indicates how much that has been requested to settle the
+authorization.
+** The **Refunded Amount** indicates the amount that the merchant has requested to be credited back to the consumer on this order.
+ 
 
 
-### Role of JavaScripts in Demo Application:
+
+See the [PaymentAPI documentation on Responses][2] for further information on fields.
+
+### Role of JavaScripts in Demo Application
 1. The javascripts i.e. the demo.js and the worldline-script.js should be referenced in index.html file.
 2. Once the user details are submitted using payment form, the example API /api/users/registrations is 
    called by the demo.js script to encrypt this form data.
@@ -77,3 +118,5 @@ See [LICENSE] file
 [LICENSE]: license
 
 [http://localhost:8080/]: http://localhost:8080/
+
+[2]: https://github.com/WorldlineNordics/payment-api/blob/master/docs/device-payment-api.md#response-details

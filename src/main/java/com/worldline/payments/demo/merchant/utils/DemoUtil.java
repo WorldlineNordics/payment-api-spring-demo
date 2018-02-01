@@ -27,9 +27,9 @@ public class DemoUtil {
                         .getStoreExpirationDate());
             }
             System.out.printf("%-25s: %-60s\n", "Currency", decodedResponse.getCurrency());
-            System.out.printf("%-25s: %-60s\n", "Captured Amount", decodedResponse.getCapturedAmount());
             System.out.printf("%-25s: %-60s\n", "Order Amount", decodedResponse.getOrderAmount());
             System.out.printf("%-25s: %-60s\n", "Fulfilment Amount", decodedResponse.getFulfilmentAmount());
+            System.out.printf("%-25s: %-60s\n", "Captured Amount", decodedResponse.getCapturedAmount());
             System.out.printf("%-25s: %-60s\n", "Refunded Amount", decodedResponse.getRefundedAmount());
             System.out.printf("%-25s: %-60s\n", "Transaction State", decodedResponse.getTransaction().getTransactionState());
         }
