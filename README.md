@@ -60,7 +60,7 @@ The demo page will then step through:
 8. Optionally, the merchant can call upon Worldline for follow-up requests for Cancellations, Refunds,
    Settlements or Recurring charges.
 9. The demo server will display more results of the payment transaction E.g.
-   ````
+````
      ------------------------------ Response ------------------------------
      Status                   : OK                                                                             
      Client Answer Code       : 0                                                           
