@@ -15,7 +15,6 @@ apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
 
-
 repositories {
 	jcenter()
 }
@@ -23,7 +22,7 @@ repositories {
 dependencies {
 
 	// The Worldline Payment API that provides the encryption
-	compile 'com.worldline.payments:payment-api:1.4.0'
+	compile 'com.worldline.payments:payment-api:4.0.0'
 
 	// Provided by Spring Boot
 	compile('org.springframework.boot:spring-boot-starter-jersey')
