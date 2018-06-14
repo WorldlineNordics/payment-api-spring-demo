@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>DRWP Example Checkout</title>
+    <link rel="stylesheet" type="text/css" href="payment.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<h3 class="panel-heading">Sample form combined sign up and payment</h3>
+<form id="paymentForm" enctype="application/x-www-form-urlencoded">
+
+    <div id="openModal" class="modalDialog">
+        <div>
+            <h2 id="democonfig">Demo settings</h2>
+            <p>This is a demo form for the Device Payment API.</p>
+            <p>On a checkout page, the currency, amount and merchant details are normally set on the server side,
+                but for the purpose of demonstration, we put a limited number of parameters
+                that controls the payment here.</p>
+            <div class="form-group">
+                <label for="currency">Currency</label>
+                <div class="input-group">
+                    <select name="demoCurrency" id="currency">
+                        <option value="BRL">BRL</option>
+                        <option value="EUR" selected>EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <div class="input-group">
+                    <input name="demoAmount" id="amount" value="100.00"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="transactionchannel">Transaction Channel</label>
+                <div class="input-group">
+                    <select name="demoTransactionChannel" id="transactionchannel">
+                        <option value="Web Online">Web Online</option>
+                        <option value="Cash Register">Cash Register</option>
+                        <option value="Mail">Mail</option>
+                        <option value="Telephone">Telephone</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="demoAutoCapture" checked> Auto Capture
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tokenization">Tokenization</label>
+                <div class="input-group">
+                    <select name="demoTokenization" id="tokenization">
+                        <option value="NO_STORE">Payment only (NO_STORE)</option>
+                        <option value="STORE" selected>Payment and Tokenization (STORE)</option>
+                        <option value="STORE_ONLY">Tokenization only (STORE_ONLY)</option>
+                    </select>
+                </div>
+            </div>
+            <div><a href="#closeModal" class="btn btn-primary nounderline">Close</a></div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-md-2"></div>
+    <div class="container">
+        <div class="col-xs-12 col-md-4">
+            <div class="panel panel-default credit-card-box">
+                <div class="panel-heading panel-heading-full display-table">
+                    <div class="row display-tr">
+                        <h3 class="panel-title display-td">Billing Information</h3>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingBuyerType">BUYER TYPE</label>
+                            <div class="input-group">
+                                <select name="billingBuyerType" id="billingBuyerType" class="form-control"
+                                        autocomplete="billing type">
+                                    <option value="INDIVIDUAL" selected>Individual</option>
+                                    <option value="BUSINESS">Business</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingFullName">FULL NAME</label>
+                            <div class="input-group">
+                                <input type="text" name="billingFullName" id="billingFullName"
+                                       placeholder="Full name"
+                                       class="form-control"
+                                       autocomplete="billing name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingEmailAddress">EMAIL</label>
+                            <div class="input-group">
+                                <input type="email" name="billingEmailAddress" id="billingEmailAddress"
+                                       placeholder="name@example.com" 
+                                       class="form-control"
+                                       autocomplete="billing email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="birthDate">BIRTH DATE</label>
+                            <div class="input-group">
+                                <input type="text" name="birthDate" id="birthDate" placeholder="yyyyMMdd"
+                                       class="form-control"
+                                       autocomplete="billing bday">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingBuyerVATNumber">BUYER VAT NUMBER</label>
+                            <div class="input-group">
+                                <input type="text" name="billingBuyerVATNumber" id="billingBuyerVATNumber"
+                                       placeholder="12345678901" 
+                                       class="form-control"
+                                       autocomplete="billing vat">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingAddressLine1">ADDRESS LINE 1</label>
+                            <div class="input-group">
+                                <input type="text" name="billingAddressLine1" id="billingAddressLine1"
+                                       placeholder="AV MIRACATU"
+                                       class="form-control"
+                                       autocomplete="billing address-line1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingAddressLine2">ADDRESS LINE 2</label>
+                            <div class="input-group">
+                                <input type="text" name="billingAddressLine2" id="billingAddressLine2"
+                                       placeholder="Number and street name"
+                                       class="form-control"
+                                       autocomplete="billing address-line2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingCity">CITY</label>
+                            <div class="input-group">
+                                <input type="text" name="billingCity" id="billingCity" placeholder="City"
+                                       class="form-control"
+                                       autocomplete="billing address-level2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingStateProvince">STATE</label>
+                            <div class="input-group">
+                                <input type="text" name="billingStateProvince" id="billingStateProvince"
+                                       placeholder="SP"
+                                       class="form-control"
+                                       autocomplete="billing address-level1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingZipCode">ZIP CODE</label>
+                            <div class="input-group">
+                                <input type="text" name="billingZipCode" id="billingZipCode" placeholder="zip code"
+                                       class="form-control"
+                                       autocomplete="billing zip">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingCountryCode">COUNTRY CODE</label>
+                            <div class="input-group">
+                                <input type="text" name="billingCountryCode" id="billingCountryCode"
+                                       placeholder="BR" 
+                                       pattern="[A-Za-z]{2}"
+                                       class="form-control"
+                                       autocomplete="billing country">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="billingMobilePhone">MOBILE PHONE</label>
+                            <div class="input-group">
+                                <input type="text" name="billingMobilePhone" id="billingMobilePhone"
+                                       placeholder="9988776655"
+                                       class="form-control"
+                                       autocomplete="billing mobile">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col-xs-12 col-md-4">
+                <div class="panel panel-default credit-card-box">
+                    <div class="panel-heading display-table">
+                        <div class="row display-tr">
+                            <h3 class="panel-title display-td">Payment Details</h3>
+                            <div class="display-td">
+                                <img class="img-responsive pull-right" src="img/accepted_c22e0.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="cardHolderName">CARD HOLDER NAME<span
+                                            style="color:red;">*</span></label>
+                                    <div class="input-group">
+                                        <!-- IMPORTANT! The card holder data has NO "name" attribute, in order
+                                        to prevent sending of the data to the merchant. -->
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                data-chd="cardHolderName"
+                                                id="cardHolderName"
+                                                placeholder="Card Holder Name"
+                                                autocomplete="cc-name"
+                                                required autofocus
+                                        />
+                                        <span class="input-group-addon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="cardNumber">CARD NUMBER <span style="color:red;">*</span></label>
+                                    <div class="input-group">
+                                        <input
+                                                type="text" maxlength="20"
+                                                class="form-control"
+                                                data-chd="cardNumber"
+                                                id="cardNumber"
+                                                placeholder="Valid Card Number"
+                                                autocomplete="cc-number"
+                                                required
+                                        />
+                                        <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <label for="cardExpiryMonth">EXP DATE<span style="color:red;">*</span></label>
+                                <div class="col-xs-6 dateMargin">
+                                    <div class="form-group">
+                                        <select class="form-control" data-chd="cardExpiryMonth" id="cardExpiryMonth"
+                                                autocomplete="cc-exp-month">
+                                            <option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-7 dateMargin">
+                                    <div class="form-group">
+                                        <select class="form-control" id="expYear" data-chd="cardExpiryYear"
+                                                autocomplete="cc-exp-year">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label for="cardCVC">CV CODE <span style="color:red;">*</span></label>
+                                    <input
+                                            type="text" maxlength="4"
+                                            class="form-control"
+                                            data-chd="cardCVC" id="cardCVC"
+                                            placeholder="CVC"
+                                            autocomplete="cc-csc"
+                                            required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-heading-full credit-card-box">
+                    <div>
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Start Subscription</button>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div>
+                            <div class="col-xs-12">
+                                <p class="warning display-errors" id="payment-errors"></p>
+                                <p class="success display-result" id="payment-result"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-xs-12">
+                            <hr>
+                        </div>
+                        <div class="col-xs-12">
+                            <a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="demo-serverside-key.js"></script>
+<script src="js/worldline-payments.js"></script>
+</body>
+</html>
