@@ -40,6 +40,7 @@ public class RegistrationEndpoint {
 
         // Build the PaymentRequest.
         PaymentRequest details = new PaymentRequestBuilder()
+
                 .setBillingAddressLine1(request.billingAddressLine1)
                 .setBillingAddressLine2(request.billingAddressLine2)
                 .setBillingCity(request.billingCity)
@@ -59,7 +60,7 @@ public class RegistrationEndpoint {
                 .setCurrency(request.demoCurrency)
                 .setTransactionChannel(request.demoTransactionChannel)
                 .setAutoCapture(request.demoAutoCapture != null && request.demoAutoCapture.equals("on"))
-                .setConsumerCountry("BR")
+                .setConsumerCountry("US")
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
                 .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
