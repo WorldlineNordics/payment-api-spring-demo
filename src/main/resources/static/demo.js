@@ -9,50 +9,135 @@ for (var i = 0; i <= 10; i++) {
     selectExp.appendChild(option);
 }
 
+var form;
+
 window.addEventListener("load", function () {
-    var form = document.getElementById("paymentForm");
+    form = document.getElementById("paymentForm");
 
     // Prevent form from being submitted
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        exec();
+        //exec();
     });
-
-    function exec() {
-        var formAsJson = formToJson(form);
-
-        makeRequest({
-            method: 'POST',
-            url: '/api/demo/registrations',
-            encode: false,
-            params: formAsJson
-        })
-        .then(function (response) {
-            displayResult("Processing with Worldline.", "");
-            return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest))
-        })
-        .then(function (response) {
-                displayResult("Processing result with merchant.", "");
-                return makeRequest({
-                    method: 'POST',
-                    url: '/api/demo/unpackResponse',
-                    encode: true,
-                    params: JSON.stringify(response)
-                });
-            })
-            .then(function (response) {
-                response = JSON.parse(response);
-                displayResult("Status: " + response.status
-                    + "<br>TransactionId: " + response.transactionId
-                    + "<br>OrderId: " + response.orderId
-                    + "<br>Payment Method: " + response.paymentMethodName
-                    , "");
-            })
-            .catch(function (err) {
-                showError(err);
-            });
-    }
+    
 });
+
+
+function exec(pmType) {
+    var formAsJson = formToJson(form,pmType);
+    if(pmType == 'card'){
+    	processCard(formAsJson);
+    }
+    else if (pmType == 'ibp'){
+    	processIbp(formAsJson);
+    }
+    
+    /*makeRequest({
+        method: 'POST',
+        url: '/api/demo/registrations',
+        encode: false,
+        params: formAsJson
+    })
+    .then(function (response) {
+        displayResult("Processing with Worldline.", "");
+        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest))
+    })
+    .then(function (response) {
+            displayResult("Processing result with merchant.", "");
+            return makeRequest({
+                method: 'POST',
+                url: '/api/demo/unpackResponse',
+                encode: true,
+                params: JSON.stringify(response)
+            });
+        })
+        .then(function (response) {
+            response = JSON.parse(response);
+            displayResult("Status: " + response.status
+                + "<br>TransactionId: " + response.transactionId
+                + "<br>OrderId: " + response.orderId
+                + "<br>Payment Method: " + response.paymentMethodName
+                , "");
+        })
+        .catch(function (err) {
+            showError(err);
+        });*/
+}
+
+
+function processCard(formAsJson){
+	
+	processWithWorldline(formAsJson)
+	.then(function(response){
+		displayResult("Processing result with merchant.", "");
+        return makeRequest({
+            method: 'POST',
+            url: '/api/demo/unpackResponse',
+            encode: true,
+            params: JSON.stringify(response)
+        });
+	})
+	.then(function (response) {
+            response = JSON.parse(response);
+            displayResult("Status: " + response.status
+                + "<br>TransactionId: " + response.transactionId
+                + "<br>OrderId: " + response.orderId
+                + "<br>Payment Method: " + response.paymentMethodName
+                , "");
+     })
+     .catch(function (err) {
+         showError(err);
+     });
+	
+}
+
+function processIbp(formAsJson){
+	window.open("ibp_redirect.html","ibp");
+	
+	var form = document.createElement("form");
+	form.setAttribute("method", "GET");
+    form.setAttribute("action", "https://wp121dapp021.dc12.digitalriverws.net:8087/ibp/ideal_initiate");
+    form.setAttribute("target","ibp");
+    var parser = new DOMParser();
+    var bankForm = "<input type='hidden' name='trxid' value='0030154564665709'/><input type='hidden' name='randomizedstring' value='3939393921'/>";
+    var el = parser.parseFromString(bankForm, "text/html");
+    form.appendChild(el.firstChild);
+    document.body.appendChild(form);
+    form.submit();
+    
+	/*processWithWorldline(formAsJson)
+	.then(function(response){
+		displayResult("Processing result with merchant.", "");
+        /*return makeRequest({
+            method: 'POST',
+            url: '/api/demo/unpackResponse',
+            encode: true,
+            params: JSON.stringify(response)
+        });*/
+		
+/*		console.log(response);
+	})
+	.then(function(response){
+		
+	})*/
+	
+}
+
+function processWithWorldline(formAsJson){
+	
+	return new Promise(function (resolve, reject) {
+		makeRequest({
+	        method: 'POST',
+	        url: '/api/demo/registrations',
+	        encode: false,
+	        params: formAsJson
+	    })
+	    .then(function (response) {
+	        displayResult("Processing with Worldline.", "");
+	        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest))
+	    })
+	});
+}
 
 function showError(error) {
     console.error(error);
@@ -103,11 +188,12 @@ function makeRequest(opts) {
     });
 }
 
-function formToJson(form) {
+function formToJson(form,pmType) {
     var FD = new FormData(form);
     var object = {};
     FD.forEach(function (value, key) {
         object[key] = value;
     });
+    object["paymentType"] = pmType;
     return JSON.stringify(object);
 }

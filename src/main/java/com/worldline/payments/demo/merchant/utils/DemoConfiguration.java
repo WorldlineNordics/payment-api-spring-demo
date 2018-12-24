@@ -13,10 +13,10 @@ public class DemoConfiguration {
     public String keystorePwd;
 
     @Value("${worldline.api.key.merchantkeyalias}")
-    public String merchantKeyAlias = "merchant";
+    public String merchantKeyAlias;
 
     @Value("${worldline.api.key.worldlinekeyalias}")
-    public String worldlineKeyAlias = "ngcert";
+    public String worldlineKeyAlias;
 
     @Value("${worldline.api.merchantId}")
     public String merchantId;

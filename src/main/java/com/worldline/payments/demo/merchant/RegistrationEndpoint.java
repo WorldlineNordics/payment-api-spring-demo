@@ -35,8 +35,11 @@ public class RegistrationEndpoint {
         // First we check if the user is already registered, and similar.
         boolean alreadyRegistered = false;
 
+        //create endpoint url based on payment type
+        String deviceAPIEndpoint = createUrl(request.getPaymentType());
+        
         // Initialize the PaymentHandler
-        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), deviceAPIEndpoint);
 
         // Build the PaymentRequest.
         PaymentRequest details = new PaymentRequestBuilder()
@@ -72,7 +75,21 @@ public class RegistrationEndpoint {
         return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
     }
 
-    @POST
+    private String createUrl(String paymentType) {
+    	String worldlineUrl = props.worldlineURL;
+    	switch(paymentType){
+    		case "card":
+    			worldlineUrl = worldlineUrl.concat("payments");
+    			break;
+    		case "ibp":
+    			worldlineUrl = worldlineUrl.concat("ibppayments");
+    			break;
+    	}
+    	
+		return worldlineUrl;
+	}
+
+	@POST
     @Path("/unpackResponse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

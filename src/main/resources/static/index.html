@@ -219,15 +219,15 @@
         <div class="container">
             <div class="col-xs-12 col-md-4">
                 <div class="panel panel-default credit-card-box">
-                    <div class="panel-heading display-table">
+                    <div class="panel-heading display-table" id = "card_header">
                         <div class="row display-tr">
-                            <h3 class="panel-title display-td">Payment Details</h3>
+                            <h3 class="panel-title display-td">Card Details</h3>
                             <div class="display-td">
                                 <img class="img-responsive pull-right" src="img/accepted_c22e0.png">
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="card_details" style = "display:none;">
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
@@ -313,13 +313,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    
+                <!-- </div> -->
 
-                <div class="panel panel-heading-full credit-card-box">
+               <!--  <div class="panel panel-heading-full credit-card-box"> -->
                     <div>
                         <div class="col-xs-12">
-                            <button type="submit" class="btn btn-success btn-lg btn-block">Start Subscription</button>
+                            <button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('card')">Start Subscription</button>
                         </div>
                     </div>
 
@@ -339,14 +339,51 @@
                             <a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
                         </div>
                     </div>
-
-
-                </div>
-            </div>
+				</div>
+             </div>
+             
+             <!-- Online Banking -->
+             <br><br>
+             <div class="panel panel-default credit-card-box">
+                    <div class="panel-heading display-table" id = "online_banking_header">
+                        <div class="row display-tr">
+                            <h3 class="panel-title display-td">Online Banking</h3>
+                            <div class="display-td">
+                                <img class="img-responsive pull-right" src="img/ob.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="online_banking_details" style = "display:none;">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <select class="form-control">
+                                            <option value="4">Ideal</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                            	<button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('ibp')">Submit</button>
+                        	</div>
+                        	<div>
+                        		<div class="col-xs-12" id = "ibp-result">
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+             </div>
+             
+             
+           </div> 
         </div>
     </div>
 </form>
 <script src="demo.js"></script>
 <script src="js/worldline-payments.js"></script>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src = "script.js"></script>
 </body>
 </html>
