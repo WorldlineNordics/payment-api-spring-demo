@@ -25,6 +25,10 @@ public class RegistrationEndpoint {
 
     @Autowired
     private DemoConfiguration props;
+    
+    private static final String CARD = "card";
+    private static final String IBP = "ibp";
+    
 
     @POST
     @Path("/registrations")
@@ -78,10 +82,10 @@ public class RegistrationEndpoint {
     private String createUrl(String paymentType) {
     	String worldlineUrl = props.worldlineURL;
     	switch(paymentType){
-    		case "card":
+    		case CARD:
     			worldlineUrl = worldlineUrl.concat("payments");
     			break;
-    		case "ibp":
+    		case IBP:
     			worldlineUrl = worldlineUrl.concat("ibppayments");
     			break;
     	}
