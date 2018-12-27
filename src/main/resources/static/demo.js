@@ -97,11 +97,11 @@ function processWithWorldline(formAsJson){
 	        method: 'POST',
 	        url: '/api/demo/registrations',
 	        encode: false,
-	        params: formAsJson
+	        params: JSON.stringify(formAsJson)
 	    })
 	    .then(function (response) {
 	        displayResult("Processing with Worldline.", "");
-	        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest))
+	        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
 	    })
 	});
 }
@@ -116,21 +116,31 @@ function displayResult(result, error) {
     document.getElementById("payment-errors").innerHTML = error;
 }
 
-function makeWLPromise(data) {
-    return new Promise(function (resolve, reject) {
-        new WLPaymentRequest()
-            .chdForm(document.getElementById("paymentForm"), 'data-chd')
-            .deviceAPIRequest(data)
-            .onSuccess(resolve)
-            .onError(reject)
-            .send()
-    })
+function makeWLPromise(data,paymentType) {
+	if(paymentType=="card"){
+	    return new Promise(function (resolve, reject) {
+	        new WLPaymentRequest()
+	            .cardForm(document.getElementById("card_details"), 'data-chd')
+	            .deviceAPIRequest(data)
+	            .onSuccess(resolve)
+	            .onError(reject)
+	            .send()
+	    })
+	}
+	else if(paymentType=="ibp"){
+		return new Promise(function (resolve, reject) {
+	        new WLPaymentRequest()
+	            .ibpForm(document.getElementById("online_banking_details"), 'data-chd')
+	            .deviceAPIRequest(data)
+	            .onSuccess(resolve)
+	            .onError(reject)
+	            .send()
+	    })
+	}
 }
 
 function makeRequest(opts) {
     return new Promise(function (resolve, reject) {
-
-
         var xhr = new XMLHttpRequest();
         xhr.open(opts.method, opts.url);
         xhr.onload = function () {
@@ -162,5 +172,5 @@ function formToJson(form,pmType) {
         object[key] = value;
     });
     object["paymentType"] = pmType;
-    return JSON.stringify(object);
+    return object;
 }

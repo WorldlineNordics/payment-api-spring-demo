@@ -33,7 +33,7 @@ var WLPaymentRequestState = {
 };
 
 var WLPaymentRequest = function () {
-    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint;
+    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint,_paymentMethodId;
     var _success, _error;
     var _state = WLPaymentRequestState.NEW;
 
@@ -42,7 +42,7 @@ var WLPaymentRequest = function () {
             _cardHolderName = n;
             return this
         },
-        chdForm: function (document, tag) {
+        cardForm: function (document, tag) {
             if (tag && document && typeof document === 'object') {
                 var chdElements = document.querySelectorAll('['+tag+']');
                 var chd = {};
@@ -89,6 +89,17 @@ var WLPaymentRequest = function () {
           _encryptedPayload = n.encryptedPayload;
           _endpoint = n.deviceEndpoint;
           return this
+        },
+        ibpForm:function(document,tag){
+        	if (tag && document && typeof document === 'object'){
+        		var el = document.querySelector('['+tag+']');
+        		_paymentMethodId =  el.value;
+        	}
+        	return this;
+        },
+        paymentMethodId: function (n) {
+        	_paymentMethodId = n;
+            return this
         },
         onSuccess: function (n) {
             _success = n;
