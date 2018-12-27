@@ -124,7 +124,7 @@ function makeWLPromise(data,paymentType) {
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send()
+	            .send('card')
 	    })
 	}
 	else if(paymentType=="ibp"){
@@ -134,7 +134,7 @@ function makeWLPromise(data,paymentType) {
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send()
+	            .send('ibp')
 	    })
 	}
 }

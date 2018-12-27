@@ -109,8 +109,8 @@ var WLPaymentRequest = function () {
             _error = n;
             return this
         },
-        send: function () {
-            sendPayment(_success, _error, _encryptedPayload, _endpoint, _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode);
+        send: function (pmType) {
+            sendPayment(_success, _error, _encryptedPayload, _endpoint, _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode,_paymentMethodId,pmType);
             return this
         }
     };
@@ -121,18 +121,26 @@ var WLPaymentRequest = function () {
         }
     });
 
-    function sendPayment(success, error, encryptedPayload, endpoint, cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode) {
+    function sendPayment(success, error, encryptedPayload, endpoint, cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode,paymentMethodId,pmType) {
 
         var xhttp = new XMLHttpRequest();
-
-        var data = JSON.stringify({
-            cardHolderName: cardHolderName,
-            cardNumber: cardNumber,
-            expDateMonth: expDateMonth,
-            expDateYear: expDateYear,
-            cvCode: cvCode,
-            encryptedPayload: encryptedPayload
-        });
+        var data;
+        if(pmType=="card"){
+	        data = JSON.stringify({
+	            cardHolderName: cardHolderName,
+	            cardNumber: cardNumber,
+	            expDateMonth: expDateMonth,
+	            expDateYear: expDateYear,
+	            cvCode: cvCode,
+	            encryptedPayload: encryptedPayload
+	        });
+        }
+        else if(pmType=="ibp"){
+        	data = JSON.stringify({
+        		paymentMethodId:paymentMethodId,
+        		encryptedPayload:encryptedPayload
+        	})
+        }
 
         xhttp.open("POST", endpoint, true);
         xhttp.timeout = 60000;
