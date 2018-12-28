@@ -83,46 +83,22 @@ function processIbp(formAsJson){
     })
 	.then(function(response){
 		displayResult("Processing result with merchant.", "");
-        /*return makeRequest({
-            method: 'POST',
-            url: '/api/demo/unpackResponse',
-            encode: true,
-            params: JSON.stringify(response)
-        });*/
-		
 		console.log(response);
-	})
-	/*.then(function(response){
 		window.open("ibp_redirect.html","ibp");
 		var form = document.createElement("form");
 		form.setAttribute("method", "GET");
-    	form.setAttribute("action", "https://wp121dapp021.dc12.digitalriverws.net:8087/ibp/ideal_initiate");
+    	form.setAttribute("action", response.bankUrl);
     	form.setAttribute("target","ibp");
     	var parser = new DOMParser();
-    	var bankForm = "<input type='hidden' name='trxid' value='0030154564665709'/><input type='hidden' name='randomizedstring' value='3939393921'/>";
+    	var bankForm = response.bankForm
     	var el = parser.parseFromString(bankForm, "text/html");
     	form.appendChild(el.firstChild);
     	document.body.appendChild(form);
     	form.submit();
-	})*/
+	})
 	
 }
 
-/*function processWithWorldline(formAsJson){
-	
-	return new Promise(function (resolve, reject) {
-		makeRequest({
-	        method: 'POST',
-	        url: '/api/demo/registrations',
-	        encode: false,
-	        params: JSON.stringify(formAsJson)
-	    })
-	    .then(function (response) {
-	        displayResult("Processing with Worldline.", "");
-	        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
-	    })
-	});
-}*/
 
 function showError(error) {
     console.error(error);
