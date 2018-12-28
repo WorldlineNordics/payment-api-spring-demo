@@ -104,16 +104,16 @@ function processIbp(formAsJson){
 	            url: '/api/demo/unpackResponse',
 	            encode: true,
 	            params: JSON.stringify(response)
-	        });			
+	        })
+	        .then(function (response) {
+	        	response = JSON.parse(response);
+	        	displayResult("Status: " + response.status
+	        			+ "<br>TransactionId: " + response.transactionId
+	        			+ "<br>OrderId: " + response.orderId
+	        			+ "<br>Payment Method: " + response.paymentMethodName
+	        			, "");
+	        })
 		}
-	})
-	.then(function (response) {
-        response = JSON.parse(response);
-        displayResult("Status: " + response.status
-            + "<br>TransactionId: " + response.transactionId
-            + "<br>OrderId: " + response.orderId
-            + "<br>Payment Method: " + response.paymentMethodName
-            , "");
 	})
 	.catch(function (err) {
         showError(err);
