@@ -83,19 +83,41 @@ function processIbp(formAsJson){
     })
 	.then(function(response){
 		displayResult("Processing result with merchant.", "");
-		console.log(response);
-		window.open("ibp_redirect.html","ibp");
-		var form = document.createElement("form");
-		form.setAttribute("method", "GET");
-    	form.setAttribute("action", response.bankUrl);
-    	form.setAttribute("target","ibp");
-    	var parser = new DOMParser();
-    	var bankForm = response.bankForm
-    	var el = parser.parseFromString(bankForm, "text/html");
-    	form.appendChild(el.firstChild);
-    	document.body.appendChild(form);
-    	form.submit();
+		if(response.bankUrl){
+			
+			window.open("ibp_redirect.html","ibp");
+			var form = document.createElement("form");
+			form.setAttribute("method", "GET");
+	    	form.setAttribute("action", response.bankUrl);
+	    	form.setAttribute("target","ibp");
+	    	var parser = new DOMParser();
+	    	var bankForm = response.bankForm
+	    	var el = parser.parseFromString(bankForm, "text/html");
+	    	form.appendChild(el.firstChild);
+	    	document.body.appendChild(form);
+	    	form.submit();
+		}
+		else{
+			//unpack response
+			return makeRequest({
+	            method: 'POST',
+	            url: '/api/demo/unpackResponse',
+	            encode: true,
+	            params: JSON.stringify(response)
+	        });			
+		}
 	})
+	.then(function (response) {
+        response = JSON.parse(response);
+        displayResult("Status: " + response.status
+            + "<br>TransactionId: " + response.transactionId
+            + "<br>OrderId: " + response.orderId
+            + "<br>Payment Method: " + response.paymentMethodName
+            , "");
+	})
+	.catch(function (err) {
+        showError(err);
+	});
 	
 }
 
