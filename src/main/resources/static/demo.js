@@ -37,7 +37,16 @@ function exec(pmType) {
 
 function processCard(formAsJson){
 	
-	processWithWorldline(formAsJson)
+	makeRequest({
+        method: 'POST',
+        url: '/api/demo/registrations',
+        encode: false,
+        params: JSON.stringify(formAsJson)
+    })
+    .then(function (response) {
+        displayResult("Processing with Worldline.", "");
+        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
+    })
 	.then(function(response){
 		displayResult("Processing result with merchant.", "");
         return makeRequest({
@@ -62,7 +71,16 @@ function processCard(formAsJson){
 }
 
 function processIbp(formAsJson){
-	processWithWorldline(formAsJson)
+	makeRequest({
+        method: 'POST',
+        url: '/api/demo/registrations',
+        encode: false,
+        params: JSON.stringify(formAsJson)
+    })
+    .then(function (response) {
+        displayResult("Processing with Worldline.", "");
+        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
+    })
 	.then(function(response){
 		displayResult("Processing result with merchant.", "");
         /*return makeRequest({
@@ -90,7 +108,7 @@ function processIbp(formAsJson){
 	
 }
 
-function processWithWorldline(formAsJson){
+/*function processWithWorldline(formAsJson){
 	
 	return new Promise(function (resolve, reject) {
 		makeRequest({
@@ -104,7 +122,7 @@ function processWithWorldline(formAsJson){
 	        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
 	    })
 	});
-}
+}*/
 
 function showError(error) {
     console.error(error);
