@@ -82,7 +82,7 @@ function processIbp(formAsJson){
         return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
     })
 	.then(function(response){
-		displayResult("Processing result with merchant.", "");
+		displayResult("Redirecting to bank's site.", "");
 		if(response.bankUrl){
 			
 			window.open("ibp_redirect.html","ibp");
@@ -99,7 +99,7 @@ function processIbp(formAsJson){
 		}
 		else{
 			//unpack response
-			return makeRequest({
+			makeRequest({
 	            method: 'POST',
 	            url: '/api/demo/unpackResponse',
 	            encode: true,

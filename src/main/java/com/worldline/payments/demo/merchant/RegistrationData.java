@@ -74,6 +74,10 @@ public class RegistrationData {
     public String getPaymentType(){
     	return paymentType;
     }
+    
+    public String getReturnUrl(){
+    	return returnUrl;
+    }
 
     String billingAddressLine1;
     String billingAddressLine2;
@@ -93,4 +97,5 @@ public class RegistrationData {
     String demoAutoCapture;
     String demoTokenization;
     String paymentType;
+    String returnUrl;
 }
