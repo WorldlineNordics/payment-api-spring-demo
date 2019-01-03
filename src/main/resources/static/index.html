@@ -14,7 +14,7 @@
 <h3 class="panel-heading">Sample form combined sign up and payment</h3>
 <form id="paymentForm" enctype="application/x-www-form-urlencoded">
 
-    <div id="openCardModal" class="modalDialog">
+    <div id="openModal" class="modalDialog">
         <div>
             <h2 id="democonfig">Demo settings</h2>
             <p>This is a demo form for the Device Payment API.</p>
@@ -342,7 +342,8 @@
                         <div class="row display-tr">
                             <h3 class="panel-title display-td">Online Banking</h3>
                             <div class="display-td">
-                                <img class="img-responsive pull-right" src="img/ob.png">
+                                <img class="img-responsive pull-right"
+                                >
                             </div>
                         </div>
                     </div>
@@ -352,7 +353,11 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <select class="form-control" data-chd="ibpId">
-                                            <option value="4">Ideal</option>
+                                        	<option value="">Sofortüberweisung</option>
+                                            <option value="4" selected>Ideal</option>
+                                            <option value="">Bradesco</option>
+                                            <option value="">SantanderIBP</option>
+                                            <option value="">Itau</option>
                                         </select>
                                     </div>
                                 </div>
@@ -376,6 +381,11 @@
                     </div>
                     
              </div>
+             <div class="">
+                	<div id  = "iframeDiv" class="col-xs-12">
+                    	
+                    </div>
+              </div>
              
              <div class="">
              	<div>

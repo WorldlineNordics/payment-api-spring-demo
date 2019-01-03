@@ -81,17 +81,17 @@ public class RegistrationEndpoint {
     }
 
     private String createUrl(String paymentType) {
-    	String worldlineUrl = props.worldlineURL;
+    	StringBuffer worldlineUrl = new StringBuffer(props.worldlineURL);
     	switch(paymentType){
     		case CARD:
-    			worldlineUrl = worldlineUrl.concat("payments");
+    			worldlineUrl.append("payments");
     			break;
     		case IBP:
-    			worldlineUrl = worldlineUrl.concat("ibppayments");
+    			worldlineUrl.append("ibppayments");
     			break;
     	}
     	
-		return worldlineUrl;
+		return worldlineUrl.toString();
 	}
 
 	@POST

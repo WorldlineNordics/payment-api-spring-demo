@@ -84,18 +84,7 @@ function processIbp(formAsJson){
 	.then(function(response){
 		displayResult("Redirecting to bank's site.", "");
 		if(response.bankUrl){
-			
-			window.open("ibp_redirect.html","ibp");
-			var form = document.createElement("form");
-			form.setAttribute("method", "GET");
-	    	form.setAttribute("action", response.bankUrl);
-	    	form.setAttribute("target","ibp");
-	    	var parser = new DOMParser();
-	    	var bankForm = response.bankForm
-	    	var el = parser.parseFromString(bankForm, "text/html");
-	    	form.appendChild(el.firstChild);
-	    	document.body.appendChild(form);
-	    	form.submit();
+			redirectToBankSite(response);
 		}
 		else{
 			//unpack response
@@ -189,4 +178,20 @@ function formToJson(form,pmType) {
     });
     object["paymentType"] = pmType;
     return object;
+}
+
+function redirectToBankSite(res){
+	var ifrm = document.createElement("iframe");
+	ifrm.setAttribute("src", "ibp_redirect.html");
+	ifrm.setAttribute("target","_blank");
+	var form = document.createElement("form");
+	ifrm.ownerDocument.body.appendChild(form);
+	form.setAttribute("method", "GET");
+	form.setAttribute("action", res.bankUrl);
+	var parser = new DOMParser();
+	var bankForm = res.bankForm
+	var el = parser.parseFromString(bankForm, "text/html");
+	form.appendChild(el.firstChild);
+	//document.body.appendChild(form);
+	form.submit();
 }
