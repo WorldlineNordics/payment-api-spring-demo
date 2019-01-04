@@ -17,7 +17,6 @@ window.addEventListener("load", function () {
     // Prevent form from being submitted
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        //exec();
     });
     
 });
@@ -182,8 +181,7 @@ function formToJson(form,pmType) {
 
 function redirectToBankSite(res){
 	var ifrm = document.createElement("iframe");
-	ifrm.setAttribute("src", "ibp_redirect.html");
-	ifrm.setAttribute("target","_blank");
+	ifrm.setAttribute("src", "ibp-redirect.html");
 	var form = document.createElement("form");
 	ifrm.ownerDocument.body.appendChild(form);
 	form.setAttribute("method", "GET");
@@ -192,6 +190,6 @@ function redirectToBankSite(res){
 	var bankForm = res.bankForm
 	var el = parser.parseFromString(bankForm, "text/html");
 	form.appendChild(el.firstChild);
-	//document.body.appendChild(form);
+	document.body.appendChild(form);
 	form.submit();
 }

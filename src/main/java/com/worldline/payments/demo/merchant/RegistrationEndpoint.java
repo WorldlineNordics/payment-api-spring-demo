@@ -71,7 +71,6 @@ public class RegistrationEndpoint {
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
                 .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
-                .setReturnUrl("http://localhost:8080/ibp_result.html")
                 .createPaymentRequest();
 
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
