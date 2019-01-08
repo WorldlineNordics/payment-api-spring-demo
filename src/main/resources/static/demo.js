@@ -183,7 +183,7 @@ function formToJson(form,pmType) {
 
 function redirectToBankSite(res){
 	var ifrm = document.createElement("iframe");
-	document.cookie = "payload="+res.encryptedPayload+";;path=/";
+	document.cookie = "pp1="+res.encryptedPayload+";;path=/";
 	ifrm.setAttribute("src", "ibp-redirect.html");
 	var redirectForm = document.createElement("form");
 	ifrm.ownerDocument.body.appendChild(redirectForm);
