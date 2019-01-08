@@ -78,6 +78,8 @@ function processIbp(formAsJson){
     })
     .then(function (response) {
         displayResult("Processing with Worldline.", "");
+        console.log("checking cookies")
+        console.log(document.cookies);
         return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
     })
 	.then(function(response){
@@ -181,6 +183,7 @@ function formToJson(form,pmType) {
 
 function redirectToBankSite(res){
 	var ifrm = document.createElement("iframe");
+	document.cookie = "payload="+res.encryptedPayload+";;path=/";
 	ifrm.setAttribute("src", "ibp-redirect.html");
 	var redirectForm = document.createElement("form");
 	ifrm.ownerDocument.body.appendChild(redirectForm);
@@ -190,5 +193,6 @@ function redirectToBankSite(res){
 	var bankForm = res.bankForm
 	var el = parser.parseFromString(bankForm, "text/html");
 	redirectForm.appendChild(el.firstChild);
+	//document.body.appendChild(redirectForm);
 	redirectForm.submit();
 }
