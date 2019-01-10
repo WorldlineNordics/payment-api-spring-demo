@@ -4,7 +4,7 @@ buildscript {
 	}
 	repositories {
 	   maven {
-	   	  url "http://testrepo.drwp.digitalriver.com/artifactory/all-libs"
+	   	  url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 		}
 
 	}
@@ -25,10 +25,10 @@ mainClassName='com.worldline.payments.demo.merchant.DemoApplication'
 
 repositories {
 	maven {
-		url "http://testrepo.drwp.digitalriver.com/artifactory/libs-beta"
+		url "http://devrepo.drwp.digitalriver.com/artifactory/libs-beta"
 	}
 	maven {
-		url "http://testrepo.drwp.digitalriver.com/artifactory/all-libs"
+		url "http://devrepo.drwp.digitalriver.com/artifactory/all-libs"
 	}
 
 }
