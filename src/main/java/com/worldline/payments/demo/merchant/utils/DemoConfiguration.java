@@ -28,6 +28,6 @@ public class DemoConfiguration {
     public String worldlineURL;
     
     @Value("${ibp.result.path}")
-    public String returnUrl;
+    public String resultPage;
 
 }

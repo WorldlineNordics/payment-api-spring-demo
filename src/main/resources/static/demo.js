@@ -21,7 +21,6 @@ window.addEventListener("load", function () {
     
 });
 
-
 function exec(pmType) {
     var formAsJson = formToJson(form,pmType);
     if(pmType == 'card'){
@@ -178,6 +177,7 @@ function formToJson(form,pmType) {
         object[key] = value;
     });
     object["paymentType"] = pmType;
+    object["hostUrl"] = window.location.protocol+"//"+window.location.host;
     return object;
 }
 
