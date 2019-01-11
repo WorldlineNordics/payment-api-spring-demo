@@ -30,7 +30,6 @@ repositories {
 	maven {
 		url "https://devrepo.int.payments.worldline.com/artifactory/all-libs"
 	}
-	}
 
 }
 
