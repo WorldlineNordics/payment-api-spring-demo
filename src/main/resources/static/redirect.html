@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>redirect</title>
+<body>
+processing complete flow....
+</body>
+<script>
+var form = document.createElement('form');
+form.setAttribute('method','GET');
+form.setAttribute('action','http://localhost:1082/ibpcp');
+
+
+document.body.appendChild(form);
+form.submit()
+/* var xhttp = new XMLHttpRequest();
+
+xhttp.open("POST", "http://localhost:1082/ibpcp/", true);
+xhttp.timeout = 60000;
+xhttp.setRequestHeader("Content-type", "application/json");
+
+xhttp.onreadystatechange = function() {
+	  if (this.readyState == 4 && this.status == 200) {
+	    console.log(this.responseText);
+	  }
+	};
+
+xhttp.send(); */
+</script>
+</head>
+</html>
