@@ -188,7 +188,7 @@ function redirectToBankSite(res){
 	ifrm.setAttribute("src", "ibp-redirect.html");
 	var redirectForm = document.createElement("form");
 	ifrm.ownerDocument.body.appendChild(redirectForm);
-	redirectForm.setAttribute("method", "GET");
+	redirectForm.setAttribute("method", res.bankMethod);
 	redirectForm.setAttribute("action", res.bankUrl);
 	var parser = new DOMParser();
 	var bankForm = res.bankForm
