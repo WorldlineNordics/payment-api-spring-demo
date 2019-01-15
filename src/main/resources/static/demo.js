@@ -122,6 +122,7 @@ function displayResult(result, error) {
 }
 
 function makeWLPromise(data,paymentType) {
+	
 	if(paymentType=="card"){
 	    return new Promise(function (resolve, reject) {
 	        new WLPaymentRequest()
@@ -129,7 +130,7 @@ function makeWLPromise(data,paymentType) {
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send('card')
+	            .send(paymentType)
 	    })
 	}
 	else if(paymentType=="ibp"){
@@ -139,7 +140,7 @@ function makeWLPromise(data,paymentType) {
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send('ibp')
+	            .send(paymentType)
 	    })
 	}
 }
