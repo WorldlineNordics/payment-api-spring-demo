@@ -1,17 +1,17 @@
-/*This script would contain the javascript functionality of the page ibp-result.html which would be showing the final transaction status for online banking.*/
-
 
 window.addEventListener("load", function () {
 	var url = new URL(window.location.href);
 	var response = url.searchParams.get("response");
 	console.log(response);
 	if(response){
+		//unpack resposne and show result
 		unPackResponse(response);
 	}
 	else{
+		//process complete request
 		var form = document.createElement('form');
 		form.setAttribute('method','GET');
-		form.setAttribute('action','http://localhost:1082/ibpcp');
+		form.setAttribute('action','http://wp121dapp020.dc12.digitalriverws.net:1082/ibpcp');
 
 		var cookies = document.cookie.split(';');
 
