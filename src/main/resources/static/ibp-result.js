@@ -11,9 +11,7 @@ window.addEventListener("load", function () {
 		//process complete request
 		var form = document.createElement('form');
 		form.setAttribute('method','GET');
-		form.setAttribute('action','http://wp121dapp020.dc12.digitalriverws.net:1082/ibpcp');
-
-		var cookies = document.cookie.split(';');
+		form.setAttribute('action','http://localhost:1082/ibpcp/');
 
 		var pp1 = getCookie('pp1');
 		var el = document.createElement('input');

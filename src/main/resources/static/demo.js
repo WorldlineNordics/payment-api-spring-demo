@@ -183,17 +183,21 @@ function formToJson(form,pmType) {
 }
 
 function redirectToBankSite(res){
-	var ifrm = document.createElement("iframe");
+	ibpIframe = document.getElementById('ibpFrame');
+	ibpIframe.style.display = "block";
+	var idocument = ibpIframe.contentWindow.document;
 	document.cookie = "pp1="+res.encryptedPayload+";;path=/";
-	ifrm.setAttribute("src", "ibp-redirect.html");
-	var redirectForm = document.createElement("form");
-	ifrm.ownerDocument.body.appendChild(redirectForm);
-	redirectForm.setAttribute("method", res.bankMethod);
-	redirectForm.setAttribute("action", res.bankUrl);
+	ibpForm = idocument.createElement("form");
+	ibpForm.target = "ibpFrame";
+	ibpForm.method = res.bankMethod;
+	ibpForm.action = res.bankUrl;
 	var parser = new DOMParser();
 	var bankForm = res.bankForm
 	var el = parser.parseFromString(bankForm, "text/html");
-	redirectForm.appendChild(el.firstChild);
-	//document.body.appendChild(redirectForm);
-	redirectForm.submit();
+	ibpForm.appendChild(el.firstChild);
+	
+	
+	ibpIframe.appendChild(ibpForm);
+	ibpForm.submit();
+	
 }
