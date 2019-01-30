@@ -19,7 +19,55 @@ window.addEventListener("load", function () {
         event.preventDefault();
     });
     
+    checkForSession();
+    
 });
+
+function  checkForSession(){
+	if (typeof(Storage) !== "undefined") {
+		//check if initiate is processed or not
+		if(sessionStorage.getItem("payload") != null){
+			retrieveBillingInfo();
+			var url = new URL(window.location.href);
+			var response = url.searchParams.get("response");
+			if(response){
+				unpackResponse(response);
+			}
+			else{
+				//process complete flow
+				displayResult("Processing with Worldline.", "");
+				var completUrl = sessionStorage.getItem("completeUrl");
+				var form = document.createElement('form');
+				form.setAttribute('method','GET');
+				form.setAttribute('action',completUrl);
+	
+				var payload = sessionStorage.getItem("payload");
+				var el = document.createElement('input');
+	
+				el.setAttribute('type','hidden');
+				el.setAttribute('name','pp');
+				el.setAttribute('value',payload);
+	
+				form.appendChild(el);
+	
+				document.body.appendChild(form);
+				form.submit()
+			}
+				
+		}
+	}
+}
+
+function retrieveBillingInfo(){
+	var formAsJson = JSON.parse(sessionStorage.getItem("userDetails"));
+	var FD = new FormData(form);
+	var object = {};
+	FD.forEach(function (value, key) {
+		if(document.getElementById(key)){
+			document.getElementById(key).value = formAsJson[key];
+		}
+	});
+}
 
 function exec(pmType) {
     var formAsJson = formToJson(form,pmType);
@@ -27,6 +75,7 @@ function exec(pmType) {
     	processCard(formAsJson);
     }
     else if (pmType == 'ibp'){
+    	sessionStorage.setItem("userDetails", JSON.stringify(formAsJson));
     	processIbp(formAsJson);
     }
     
@@ -34,7 +83,6 @@ function exec(pmType) {
 
 
 function processCard(formAsJson){
-	
 	makeRequest({
         method: 'POST',
         url: '/api/demo/registrations',
@@ -77,8 +125,6 @@ function processIbp(formAsJson){
     })
     .then(function (response) {
         displayResult("Processing with Worldline.", "");
-        console.log("checking cookies")
-        console.log(document.cookies);
         return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
     })
 	.then(function(response){
@@ -88,20 +134,7 @@ function processIbp(formAsJson){
 		}
 		else{
 			//unpack response
-			makeRequest({
-	            method: 'POST',
-	            url: '/api/demo/unpackResponse',
-	            encode: true,
-	            params: JSON.stringify(response)
-	        })
-	        .then(function (response) {
-	        	response = JSON.parse(response);
-	        	displayResult("Status: " + response.status
-	        			+ "<br>TransactionId: " + response.transactionId
-	        			+ "<br>OrderId: " + response.orderId
-	        			+ "<br>Payment Method: " + response.paymentMethodName
-	        			, "");
-	        })
+			unpackResponse(response);
 		}
 	})
 	.catch(function (err) {
@@ -186,7 +219,9 @@ function redirectToBankSite(res){
 	ibpIframe = document.getElementById('ibpFrame');
 	ibpIframe.style.display = "block";
 	var idocument = ibpIframe.contentWindow.document;
-	document.cookie = "pp1="+res.encryptedPayload+";;path=/";
+	//document.cookie = "pp1="+res.encryptedPayload+";;path=/";
+	sessionStorage.setItem("payload", res.encryptedPayload);
+	sessionStorage.setItem("completeUrl", res.ibpCompleteUrl);
 	ibpForm = idocument.createElement("form");
 	ibpForm.target = "ibpFrame";
 	ibpForm.method = res.bankMethod;
@@ -200,4 +235,21 @@ function redirectToBankSite(res){
 	ibpIframe.appendChild(ibpForm);
 	ibpForm.submit();
 	
+}
+
+function unpackResponse(response){
+	makeRequest({
+        method: 'POST',
+        url: '/api/demo/unpackResponse',
+        encode: true,
+        params: JSON.stringify(response)
+    })
+    .then(function (response) {
+    	response = JSON.parse(response);
+    	displayResult("Status: " + response.status
+    			+ "<br>TransactionId: " + response.transactionId
+    			+ "<br>OrderId: " + response.orderId
+    			+ "<br>Payment Method: " + response.paymentMethodName
+    			, "");
+    })
 }
