@@ -1,1 +1,0 @@
-/*This script would contain the javascript functionality of the page ibp-redirect.html which is being opened as a iframe.*/
