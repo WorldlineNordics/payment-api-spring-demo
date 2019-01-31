@@ -142,6 +142,7 @@ function processIbp(formAsJson){
 	})
 	.catch(function (err) {
         showError(err);
+        sessionStorage.clear();
 	});
 	
 }
@@ -225,15 +226,12 @@ function redirectToBankSite(res){
 	sessionStorage.setItem("payload", res.encryptedPayload);
 	sessionStorage.setItem("completeUrl", res.ibpCompleteUrl);
 	ibpForm = idocument.createElement("form");
-	ibpForm.target = "ibpFrame";
 	ibpForm.method = res.bankMethod;
 	ibpForm.action = res.bankUrl;
 	var parser = new DOMParser();
 	var bankForm = res.bankForm
 	var el = parser.parseFromString(bankForm, "text/html");
 	ibpForm.appendChild(el.firstChild);
-	
-	
 	ibpIframe.appendChild(ibpForm);
 	ibpForm.submit();
 	
