@@ -26,8 +26,5 @@ public class DemoConfiguration {
 
     @Value("${worldline.api.url}")
     public String worldlineURL;
-    
-    @Value("${ibp.result.path}")
-    public String resultPage;
 
 }

@@ -71,7 +71,7 @@ public class RegistrationEndpoint {
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
                 .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
-                .setReturnUrl(request.getHostUrl()+"/"+props.resultPage)
+                .setReturnUrl(request.getHostUrl())
                 .createPaymentRequest();
 
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);

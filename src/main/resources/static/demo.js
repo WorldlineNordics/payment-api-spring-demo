@@ -25,13 +25,15 @@ window.addEventListener("load", function () {
 
 function  checkForSession(){
 	if (typeof(Storage) !== "undefined") {
-		//check if initiate is processed or not
-		if(sessionStorage.getItem("payload") != null){
+		
+		//if initiate is processed, retrieve the user details
+		if(sessionStorage.getItem("userDetails") != null){
 			retrieveBillingInfo();
 			var url = new URL(window.location.href);
 			var response = url.searchParams.get("response");
 			if(response){
 				unpackResponse(response);
+				sessionStorage.clear();
 			}
 			else{
 				//process complete flow
@@ -135,6 +137,7 @@ function processIbp(formAsJson){
 		else{
 			//unpack response
 			unpackResponse(response);
+			sessionStorage.clear();
 		}
 	})
 	.catch(function (err) {
@@ -211,7 +214,7 @@ function formToJson(form,pmType) {
         object[key] = value;
     });
     object["paymentType"] = pmType;
-    object["hostUrl"] = window.location.protocol+"//"+window.location.host;
+    object["hostUrl"] = window.location.href;
     return object;
 }
 
@@ -219,7 +222,6 @@ function redirectToBankSite(res){
 	ibpIframe = document.getElementById('ibpFrame');
 	ibpIframe.style.display = "block";
 	var idocument = ibpIframe.contentWindow.document;
-	//document.cookie = "pp1="+res.encryptedPayload+";;path=/";
 	sessionStorage.setItem("payload", res.encryptedPayload);
 	sessionStorage.setItem("completeUrl", res.ibpCompleteUrl);
 	ibpForm = idocument.createElement("form");
