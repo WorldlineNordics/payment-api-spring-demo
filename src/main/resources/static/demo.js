@@ -18,7 +18,7 @@ window.addEventListener("load", function () {
     form.addEventListener("submit", function (event) {
         event.preventDefault();
     });
-    
+    getPaymentMethods();
     checkForSession();
     
 });
@@ -47,7 +47,7 @@ function  checkForSession(){
 				var el = document.createElement('input');
 	
 				el.setAttribute('type','hidden');
-				el.setAttribute('name','pp');
+				el.setAttribute('name','payload');
 				el.setAttribute('value',payload);
 	
 				form.appendChild(el);
@@ -252,4 +252,31 @@ function unpackResponse(response){
     			+ "<br>Payment Method: " + response.paymentMethodName
     			, "");
     })
+}
+
+function getPaymentMethods(){
+	makeRequest({
+		method:'GET',
+		url:'/api/demo/paymentMethodEndPoint?pmType=ibp',
+		
+	})
+	.then(function(response){
+		
+		makeRequest({
+			method:'GET',
+			url:response
+		})
+		.then(function(response){
+			var pMethods = JSON.parse(response);
+			var list = document.getElementById('ibpList');
+			for(key in pMethods){
+				var opt = document.createElement('option');
+				opt.value = key;
+		        opt.text = pMethods[key];
+		        list.options.add(opt);
+			}
+			
+		})
+	})
+	
 }

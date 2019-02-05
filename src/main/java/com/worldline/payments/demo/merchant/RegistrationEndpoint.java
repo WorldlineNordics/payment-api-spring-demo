@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Demo endpoint that emulates registration of a user and returns an encrypted
@@ -87,7 +90,7 @@ public class RegistrationEndpoint {
     			worldlineUrl.append("payments");
     			break;
     		case IBP:
-    			worldlineUrl.append("ibppayments");
+    			worldlineUrl.append("redirectpayments");
     			break;
     	}
     	
@@ -112,6 +115,15 @@ public class RegistrationEndpoint {
                 .getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName());
         return response;
     }
+	
+	@GET
+	@Path("/paymentMethodEndPoint")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getPaymentMethodEndPoint(@QueryParam(value = "pmType") String pmType){
+		StringBuffer baseUrl = new StringBuffer(props.worldlineURL);
+		baseUrl.append("paymentmethods/?").append("mid="+props.merchantId).append("&pmType="+pmType).append("&posId="+props.posId);
+		return baseUrl.toString();
+	} 
 
     /**
      * Example response with a custom field like "alreadyRegistered" that illustrates several actions are executed
@@ -183,4 +195,6 @@ public class RegistrationEndpoint {
             return paymentMethodName;
         }
     }
-}
+    
+   
+ }
