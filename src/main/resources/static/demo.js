@@ -277,6 +277,9 @@ function getPaymentMethods(){
 			}
 			
 		})
+		.catch(function (err) {
+			showError(err);
+	    });
 	})
 	
 }
