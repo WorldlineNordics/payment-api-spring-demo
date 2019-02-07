@@ -215,7 +215,7 @@ function formToJson(form,pmType) {
         object[key] = value;
     });
     object["paymentType"] = pmType;
-    object["hostUrl"] = window.location.href;
+    object["hostUrl"] = window.location.href.replace("#closeModal","");
     return object;
 }
 
