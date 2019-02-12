@@ -26,7 +26,7 @@ public class DeviceRestApiController {
 	@RequestMapping(value={"","/","index"})
 	public String paymentPage(){
 		try {
-			return getFileData("static/index.html");
+			return getFileData("/static/index.html");
 		} catch (URISyntaxException ex){
 			ex.printStackTrace();
 			return "Failed to load the payment page";			
@@ -37,7 +37,7 @@ public class DeviceRestApiController {
 	}
 	
 	private String getFileData(String fileName) throws URISyntaxException, IOException{
-		InputStream inputStream = new FileInputStream(new File(getClass().getClassLoader().getResource(fileName).getFile()));
+		InputStream inputStream = DeviceRestApiController.class.getResourceAsStream(fileName);
 		try(BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream))){
 			return buffer.lines().collect(Collectors.joining("\n"));
 		}
