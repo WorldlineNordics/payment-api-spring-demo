@@ -1,12 +1,13 @@
 package com.worldline.payments.demo.merchant;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -36,11 +37,10 @@ public class DeviceRestApiController {
 	}
 	
 	private String getFileData(String fileName) throws URISyntaxException, IOException{
-		Path path = Paths.get(getClass().getClassLoader().getResource(fileName).toURI());
-		Stream<String> lines = Files.lines(path);
-		String data = lines.collect(Collectors.joining("\n"));
-		lines.close();
-		return data;
+		InputStream inputStream = new FileInputStream(new File(getClass().getClassLoader().getResource(fileName).getFile()));
+		try(BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream))){
+			return buffer.lines().collect(Collectors.joining("\n"));
+		}
 	}
 
 }
