@@ -42,16 +42,27 @@ function  checkForSession(){
 				var form = document.createElement('form');
 				form.setAttribute('method','GET');
 				form.setAttribute('action',completUrl);
-	
 				var payload = sessionStorage.getItem("payload");
-				var el = document.createElement('input');
+				var e = document.createElement('input');
 	
-				el.setAttribute('type','hidden');
-				el.setAttribute('name','payload');
-				el.setAttribute('value',payload);
+				e.setAttribute('type','hidden');
+				e.setAttribute('name','payload');
+				e.setAttribute('value',payload);
 	
-				form.appendChild(el);
-	
+				form.appendChild(e);
+				var baseUri = form.baseURI;
+				var params = {};
+				var parts = baseUri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+					params[key] = value;
+				});
+				
+				for (var key in params) {				  
+				  	var el = document.createElement('input');	
+					el.setAttribute('type','hidden');
+					el.setAttribute('name',key);
+					el.setAttribute('value',params[key]);
+					form.appendChild(el);
+				}					
 				document.body.appendChild(form);
 				form.submit()
 			}
