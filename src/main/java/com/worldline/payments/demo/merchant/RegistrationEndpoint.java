@@ -124,6 +124,15 @@ public class RegistrationEndpoint {
 		baseUrl.append("paymentmethods/?").append("mid="+props.merchantId).append("&pmType="+pmType).append("&posId="+props.posId);
 		return baseUrl.toString();
 	} 
+	
+	@GET
+	@Path("/redirectEndPoint")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getRedirectEndPoint(){
+		StringBuffer baseUrl = new StringBuffer(props.worldlineURL);
+		baseUrl.append("redirects");
+		return baseUrl.toString();
+	} 
 
     /**
      * Example response with a custom field like "alreadyRegistered" that illustrates several actions are executed

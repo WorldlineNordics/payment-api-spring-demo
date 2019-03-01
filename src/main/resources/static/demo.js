@@ -19,57 +19,15 @@ window.addEventListener("load", function () {
         event.preventDefault();
     });
     getPaymentMethods();
-    checkForSession();
     
-});
-
-function  checkForSession(){
-	if (typeof(Storage) !== "undefined") {
-		
-		//if initiate is processed, retrieve the user details
-		if(sessionStorage.getItem("userDetails") != null){
-			retrieveBillingInfo();
-			var url = new URL(window.location.href);
-			var response = url.searchParams.get("response");
-			if(response){
-				unpackResponse(response);
-				sessionStorage.clear();
-			}
-			else{
-				//process complete flow
-				displayResult("Processing with Worldline.", "");
-				var completUrl = sessionStorage.getItem("completeUrl");
-				var form = document.createElement('form');
-				form.setAttribute('method','GET');
-				form.setAttribute('action',completUrl);
-				var payload = sessionStorage.getItem("payload");
-				var e = document.createElement('input');
-	
-				e.setAttribute('type','hidden');
-				e.setAttribute('name','payload');
-				e.setAttribute('value',payload);
-	
-				form.appendChild(e);
-				var baseUri = form.baseURI;
-				var params = {};
-				var parts = baseUri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-					params[key] = value;
-				});
-				
-				for (var key in params) {				  
-				  	var el = document.createElement('input');	
-					el.setAttribute('type','hidden');
-					el.setAttribute('name',key);
-					el.setAttribute('value',params[key]);
-					form.appendChild(el);
-				}					
-				document.body.appendChild(form);
-				form.submit()
-			}
-				
-		}
+    var url = new URL(window.location.href);
+	var response = url.searchParams.get("response");
+	if(response){
+		retrieveBillingInfo();
+		unpackResponse(response);
+		sessionStorage.clear();
 	}
-}
+});
 
 function retrieveBillingInfo(){
 	var formAsJson = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -141,9 +99,9 @@ function processIbp(formAsJson){
         return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
     })
 	.then(function(response){
-		displayResult("Redirecting to bank's site.", "");
 		if(response.bankUrl){
-			redirectToBankSite(response);
+			displayResult("Redirecting to bank's site.", "");
+			processRedirect(response);
 		}
 		else{
 			//unpack response
@@ -230,23 +188,6 @@ function formToJson(form,pmType) {
     return object;
 }
 
-function redirectToBankSite(res){
-	ibpIframe = document.getElementById('ibpFrame');
-	ibpIframe.style.display = "block";
-	var idocument = ibpIframe.contentWindow.document;
-	sessionStorage.setItem("payload", res.encryptedPayload);
-	sessionStorage.setItem("completeUrl", res.ibpCompleteUrl);
-	ibpForm = idocument.createElement("form");
-	ibpForm.method = res.bankMethod;
-	ibpForm.action = res.bankUrl;
-	var parser = new DOMParser();
-	var bankForm = res.bankForm
-	var el = parser.parseFromString(bankForm, "text/html");
-	ibpForm.appendChild(el.firstChild);
-	ibpIframe.appendChild(ibpForm);
-	ibpForm.submit();
-	
-}
 
 function unpackResponse(response){
 	makeRequest({
@@ -272,7 +213,6 @@ function getPaymentMethods(){
 		
 	})
 	.then(function(response){
-		
 		makeRequest({
 			method:'GET',
 			url:response
@@ -292,5 +232,60 @@ function getPaymentMethods(){
 			showError(err);
 	    });
 	})
+}
+
+function processRedirect(res){
+	
+	var req = JSON.stringify({
+		encryptedPayload:res.encryptedPayload,
+		url:res.bankUrl,
+		form:res.bankForm,
+		method:res.bankMethod
+	})
+	
+	makeRequest({
+		method:'GET',
+		url:'/api/demo/redirectEndPoint',
+		
+	})
+	.then(function(response){
+		
+		//create iframe and redirect to bank's site
+		
+		var ibpIframe = document.createElement('iframe');
+		ibpIframe.src = "about:blank";
+
+		ibpIframe.id = "ibpFrame";
+		ibpIframe.name = "ibpFrame";
+		ibpIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
+
+		var ibpDiv = document.getElementById('iframeDiv')
+		ibpDiv.appendChild(ibpIframe);
+		
+		var idocument = ibpIframe.contentWindow.document;
+		var ibpForm = idocument.createElement("form");
+		ibpForm.method = 'POST';
+		ibpForm.action = response
+		ibpForm.target = "ibpFrame"	
+		
+		var reqElement = document.createElement('input');	
+		reqElement.setAttribute('type','hidden');
+		reqElement.setAttribute('name','req');
+		reqElement.setAttribute('value',req);
+		ibpForm.appendChild(reqElement);
+		
+		ibpIframe.appendChild(ibpForm);
+		ibpForm.submit();
+		
+	})
 	
 }
+
+window.addEventListener('message',function(e) {
+    var key = e.message ? 'message' : 'data';
+    var data = e[key];
+    console.log('message received');
+    console.log('key', key)
+    console.log('data', data)
+
+},false);
