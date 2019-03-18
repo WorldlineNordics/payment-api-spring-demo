@@ -284,6 +284,7 @@ function processRedirect(res){
 window.addEventListener('message',function(e) {
     var key = e.message ? 'message' : 'data';
     var data = e[key];
+    unpackResponse(data);
     console.log('message received');
     console.log('key', key)
     console.log('data', data)
