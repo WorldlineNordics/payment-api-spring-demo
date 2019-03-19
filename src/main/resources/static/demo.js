@@ -19,26 +19,7 @@ window.addEventListener("load", function () {
         event.preventDefault();
     });
     getPaymentMethods();
-    
-    var url = new URL(window.location.href);
-	var response = url.searchParams.get("response");
-	if(response){
-		retrieveBillingInfo();
-		unpackResponse(response);
-		sessionStorage.clear();
-	}
 });
-
-function retrieveBillingInfo(){
-	var formAsJson = JSON.parse(sessionStorage.getItem("userDetails"));
-	var FD = new FormData(form);
-	var object = {};
-	FD.forEach(function (value, key) {
-		if(document.getElementById(key)){
-			document.getElementById(key).value = formAsJson[key];
-		}
-	});
-}
 
 function exec(pmType) {
     var formAsJson = formToJson(form,pmType);
@@ -46,7 +27,6 @@ function exec(pmType) {
     	processCard(formAsJson);
     }
     else if (pmType == 'ibp'){
-    	sessionStorage.setItem("userDetails", JSON.stringify(formAsJson));
     	processIbp(formAsJson);
     }
     
@@ -106,12 +86,10 @@ function processIbp(formAsJson){
 		else{
 			//unpack response
 			unpackResponse(response);
-			sessionStorage.clear();
 		}
 	})
 	.catch(function (err) {
         showError(err);
-        sessionStorage.clear();
 	});
 	
 }
@@ -156,7 +134,7 @@ function makeRequest(opts) {
         var xhr = new XMLHttpRequest();
         xhr.open(opts.method, opts.url);
         xhr.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
+            if (this.status >= 200 && this.status < 400) {
                 resolve(xhr.response);
             } else {
                 reject({
@@ -236,7 +214,7 @@ function getPaymentMethods(){
 
 function processRedirect(res){
 	
-	var req = JSON.stringify({
+	var req =JSON.stringify({
 		encryptedPayload:res.encryptedPayload,
 		url:res.bankUrl,
 		form:res.bankForm,
@@ -253,27 +231,28 @@ function processRedirect(res){
 		//create iframe and redirect to bank's site
 		
 		var ibpIframe = document.createElement('iframe');
-		ibpIframe.src = "about:blank";
+		ibpIframe.src = "frame.html";
 
 		ibpIframe.id = "ibpFrame";
 		ibpIframe.name = "ibpFrame";
 		ibpIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
-
+		ibpIframe.sandbox =	"allow-forms allow-pointer-lock allow-same-origin allow-scripts";
+			
 		var ibpDiv = document.getElementById('iframeDiv')
 		ibpDiv.appendChild(ibpIframe);
 		
 		var idocument = ibpIframe.contentWindow.document;
 		var ibpForm = idocument.createElement("form");
-		ibpForm.method = 'POST';
-		ibpForm.action = response
-		ibpForm.target = "ibpFrame"	
+		ibpForm.method = "POST";
+		ibpForm.action = response;
+		ibpForm.target = "ibpFrame";
 		
 		var reqElement = document.createElement('input');	
 		reqElement.setAttribute('type','hidden');
 		reqElement.setAttribute('name','req');
 		reqElement.setAttribute('value',req);
 		ibpForm.appendChild(reqElement);
-		
+			
 		ibpIframe.appendChild(ibpForm);
 		ibpForm.submit();
 		
@@ -283,9 +262,11 @@ function processRedirect(res){
 
 window.addEventListener('message',function(e) {
     var key = e.message ? 'message' : 'data';
-    var data = e[key];
+    var wlResponse = e[key];
+    unpackResponse(wlResponse);
+    
     console.log('message received');
     console.log('key', key)
-    console.log('data', data)
+    console.log('data', wlResponse)
 
 },false);
