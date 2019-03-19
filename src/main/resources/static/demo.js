@@ -264,7 +264,6 @@ window.addEventListener('message',function(e) {
     var key = e.message ? 'message' : 'data';
     var wlResponse = e[key];
     unpackResponse(wlResponse);
-    
     console.log('message received');
     console.log('key', key)
     console.log('data', wlResponse)
