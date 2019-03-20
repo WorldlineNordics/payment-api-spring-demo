@@ -203,6 +203,4 @@ public class RegistrationEndpoint {
             return paymentMethodName;
         }
     }
-    
-   
  }

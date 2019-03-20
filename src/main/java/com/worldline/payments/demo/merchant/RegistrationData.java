@@ -75,10 +75,6 @@ public class RegistrationData {
     	return paymentType;
     }
     
-    public String getHostUrl(){
-    	return hostUrl;
-    }
-
     String billingAddressLine1;
     String billingAddressLine2;
     String billingCity;
@@ -97,5 +93,4 @@ public class RegistrationData {
     String demoAutoCapture;
     String demoTokenization;
     String paymentType;
-    String hostUrl;
 }
