@@ -110,21 +110,21 @@ function makeWLPromise(data,paymentType) {
 	if(paymentType=="card"){
 	    return new Promise(function (resolve, reject) {
 	        new WLPaymentRequest()
-	            .cardForm(document.getElementById("card_details"), 'data-chd')
+	            .chdForm(document.getElementById("card_details"), 'data-chd')
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send(paymentType)
+	            .send()
 	    })
 	}
 	else if(paymentType=="ibp"){
 		return new Promise(function (resolve, reject) {
-	        new WLPaymentRequest()
+	        new WLRedirectPaymentRequest()
 	            .ibpForm(document.getElementById("online_banking_details"), 'data-chd')
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send(paymentType)
+	            .send()
 	    })
 	}
 }

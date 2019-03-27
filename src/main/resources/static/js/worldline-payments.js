@@ -33,7 +33,7 @@ var WLPaymentRequestState = {
 };
 
 var WLPaymentRequest = function () {
-    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint,_paymentMethodId;
+    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint;
     var _success, _error;
     var _state = WLPaymentRequestState.NEW;
 
@@ -42,7 +42,7 @@ var WLPaymentRequest = function () {
             _cardHolderName = n;
             return this
         },
-        cardForm: function (document, tag) {
+        chdForm: function (document, tag) {
             if (tag && document && typeof document === 'object') {
                 var chdElements = document.querySelectorAll('['+tag+']');
                 var chd = {};
@@ -90,6 +90,48 @@ var WLPaymentRequest = function () {
           _endpoint = n.deviceEndpoint;
           return this
         },
+        onSuccess: function (n) {
+            _success = n;
+            return this
+        },
+        onError: function (n) {
+            _error = n;
+            return this
+        },
+        send: function () {
+        	var data = JSON.stringify({
+	            cardHolderName: _cardHolderName,
+	            cardNumber: _cardNumber,
+	            expDateMonth: _expDateMonth,
+	            expDateYear: _expDateYear,
+	            cvCode: _cvCode,
+	            encryptedPayload: _encryptedPayload
+	        });
+        	WLProcessPaymentRequest(_success, _error, _endpoint,data);
+            return this
+        }
+    };
+
+    Object.defineProperty(_self, "state", {
+        get: function () {
+            return _state;
+        }
+    });
+
+    return _self;
+};
+
+var WLRedirectPaymentRequest = function () {
+    var _encryptedPayload, _endpoint,_paymentMethodId;
+    var _success, _error;
+    var _state = WLPaymentRequestState.NEW;
+
+    var _self = {
+        deviceAPIRequest: function (n) {
+          _encryptedPayload = n.encryptedPayload;
+          _endpoint = n.deviceEndpoint;
+          return this
+        },
         ibpForm:function(document,tag){
         	if (tag && document && typeof document === 'object'){
         		var el = document.querySelector('['+tag+']');
@@ -109,8 +151,12 @@ var WLPaymentRequest = function () {
             _error = n;
             return this
         },
-        send: function (pmType) {
-            sendPayment(_success, _error, _encryptedPayload, _endpoint, _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode,_paymentMethodId,pmType);
+        send: function () {
+        	var data = JSON.stringify({
+            		paymentMethodId:_paymentMethodId,
+            		encryptedPayload:_encryptedPayload
+            	});
+        	WLProcessPaymentRequest(_success, _error, _endpoint,data);
             return this
         }
     };
@@ -121,69 +167,51 @@ var WLPaymentRequest = function () {
         }
     });
 
-    function sendPayment(success, error, encryptedPayload, endpoint, cardHolderName, cardNumber, expDateMonth, expDateYear, cvCode,paymentMethodId,pmType) {
+    return _self;
+};
 
-        var xhttp = new XMLHttpRequest();
-        var data;
-        if(pmType=="card"){
-	        data = JSON.stringify({
-	            cardHolderName: cardHolderName,
-	            cardNumber: cardNumber,
-	            expDateMonth: expDateMonth,
-	            expDateYear: expDateYear,
-	            cvCode: cvCode,
-	            encryptedPayload: encryptedPayload
-	        });
-        }
-        else if(pmType=="ibp"){
-        	data = JSON.stringify({
-        		paymentMethodId:paymentMethodId,
-        		encryptedPayload:encryptedPayload
-        	})
-        }
+var WLProcessPaymentRequest = function(success, error,endpoint,data){
+	var xhttp = new XMLHttpRequest();
 
-        xhttp.open("POST", endpoint, true);
-        xhttp.timeout = 60000;
-        xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.open("POST", endpoint, true);
+    xhttp.timeout = 60000;
+    xhttp.setRequestHeader("Content-type", "application/json");
 
-        xhttp.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                _state = WLPaymentRequestState.OK;
-                success(JSON.parse(xhttp.response));
-            } else if (this.status === 405) {
-                _state = WLPaymentRequestState.ERROR;
-                error({
-                    status: this.status,
-                    statusText: 'Please verify the Worldline Device API URL'
-                });
-            } else {
-                _state = WLPaymentRequestState.ERROR;
-                error({
-                    status: this.status,
-                    statusText: xhttp.statusText
-                });
-            }
-        };
-        xhttp.onerror = function () {
+    xhttp.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            _state = WLPaymentRequestState.OK;
+            success(JSON.parse(xhttp.response));
+        } else if (this.status === 405) {
             _state = WLPaymentRequestState.ERROR;
             error({
                 status: this.status,
-                statusText: xhttp.statusText === '' ? 'Could not send transaction.' : xhttp.statusText
+                statusText: 'Please verify the Worldline Device API URL'
             });
-        };
-        xhttp.ontimeout = function () {
+        } else {
             _state = WLPaymentRequestState.ERROR;
             error({
                 status: this.status,
                 statusText: xhttp.statusText
             });
+        }
+    };
+    xhttp.onerror = function () {
+        _state = WLPaymentRequestState.ERROR;
+        error({
+            status: this.status,
+            statusText: xhttp.statusText === '' ? 'Could not send transaction.' : xhttp.statusText
+        });
+    };
+    xhttp.ontimeout = function () {
+        _state = WLPaymentRequestState.ERROR;
+        error({
+            status: this.status,
+            statusText: xhttp.statusText
+        });
 
-        };
+    };
 
-        _state = WLPaymentRequestState.SENT;
-        xhttp.send(data);
-    }
-
-    return _self;
-};
-
+    _state = WLPaymentRequestState.SENT;
+    xhttp.send(data);
+	
+}
