@@ -26,5 +26,11 @@ public class DemoConfiguration {
 
     @Value("${worldline.api.url}")
     public String worldlineURL;
+    
+    @Value("${worldline.cardpayments.api.url}")
+    public String worldlineCardPaymentsURL;
+    
+    @Value("${worldline.redirectpayments.api.url}")
+    public String worldlineRedirectPaymentsURL;
 
 }
