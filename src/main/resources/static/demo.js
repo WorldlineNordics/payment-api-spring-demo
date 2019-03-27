@@ -231,14 +231,13 @@ function processRedirect(res){
 		//create iframe and redirect to bank's site
 		
 		var ibpIframe = document.createElement('iframe');
-		ibpIframe.src = "frame.html";
 
 		ibpIframe.id = "ibpFrame";
 		ibpIframe.name = "ibpFrame";
-		ibpIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
+		ibpIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999; background-color:#FFFFFF"
 		ibpIframe.sandbox =	"allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation";
 			
-		var ibpDiv = document.getElementById('iframeDiv')
+		var ibpDiv = document.getElementById('iframeDiv');
 		ibpDiv.appendChild(ibpIframe);
 		
 		var idocument = ibpIframe.contentWindow.document;
@@ -247,12 +246,12 @@ function processRedirect(res){
 		ibpForm.action = response;
 		ibpForm.target = "ibpFrame";
 		
-		var reqElement = document.createElement('input');	
+		var reqElement = document.createElement('input');
 		reqElement.setAttribute('type','hidden');
 		reqElement.setAttribute('name','req');
 		reqElement.setAttribute('value',req);
 		ibpForm.appendChild(reqElement);
-			
+		
 		ibpIframe.appendChild(ibpForm);
 		ibpForm.submit();
 		
@@ -264,6 +263,8 @@ window.addEventListener('message',function(e) {
     var key = e.message ? 'message' : 'data';
     var wlResponse = e[key];
     unpackResponse(wlResponse);
+    var ibpDiv = document.getElementById('iframeDiv');
+    ibpDiv.removeChild(ibpDiv.childNodes[0]);
     console.log('message received');
     console.log('key', key)
     console.log('data', wlResponse)
