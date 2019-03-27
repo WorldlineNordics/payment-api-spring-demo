@@ -15,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  * Demo endpoint that emulates registration of a user and returns an encrypted
@@ -29,28 +28,46 @@ public class RegistrationEndpoint {
     @Autowired
     private DemoConfiguration props;
     
-    private static final String CARD = "card";
-    private static final String IBP = "ibp";
-    
-
     @POST
-    @Path("/registrations")
+    @Path("/cardRegistrations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RegistrationResponse registerForm(RegistrationData request) {
+    public RegistrationResponse cardRegisterForm(RegistrationData request) {
 
         // First we check if the user is already registered, and similar.
         boolean alreadyRegistered = false;
 
-        //create endpoint url based on payment type
-        String deviceAPIEndpoint = createUrl(request.getPaymentType());
-        
         // Initialize the PaymentHandler
-        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), deviceAPIEndpoint);
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineCardPaymentsURL);
 
         // Build the PaymentRequest.
-        PaymentRequest details = new PaymentRequestBuilder()
+        final String deviceAPIRequest = buildPaymentRequest(request, handler);
 
+        // Return the deviceAPIRequest and custom information to the form.
+        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
+    }
+    
+    @POST
+    @Path("/redirectRegistrations")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public RegistrationResponse redirectRegisterForm(RegistrationData request) {
+
+        // First we check if the user is already registered, and similar.
+        boolean alreadyRegistered = false;
+
+        // Initialize the PaymentHandler
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineRedirectPaymentsURL);
+
+        // Build the PaymentRequest.
+        final String deviceAPIRequest = buildPaymentRequest(request, handler);
+
+        // Return the deviceAPIRequest and custom information to the form.
+        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
+    }
+
+	private String buildPaymentRequest(RegistrationData request, PaymentHandler handler) {
+		PaymentRequest details = new PaymentRequestBuilder()
                 .setBillingAddressLine1(request.billingAddressLine1)
                 .setBillingAddressLine2(request.billingAddressLine2)
                 .setBillingCity(request.billingCity)
@@ -77,23 +94,7 @@ public class RegistrationEndpoint {
                 .createPaymentRequest();
 
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
-
-        // Return the deviceAPIRequest and custom information to the form.
-        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
-    }
-
-    private String createUrl(String paymentType) {
-    	StringBuffer worldlineUrl = new StringBuffer(props.worldlineURL);
-    	switch(paymentType){
-    		case CARD:
-    			worldlineUrl.append("payments");
-    			break;
-    		case IBP:
-    			worldlineUrl.append("redirectpayments");
-    			break;
-    	}
-    	
-		return worldlineUrl.toString();
+		return deviceAPIRequest;
 	}
 
 	@POST

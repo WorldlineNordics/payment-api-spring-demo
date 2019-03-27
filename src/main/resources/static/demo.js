@@ -36,7 +36,7 @@ function exec(pmType) {
 function processCard(formAsJson){
 	makeRequest({
         method: 'POST',
-        url: '/api/demo/registrations',
+        url: '/api/demo/cardRegistrations',
         encode: false,
         params: JSON.stringify(formAsJson)
     })
@@ -70,7 +70,7 @@ function processCard(formAsJson){
 function processIbp(formAsJson){
 	makeRequest({
         method: 'POST',
-        url: '/api/demo/registrations',
+        url: '/api/demo/redirectRegistrations',
         encode: false,
         params: JSON.stringify(formAsJson)
     })
