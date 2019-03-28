@@ -71,10 +71,6 @@ public class RegistrationData {
         return demoTokenization;
     }
     
-    public String getPaymentType(){
-    	return paymentType;
-    }
-    
     String billingAddressLine1;
     String billingAddressLine2;
     String billingCity;
@@ -92,5 +88,4 @@ public class RegistrationData {
     String demoTransactionChannel;
     String demoAutoCapture;
     String demoTokenization;
-    String paymentType;
 }

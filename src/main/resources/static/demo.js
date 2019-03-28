@@ -21,12 +21,12 @@ window.addEventListener("load", function () {
     getPaymentMethods();
 });
 
-function exec(pmType) {
-    var formAsJson = formToJson(form,pmType);
-    if(pmType == 'card'){
+function exec(pmMethodType) {
+    var formAsJson = formToJson(form);
+    if(pmMethodType == 'card'){
     	processCard(formAsJson);
     }
-    else if (pmType == 'ibp'){
+    else if (pmMethodType == 'ibp'){
     	processIbp(formAsJson);
     }
     
@@ -42,7 +42,7 @@ function processCard(formAsJson){
     })
     .then(function (response) {
         displayResult("Processing with Worldline.", "");
-        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
+        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"card")
     })
 	.then(function(response){
 		displayResult("Processing result with merchant.", "");
@@ -76,7 +76,7 @@ function processIbp(formAsJson){
     })
     .then(function (response) {
         displayResult("Processing with Worldline.", "");
-        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),formAsJson.paymentType)
+        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"ibp")
     })
 	.then(function(response){
 		if(response.bankUrl){
@@ -105,9 +105,9 @@ function displayResult(result, error) {
     document.getElementById("payment-errors").innerHTML = error;
 }
 
-function makeWLPromise(data,paymentType) {
+function makeWLPromise(data,paymentMethodType) {
 	
-	if(paymentType=="card"){
+	if(paymentMethodType=="card"){
 	    return new Promise(function (resolve, reject) {
 	        new WLPaymentRequest()
 	            .chdForm(document.getElementById("card_details"), 'data-chd')
@@ -117,7 +117,7 @@ function makeWLPromise(data,paymentType) {
 	            .send()
 	    })
 	}
-	else if(paymentType=="ibp"){
+	else if(paymentMethodType=="ibp"){
 		return new Promise(function (resolve, reject) {
 	        new WLRedirectPaymentRequest()
 	            .ibpForm(document.getElementById("online_banking_details"), 'data-chd')
@@ -155,14 +155,12 @@ function makeRequest(opts) {
     });
 }
 
-function formToJson(form,pmType) {
+function formToJson(form,pmMethodType) {
     var FD = new FormData(form);
     var object = {};
     FD.forEach(function (value, key) {
         object[key] = value;
     });
-    object["paymentType"] = pmType;
-    object["hostUrl"] = window.location.href.replace("#closeModal","");
     return object;
 }
 
