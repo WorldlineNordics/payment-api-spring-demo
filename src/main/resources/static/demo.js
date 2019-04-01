@@ -200,14 +200,14 @@ function getPaymentMethods(){
 		})
 	})
 	.then(function(response){
-		var pMethods = JSON.parse(response);
+		var pMethods = response;
 		var list = document.getElementById('ibpList');
-		for(key in pMethods){
+		pMethods.forEach(function(pm){
 			var opt = document.createElement('option');
-			opt.value = key;
-		    opt.text = pMethods[key].name;
+			opt.value = pm.id;
+		    opt.text = pm.name;
 		    list.options.add(opt);
-		}
+		});
 	})
 	.catch(function (err) {
         showError(err);
