@@ -185,29 +185,33 @@ function unpackResponse(response){
 function getPaymentMethods(){
 	makeRequest({
 		method:'GET',
-		url:'/api/demo/paymentMethodEndPoint?pmType=ibp',
+		url:'/api/demo/paymentMethodEndPoint',
 		
 	})
 	.then(function(response){
-		makeRequest({
-			method:'GET',
-			url:response
+		var data = JSON.parse(response);
+		return new Promise(function (resolve, reject) {
+	        new WLPaymentMethodRequest()
+            .pmType("ibp")
+            .deviceAPIRequest(data)
+            .onSuccess(resolve)
+            .onError(reject)
+            .send()
 		})
-		.then(function(response){
-			var pMethods = JSON.parse(response);
-			var list = document.getElementById('ibpList');
-			for(key in pMethods){
-				var opt = document.createElement('option');
-				opt.value = key;
-		        opt.text = pMethods[key].name;
-		        list.options.add(opt);
-			}
-			
-		})
-		.catch(function (err) {
-			showError(err);
-	    });
 	})
+	.then(function(response){
+		var pMethods = JSON.parse(response);
+		var list = document.getElementById('ibpList');
+		for(key in pMethods){
+			var opt = document.createElement('option');
+			opt.value = key;
+		    opt.text = pMethods[key].name;
+		    list.options.add(opt);
+		}
+	})
+	.catch(function (err) {
+        showError(err);
+	});
 }
 
 function processRedirect(res){

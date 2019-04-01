@@ -107,7 +107,7 @@ var WLPaymentRequest = function () {
 	            cvCode: _cvCode,
 	            encryptedPayload: _encryptedPayload
 	        });
-        	WLProcessPaymentRequest(_success, _error, _endpoint,data);
+        	WLProcessRequest(_success, _error, _endpoint,data);
             return this
         }
     };
@@ -156,7 +156,7 @@ var WLRedirectPaymentRequest = function () {
             		paymentMethodId:_paymentMethodId,
             		encryptedPayload:_encryptedPayload
             	});
-        	WLProcessPaymentRequest(_success, _error, _endpoint,data);
+        	WLProcessRequest(_success, _error, _endpoint,data);
             return this
         }
     };
@@ -170,7 +170,50 @@ var WLRedirectPaymentRequest = function () {
     return _self;
 };
 
-var WLProcessPaymentRequest = function(success, error,endpoint,data){
+var WLPaymentMethodRequest = function () {
+    var _encryptedPayload, _endpoint,_paymentMethodType;
+    var _success, _error;
+    var _state = WLPaymentRequestState.NEW;
+
+    var _self = {
+        deviceAPIRequest: function (n) {
+          _encryptedPayload = n.encryptedPayload;
+          _endpoint = n.deviceEndpoint;
+          return this
+        },
+        pmType: function (n) {
+        	_paymentMethodType = n;
+            return this
+        },
+        onSuccess: function (n) {
+            _success = n;
+            return this
+        },
+        onError: function (n) {
+            _error = n;
+            return this
+        },
+        send: function () {
+        	var data = JSON.stringify({
+            		paymentMethodType:_paymentMethodType,
+            		encryptedPayload:_encryptedPayload
+            	});
+        	WLProcessRequest(_success, _error, _endpoint,data);
+            return this
+        }
+    };
+
+    Object.defineProperty(_self, "state", {
+        get: function () {
+            return _state;
+        }
+    });
+
+    return _self;
+};
+
+
+var WLProcessRequest = function(success, error,endpoint,data){
 	var xhttp = new XMLHttpRequest();
 
     xhttp.open("POST", endpoint, true);

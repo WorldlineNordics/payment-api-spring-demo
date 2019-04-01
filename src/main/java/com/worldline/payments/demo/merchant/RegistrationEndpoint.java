@@ -119,10 +119,21 @@ public class RegistrationEndpoint {
 	@GET
 	@Path("/paymentMethodEndPoint")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getPaymentMethodEndPoint(@QueryParam(value = "pmType") String pmType){
-		StringBuffer baseUrl = new StringBuffer(props.worldlineURL);
-		baseUrl.append("paymentmethods/?").append("mid="+props.merchantId).append("&pmType="+pmType).append("&posId="+props.posId);
-		return baseUrl.toString();
+	public String getPaymentMethodEndPoint(){
+		
+		 // Initialize the PaymentHandler
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL.concat("paymentmethods"));
+
+        // Build the PaymentRequest.
+    	PaymentRequest details = new PaymentRequestBuilder()
+    			.setMid(Long.parseLong(props.merchantId))
+    			.setPosId(props.posId).setCurrency("USD")
+    			.setOrderId("Example_order_" + System.currentTimeMillis())
+    			.setConsumerCountry("US")
+                .setConsumerLanguage("en")
+                .createPaymentRequest();
+		
+		return handler.createDeviceAPIRequest(details);
 	} 
 	
 	@GET
