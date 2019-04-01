@@ -199,7 +199,7 @@ function getPaymentMethods(){
 			for(key in pMethods){
 				var opt = document.createElement('option');
 				opt.value = key;
-		        opt.text = pMethods[key];
+		        opt.text = pMethods[key].name;
 		        list.options.add(opt);
 			}
 			
