@@ -13,7 +13,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -29,45 +28,19 @@ public class RegistrationEndpoint {
     private DemoConfiguration props;
     
     @POST
-    @Path("/cardRegistrations")
+    @Path("/registrations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RegistrationResponse cardRegisterForm(RegistrationData request) {
+    public RegistrationResponse registerForm(RegistrationData request) {
 
         // First we check if the user is already registered, and similar.
         boolean alreadyRegistered = false;
 
         // Initialize the PaymentHandler
-        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineCardPaymentsURL);
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
 
         // Build the PaymentRequest.
-        final String deviceAPIRequest = buildPaymentRequest(request, handler);
-
-        // Return the deviceAPIRequest and custom information to the form.
-        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
-    }
-    
-    @POST
-    @Path("/redirectRegistrations")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public RegistrationResponse redirectRegisterForm(RegistrationData request) {
-
-        // First we check if the user is already registered, and similar.
-        boolean alreadyRegistered = false;
-
-        // Initialize the PaymentHandler
-        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineRedirectPaymentsURL);
-
-        // Build the PaymentRequest.
-        final String deviceAPIRequest = buildPaymentRequest(request, handler);
-
-        // Return the deviceAPIRequest and custom information to the form.
-        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
-    }
-
-	private String buildPaymentRequest(RegistrationData request, PaymentHandler handler) {
-		PaymentRequest details = new PaymentRequestBuilder()
+        PaymentRequest details = new PaymentRequestBuilder()
                 .setBillingAddressLine1(request.billingAddressLine1)
                 .setBillingAddressLine2(request.billingAddressLine2)
                 .setBillingCity(request.billingCity)
@@ -92,11 +65,13 @@ public class RegistrationEndpoint {
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
                 .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
                 .createPaymentRequest();
-
+        
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
-		return deviceAPIRequest;
-	}
 
+        // Return the deviceAPIRequest and custom information to the form.
+        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
+    }
+    
 	@POST
     @Path("/unpackResponse")
     @Consumes(MediaType.APPLICATION_JSON)
