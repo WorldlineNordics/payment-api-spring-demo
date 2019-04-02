@@ -90,6 +90,10 @@ var WLPaymentRequest = function () {
           _endpoint = n.deviceEndpoint;
           return this
         },
+        deviceAPIUrl:function(){
+        	_endpoint = _endpoint.concat("/api/v1/payments");
+        	
+        },
         onSuccess: function (n) {
             _success = n;
             return this
@@ -139,6 +143,10 @@ var WLRedirectPaymentRequest = function () {
         	}
         	return this;
         },
+        deviceAPIUrl:function(){
+        	_endpoint = _endpoint.concat("/api/v1/redirectpayments");
+        	
+        },
         paymentMethodId: function (n) {
         	_paymentMethodId = n;
             return this
@@ -180,6 +188,10 @@ var WLPaymentMethodRequest = function () {
           _encryptedPayload = n.encryptedPayload;
           _endpoint = n.deviceEndpoint;
           return this
+        },
+        deviceAPIUrl:function(){
+        	_endpoint = _endpoint.concat("/api/v1/paymentmethods");
+        	
         },
         pmType: function (n) {
         	_paymentMethodType = n;

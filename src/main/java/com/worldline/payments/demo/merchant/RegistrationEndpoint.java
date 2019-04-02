@@ -122,7 +122,7 @@ public class RegistrationEndpoint {
 	public String getPaymentMethodEndPoint(){
 		
 		 // Initialize the PaymentHandler
-        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL.concat("paymentmethods"));
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
 
         // Build the PaymentRequest.
     	PaymentRequest details = new PaymentRequestBuilder()
