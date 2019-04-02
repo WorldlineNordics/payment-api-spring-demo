@@ -112,6 +112,7 @@ function makeWLPromise(data,paymentMethodType) {
 	        new WLPaymentRequest()
 	            .chdForm(document.getElementById("card_details"), 'data-chd')
 	            .deviceAPIRequest(data)
+	            .deviceAPIUrl()
 	            .onSuccess(resolve)
 	            .onError(reject)
 	            .send()
@@ -122,6 +123,7 @@ function makeWLPromise(data,paymentMethodType) {
 	        new WLRedirectPaymentRequest()
 	            .ibpForm(document.getElementById("online_banking_details"), 'data-chd')
 	            .deviceAPIRequest(data)
+	            .deviceAPIUrl()
 	            .onSuccess(resolve)
 	            .onError(reject)
 	            .send()
@@ -194,6 +196,7 @@ function getPaymentMethods(){
 	        new WLPaymentMethodRequest()
             .pmType("ibp")
             .deviceAPIRequest(data)
+            .deviceAPIUrl()
             .onSuccess(resolve)
             .onError(reject)
             .send()
@@ -231,7 +234,7 @@ function processRedirect(res){
 	.then(function(response){
 		
 		//create iframe and redirect to bank's site
-		
+		var wlRedirectUrl = response.concat("/api/v1/redirects")
 		var ibpIframe = document.createElement('iframe');
 
 		ibpIframe.id = "ibpFrame";
@@ -245,7 +248,7 @@ function processRedirect(res){
 		var idocument = ibpIframe.contentWindow.document;
 		var ibpForm = idocument.createElement("form");
 		ibpForm.method = "POST";
-		ibpForm.action = response;
+		ibpForm.action = wlRedirectUrl;
 		ibpForm.target = "ibpFrame";
 		
 		var reqElement = document.createElement('input');

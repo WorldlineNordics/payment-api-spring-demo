@@ -92,6 +92,7 @@ var WLPaymentRequest = function () {
         },
         deviceAPIUrl:function(){
         	_endpoint = _endpoint.concat("/api/v1/payments");
+        	return this
         	
         },
         onSuccess: function (n) {
@@ -145,6 +146,7 @@ var WLRedirectPaymentRequest = function () {
         },
         deviceAPIUrl:function(){
         	_endpoint = _endpoint.concat("/api/v1/redirectpayments");
+        	return this
         	
         },
         paymentMethodId: function (n) {
@@ -191,6 +193,7 @@ var WLPaymentMethodRequest = function () {
         },
         deviceAPIUrl:function(){
         	_endpoint = _endpoint.concat("/api/v1/paymentmethods");
+        	return this
         	
         },
         pmType: function (n) {

@@ -116,7 +116,6 @@ public class RegistrationEndpoint {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getRedirectEndPoint(){
 		StringBuffer baseUrl = new StringBuffer(props.worldlineURL);
-		baseUrl.append("redirects");
 		return baseUrl.toString();
 	} 
 
