@@ -225,7 +225,7 @@
         <div class="container">
             <div class="col-xs-12 col-md-4">
                 <div class="panel panel-default credit-card-box">
-                    <div class="panel-heading display-table" id = "card_header">
+                    <div class="panel-heading display-table" id = "card_header" onclick='toggleCardDetails()'>
                         <div class="row display-tr">
                             <h3 class="panel-title display-td">Card Details</h3>
                             <div class="display-td">
@@ -344,7 +344,7 @@
              <!-- Online Banking -->
              <br><br>
              <div class="panel panel-default credit-card-box">
-                    <div class="panel-heading display-table" id = "online_banking_header">
+                    <div class="panel-heading display-table" id = "online_banking_header" onclick='toggleIbpDetails()'>
                         <div class="row display-tr">
                             <h3 class="panel-title display-td">Online Banking</h3>
                             <div class="display-td">
@@ -358,7 +358,7 @@
                             <div class="col-xs-12">
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <select class="form-control" data-chd="ibpId" id = "ibpList">
+                                        <select class="form-control" data-ibp="ibpId" id = "ibpList">
                                         </select>
                                     </div>
                                 </div>
@@ -399,6 +399,5 @@
 <script src="demo.js"></script>
 <script src="js/worldline-payments.js"></script>
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src = "script.js"></script>
 </body>
 </html>

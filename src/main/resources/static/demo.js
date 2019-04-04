@@ -112,7 +112,7 @@ function makeWLPromise(data,paymentMethodType) {
 	        new WLPaymentRequest()
 	            .chdForm(document.getElementById("card_details"), 'data-chd')
 	            .deviceAPIRequest(data)
-	            .deviceAPIUrl()
+	            .deviceAPIUrl(data.deviceEndpoint)
 	            .onSuccess(resolve)
 	            .onError(reject)
 	            .send()
@@ -121,9 +121,8 @@ function makeWLPromise(data,paymentMethodType) {
 	else if(paymentMethodType=="ibp"){
 		return new Promise(function (resolve, reject) {
 	        new WLRedirectPaymentRequest()
-	            .ibpForm(document.getElementById("online_banking_details"), 'data-chd')
+	            .ibpForm(document.getElementById("online_banking_details"), 'data-ibp')
 	            .deviceAPIRequest(data)
-	            .deviceAPIUrl()
 	            .onSuccess(resolve)
 	            .onError(reject)
 	            .send()
@@ -196,7 +195,6 @@ function getPaymentMethods(){
 	        new WLPaymentMethodRequest()
             .pmType("ibp")
             .deviceAPIRequest(data)
-            .deviceAPIUrl()
             .onSuccess(resolve)
             .onError(reject)
             .send()
@@ -275,3 +273,15 @@ window.addEventListener('message',function(e) {
     console.log('data', wlResponse)
 
 },false);
+
+function toggleCardDetails(){
+	var cardDetails = document.getElementById('card_details');
+	cardDetails.style.display  = cardDetails.style.display === 'none' ? 'block' : 'none'; 
+	
+}
+
+function toggleIbpDetails(){
+	var ibpDetails = document.getElementById('online_banking_details');
+	ibpDetails.style.display  = ibpDetails.style.display === 'none' ? 'block' : 'none'; 
+	
+}
