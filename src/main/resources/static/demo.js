@@ -112,7 +112,6 @@ function makeWLPromise(data,paymentMethodType) {
 	        new WLPaymentRequest()
 	            .chdForm(document.getElementById("card_details"), 'data-chd')
 	            .deviceAPIRequest(data)
-	            .deviceAPIUrl(data.deviceEndpoint)
 	            .onSuccess(resolve)
 	            .onError(reject)
 	            .send()

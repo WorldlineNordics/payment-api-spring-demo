@@ -46,22 +46,7 @@
  * 
  * For IBP functionality below are the usage:
  * 
- *Usage:
- * var Request = new WLPaymentRequest()
- *      .chdForm(document.getElementById("card_details"), 'data-chd')
- *      .deviceAPIRequest(deviceAPIRequest)
- *      .deviceAPIUrl(deviceAPIRequest.deviceEndpoint)
- *      .onSuccess(callback)
- *      .onError(callback)
- *      .send();
- * 
- * Where
- *  - The form has input fields for cardNumber, cardExpiryMonth, cardExpiryYear, cardCVC.
- *    Note that the form input fields may not have "name", as that could risk that the cardholderdata gets
- *    passed to the merchant server. This method explicitly warns on the console in that case.
- *  - The deviceAPIRequest contains a JSON with encryptedPayload and deviceEndpoint.
- *  - Callbacks for success and error. Error callback provides a JSON with status and statusText.
- *    The success callback contains an encryptedResponse that requires decryption on server side.
+
  * 
  * 
  * Usage:
@@ -106,7 +91,7 @@ var WLPaymentRequestState = {
 };
 
 var WLPaymentRequest = function () {
-    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint, _storedUserReference, _provider,_baseUrl;
+    var _cardHolderName, _cardNumber, _expDateMonth, _expDateYear, _cvCode, _encryptedPayload, _endpoint, _storedUserReference, _provider;
     var _success, _error;
     var _state = WLPaymentRequestState.NEW;
 
@@ -170,12 +155,13 @@ var WLPaymentRequest = function () {
         deviceAPIRequest: function (n) {
           _encryptedPayload = n.encryptedPayload;
           _endpoint = n.deviceEndpoint;
-          return this
-        },
-        deviceAPIUrl:function(n){
-        	_baseUrl = n;
-        	_endpoint = _baseUrl.concat("/api/v1/payments");
-        	return this
+          if(_endpoint.indexOf("/api/v1/payments") > -1){
+              return this
+          }
+          else{
+        	  _endpoint = _endpoint.concat("/api/v1/payments");
+          	  return this
+          }
         },
         onSuccess: function (n) {
             _success = n;
@@ -212,15 +198,15 @@ var WLPaymentRequest = function () {
 };
 
 var WLRedirectPaymentRequest = function () {
-    var _encryptedPayload, _endpoint,_paymentMethodId,_baseUrl;
+    var _encryptedPayload, _endpoint,_paymentMethodId;
     var _success, _error;
     var _state = WLPaymentRequestState.NEW;
 
     var _self = {
         deviceAPIRequest: function (n) {
           _encryptedPayload = n.encryptedPayload;
-          _baseUrl = n.deviceEndpoint;
-          _endpoint = _baseUrl.concat("/api/v1/redirectpayments");
+          _endpoint = n.deviceEndpoint;
+          _endpoint = _endpoint.concat("/api/v1/redirectpayments");
           return this
         },
         ibpForm:function(document,tag){
@@ -263,15 +249,15 @@ var WLRedirectPaymentRequest = function () {
 
 
 var WLPaymentMethodRequest = function () {
-    var _encryptedPayload, _endpoint,_paymentMethodType,_baseUrl;
+    var _encryptedPayload, _endpoint,_paymentMethodType;
     var _success, _error;
     var _state = WLPaymentRequestState.NEW;
 
     var _self = {
         deviceAPIRequest: function (n) {
           _encryptedPayload = n.encryptedPayload;
-          _baseUrl = n.deviceEndpoint;
-          _endpoint = _baseUrl.concat("/api/v1/paymentmethods");
+          _endpoint = n.deviceEndpoint;
+          _endpoint = _endpoint.concat("/api/v1/paymentmethods");
           return this
         },
         pmType: function (n) {
@@ -350,7 +336,7 @@ var WLProcessRequest = function(success, error,endpoint,data){
     _state = WLPaymentRequestState.SENT;
     xhttp.send(data);
 	
-}
+};
 
 var WLPaymentOptionsRequest = function () {
 	
