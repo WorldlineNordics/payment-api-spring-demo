@@ -44,10 +44,6 @@
  *  - Callbacks for success and error. Error callback provides a JSON with status and statusText.
  *    The success callback contains an encryptedResponse that requires decryption on server side. 
  * 
- * For IBP functionality below are the usage:
- * 
-
- * 
  * 
  * Usage:
  * var Request = new WLRedirectPaymentRequest()
