@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,7 +26,7 @@ public class RegistrationEndpoint {
 
     @Autowired
     private DemoConfiguration props;
-
+    
     @POST
     @Path("/registrations")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -40,7 +41,6 @@ public class RegistrationEndpoint {
 
         // Build the PaymentRequest.
         PaymentRequest details = new PaymentRequestBuilder()
-
                 .setBillingAddressLine1(request.billingAddressLine1)
                 .setBillingAddressLine2(request.billingAddressLine2)
                 .setBillingCity(request.billingCity)
@@ -65,14 +65,14 @@ public class RegistrationEndpoint {
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
                 .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
                 .createPaymentRequest();
-
+        
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
 
         // Return the deviceAPIRequest and custom information to the form.
         return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
     }
-
-    @POST
+    
+	@POST
     @Path("/unpackResponse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -90,6 +90,34 @@ public class RegistrationEndpoint {
                 .getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName());
         return response;
     }
+	
+	@GET
+	@Path("/paymentMethodEndPoint")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getPaymentMethodEndPoint(){
+		
+		 // Initialize the PaymentHandler
+        PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
+
+        // Build the PaymentRequest.
+    	PaymentRequest details = new PaymentRequestBuilder()
+    			.setMid(Long.parseLong(props.merchantId))
+    			.setPosId(props.posId).setCurrency("USD")
+    			.setOrderId("Example_order_" + System.currentTimeMillis())
+    			.setConsumerCountry("US")
+                .setConsumerLanguage("en")
+                .createPaymentRequest();
+		
+		return handler.createDeviceAPIRequest(details);
+	} 
+	
+	@GET
+	@Path("/redirectEndPoint")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getRedirectEndPoint(){
+		StringBuffer baseUrl = new StringBuffer(props.worldlineURL);
+		return baseUrl.toString();
+	} 
 
     /**
      * Example response with a custom field like "alreadyRegistered" that illustrates several actions are executed
@@ -161,4 +189,4 @@ public class RegistrationEndpoint {
             return paymentMethodName;
         }
     }
-}
+ }

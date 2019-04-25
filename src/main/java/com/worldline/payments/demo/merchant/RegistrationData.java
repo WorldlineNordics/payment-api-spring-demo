@@ -70,7 +70,7 @@ public class RegistrationData {
     public String getDemoTokenization() {
         return demoTokenization;
     }
-
+    
     String billingAddressLine1;
     String billingAddressLine2;
     String billingCity;
