@@ -61,7 +61,7 @@ function displayResult(result, error) {
 
 function makeWLPromise(data) {
     return new Promise(function (resolve, reject) {
-        new WLPaymentRequest()
+        new Worldline.PaymentRequest()
             .chdForm(document.getElementById("paymentForm"), 'data-chd')
             .deviceAPIRequest(data)
             .onSuccess(resolve)
