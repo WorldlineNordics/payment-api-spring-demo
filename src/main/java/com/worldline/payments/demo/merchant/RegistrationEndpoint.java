@@ -64,6 +64,16 @@ public class RegistrationEndpoint {
                 .setConsumerLanguage("en")
                 .setAuthorizationType(AuthorizationType.UNDEFINED)
                 .setStoreFlag(StoreFlag.valueOf(request.demoTokenization))
+                .setShippingAddressLine1(request.shippingAddressLine1)
+                .setShippingAddressLine2(request.shippingAddressLine2)
+                .setShippingCity(request.shippingCity)
+                .setShippingCompanyName(request.shippingCompanyName)
+                .setShippingCountryCode(request.shippingCountryCode)
+                .setShippingEmailAddress(request.shippingEmailAddress)
+                .setShippingFullName(request.shippingFullName)
+                .setShippingMobilePhone(request.shippingMobilePhone)
+                .setShippingZipCode(request.shippingZipCode)
+                .setShippingStateProvince(request.shippingStateProvince)
                 .createPaymentRequest();
         
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
@@ -87,7 +97,7 @@ public class RegistrationEndpoint {
         // Only select fields to be returned to the web page
         UnpackedResponse response = new UnpackedResponse(decodedResponse.getStatus(), decodedResponse.getTransaction() == null ? 0 : decodedResponse
                 .getTransaction()
-                .getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName());
+                .getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName(), decodedResponse.getEftPaymentSlipUrl());
         return response;
     }
 	
@@ -162,15 +172,17 @@ public class RegistrationEndpoint {
         Long transactionId;
         String orderId;
         String paymentMethodName;
+        String eftPaymentSlipUrl;
 
 
         UnpackedResponse(
                 String status, Long transactionId,
-                String orderId, String paymentMethodName) {
+                String orderId, String paymentMethodName,String eftPaymentSlipUrl) {
             this.status = status;
             this.transactionId = transactionId;
             this.orderId = orderId;
             this.paymentMethodName = paymentMethodName;
+            this.eftPaymentSlipUrl=eftPaymentSlipUrl;
         }
 
         public String getStatus() {
@@ -187,6 +199,9 @@ public class RegistrationEndpoint {
 
         public String getPaymentMethodName() {
             return paymentMethodName;
+        }
+        public String getEftPaymentSlipUrl() {
+        	return eftPaymentSlipUrl;
         }
     }
  }

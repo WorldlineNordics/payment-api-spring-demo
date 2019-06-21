@@ -38,6 +38,8 @@
                         <option value="CLP">CLP</option>
                         <option value="COP">COP</option>
                         <option value="ARS">ARS</option>
+                        <option value="CNY">CNY</option>
+                        <option value="MXN">MXN</option>
                     </select>
                 </div>
             </div>
@@ -82,15 +84,15 @@
     </div>
 
     <div class="col-xs-12 col-md-2"></div>
-    <div class="container">
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default credit-card-box">
-                <div class="panel-heading panel-heading-full display-table">
+   	<div class="container">
+    	<div class="col-xs-12 col-md-4">
+        	<div class="panel panel-default credit-card-box">
+                <div class="panel-heading panel-heading-full display-table" onclick='toggleBillingDetails()'>
                     <div class="row display-tr">
                         <h3 class="panel-title display-td">Billing Information</h3>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="billing_details" style = "display:none;">
                     <div class="col-xs-12">
                         <div class="form-group">
                             <label for="billingBuyerType">BUYER TYPE</label>
@@ -223,7 +225,125 @@
                         </div>
                     </div>
                 </div>
-            </div>
+        	</div>
+        	<div class="panel panel-default credit-card-box">
+                <div class="panel-heading panel-heading-full display-table" onclick='toggleShippingDetails()'>
+                    <div class="row display-tr">
+                        <h3 class="panel-title display-td">Shipping Information</h3>
+                    </div>
+                </div>
+                <div class="panel-body" id="shipping_details" style = "display:none;">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingFullName">FULL NAME</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingFullName" id="shippingFullName"
+                                       placeholder="Full name"
+                                       class="form-control"
+                                       autocomplete="shipping name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingCompanyName">COMPANY NAME</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingCompanyName" id="shippingCompanyName"
+                                       placeholder="Full name"
+                                       class="form-control"
+                                       autocomplete="shipping company name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingEmailAddress">EMAIL</label>
+                            <div class="input-group">
+                                <input type="email" name="shippingEmailAddress" id="shippingEmailAddress"
+                                       placeholder="name@example.com" 
+                                       class="form-control"
+                                       autocomplete="shipping email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingAddressLine1">ADDRESS LINE 1</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingAddressLine1" id="shippingAddressLine1"
+                                       placeholder="AV MIRACATU"
+                                       class="form-control"
+                                       autocomplete="shipping address-line1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingAddressLine2">ADDRESS LINE 2</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingAddressLine2" id="shippingAddressLine2"
+                                       placeholder="Number and street name"
+                                       class="form-control"
+                                       autocomplete="shipping address-line2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingCity">CITY</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingCity" id="shippingCity" placeholder="City"
+                                       class="form-control"
+                                       autocomplete="shipping address-level2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingStateProvince">STATE</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingStateProvince" id="shippingStateProvince"
+                                       placeholder="SP"
+                                       class="form-control"
+                                       autocomplete="shipping address-level1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingZipCode">ZIP CODE</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingZipCode" id="shippingZipCode" placeholder="zip code"
+                                       class="form-control"
+                                       autocomplete="shipping zip">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingCountryCode">COUNTRY CODE</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingCountryCode" id="shippingCountryCode"
+                                       placeholder="BR" 
+                                       pattern="[A-Za-z]{2}"
+                                       class="form-control"
+                                       autocomplete="shipping country">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="shippingMobilePhone">MOBILE PHONE</label>
+                            <div class="input-group">
+                                <input type="text" name="shippingMobilePhone" id="shippingMobilePhone"
+                                       placeholder="9988776655"
+                                       class="form-control"
+                                       autocomplete="shipping mobile">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        	</div>
         </div>
         <div class="container">
             <div class="col-xs-12 col-md-4">
@@ -345,7 +465,7 @@
              </div>
              
              <!-- Online Banking -->
-             <br><br>
+             <br/>
              <div class="panel panel-default credit-card-box">
                     <div class="panel-heading display-table" id = "online_banking_header" onclick='toggleIbpDetails()'>
                         <div class="row display-tr">
@@ -383,7 +503,88 @@
 							</div>
                         </div>
                     </div>
+             </div>
+             <!-- EFT -->
+             <br/>
+              <div class="panel panel-default credit-card-box">
+                    <div class="panel-heading display-table" id = "eft_header" onclick='toggleEftDetails()'>
+                        <div class="row display-tr">
+                            <h3 class="panel-title display-td">Wire Transfer</h3>
+                            <div class="display-td">
+                                <img class="img-responsive pull-right"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="eft_details" style = "display:none;">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <select class="form-control" data-eft="eftId" id = "eftList">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                            	<button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('eft')">Submit</button>
+                        	</div>
+                        	<div>
+                        		<div class="col-xs-12">
+                            	</div>
+                            </div>
+                            <div>
+                        		<div class="col-xs-12">
+                            		<hr>
+                        		</div>
+                        		<div class="col-xs-12">
+                            		<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
+                        		</div>
+							</div>
+                        </div>
+                    </div>
                     
+             </div>
+             <br/>
+             <!-- E-wallets -->
+             
+              <div class="panel panel-default credit-card-box">
+                    <div class="panel-heading display-table" id = "ewallet_header" onclick='toggle_eWalletDetails()'>
+                        <div class="row display-tr">
+                            <h3 class="panel-title display-td">eWallet</h3>
+                            <div class="display-td">
+                                <img class="img-responsive pull-right"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="ewallet_details" style = "display:none;">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <select class="form-control" data-ewallet="ewalletId" id = "ewalletList">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                            	<button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('ewallet')">Submit</button>
+                        	</div>
+                        	<div>
+                        		<div class="col-xs-12">
+                            	</div>
+                            </div>
+                            <div>
+                        		<div class="col-xs-12">
+                            		<hr>
+                        		</div>
+                        		<div class="col-xs-12">
+                            		<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
+                        		</div>
+							</div>
+                        </div>
+                    </div>
              </div>
              <div class="">
              	<div>

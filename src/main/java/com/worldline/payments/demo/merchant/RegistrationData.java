@@ -71,6 +71,46 @@ public class RegistrationData {
         return demoTokenization;
     }
     
+    public String getShippingFullName() {
+        return shippingFullName;
+    }
+    
+    public String getShippingCompanyName() {
+        return shippingCompanyName;
+    }
+    
+    public String getShippingEmailAddress() {
+        return shippingEmailAddress;
+    }
+    
+    public String getShippingAddressLine1() {
+        return shippingAddressLine1;
+    }
+    
+    public String getShippingAddressLine2() {
+        return shippingAddressLine2;
+    }
+    
+    public String getShippingCity() {
+        return shippingCity;
+    }
+    
+    public String getShippingStateProvince() {
+        return shippingStateProvince;
+    }
+    
+    public String getShippingZipCode() {
+        return shippingZipCode;
+    }
+    
+    public String getShippingCountryCode() {
+        return shippingCountryCode;
+    }
+    
+    public String getShippingMobilePhone() {
+        return shippingMobilePhone;
+    }
+    
     String billingAddressLine1;
     String billingAddressLine2;
     String billingCity;
@@ -88,4 +128,14 @@ public class RegistrationData {
     String demoTransactionChannel;
     String demoAutoCapture;
     String demoTokenization;
+    String shippingFullName;
+    String shippingCompanyName;
+    String shippingEmailAddress;
+    String shippingAddressLine1;
+    String shippingAddressLine2;
+    String shippingCity;
+    String shippingStateProvince;
+    String shippingZipCode;
+    String shippingCountryCode;
+    String shippingMobilePhone;
 }

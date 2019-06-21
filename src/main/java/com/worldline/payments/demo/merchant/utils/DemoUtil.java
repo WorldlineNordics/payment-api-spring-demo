@@ -12,6 +12,7 @@ public class DemoUtil {
             System.out.printf("%-25s: %-60s\n", "Acquirer Answer Code",  decodedResponse.getAcquirerAnswerCode());
             System.out.printf("%-25s: %-60s\n", "Masked Card",  decodedResponse.getMaskedCardNumber());
             System.out.printf("%-25s: %-60s\n", "Payment Method Name",  decodedResponse.getPaymentMethodName());
+            System.out.printf("%-25s: %-60s\n", "Payment Slip URL",  decodedResponse.getEftPaymentSlipUrl());
             System.out.printf("%-25s: %-60s\n", "Auth Code",  decodedResponse.getAcquirerAuthCode());
             if (decodedResponse.getTransaction() != null) {
                 System.out.printf("%-25s: %-60s\n", "TransactionId",  decodedResponse.getTransaction().getTransactionId());

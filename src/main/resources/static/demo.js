@@ -1,6 +1,9 @@
 
 // Decorate HTML expiry year select box.
 var year = (new Date()).getFullYear(), selectExp = document.getElementById("expYear"), option = null, next_year = null;
+
+var pmTypes={"ibp":"ibpList", "eft":"eftList", "ewallet":"ewalletList"};
+
 for (var i = 0; i <= 10; i++) {
     option = document.createElement("option");
     next_year = parseInt(year, 10) + i;
@@ -22,14 +25,16 @@ window.addEventListener("load", function () {
 });
 
 function exec(pmMethodType) {
-    var formAsJson = formToJson(form);
+	var formAsJson = formToJson(form);
     if(pmMethodType == 'card'){
     	processCard(formAsJson);
     }
-    else if (pmMethodType == 'ibp'){
-    	processIbp(formAsJson);
+    else if (pmMethodType == 'ibp' || pmMethodType == 'ewallet'){
+    	initiateRedirect(formAsJson,pmMethodType);
     }
-    
+    else if(pmMethodType == 'eft'){
+    	processEft(formAsJson);
+    }
 }
 
 
@@ -67,7 +72,7 @@ function processCard(formAsJson){
 	
 }
 
-function processIbp(formAsJson){
+function initiateRedirect(formAsJson, pmMethodType){
 	makeRequest({
         method: 'POST',
         url: '/api/demo/registrations',
@@ -76,7 +81,12 @@ function processIbp(formAsJson){
     })
     .then(function (response) {
         displayResult("Processing with Worldline.", "");
-        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"ibp")
+        if(pmMethodType=='ibp'){
+        	return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"ibp")
+        }
+        else if(pmMethodType=='ewallet'){
+        	return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"ewallet")
+        }
     })
 	.then(function(response){
 		if(response.bankUrl){
@@ -94,6 +104,41 @@ function processIbp(formAsJson){
 	
 }
 
+function processEft(formAsJson){
+	makeRequest({
+        method: 'POST',
+        url: '/api/demo/registrations',
+        encode: false,
+        params: JSON.stringify(formAsJson)
+    })
+    .then(function (response) {
+        displayResult("Processing with Worldline.", "");
+        return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"eft")
+    })
+    .then(function(response){
+		displayResult("Processing result with merchant.", "");
+        return makeRequest({
+            method: 'POST',
+            url: '/api/demo/unpackResponse',
+            encode: true,
+            params: JSON.stringify(response)
+        });
+	})
+	.then(function (response) {
+            response = JSON.parse(response);
+            displayResult("Status: " + response.status
+                + "<br>TransactionId: " + response.transactionId
+                + "<br>OrderId: " + response.orderId
+                + "<br>Payment Method: " + response.paymentMethodName
+                + "<br>Payment Slip URL: " +
+                "<a href="+response.eftPaymentSlipUrl+" target='_blank'>"+response.eftPaymentSlipUrl+"</a>"
+                , "");
+     })
+    .catch(function (err) {
+        showError(err);
+     });
+	
+}
 
 function showError(error) {
     console.error(error);
@@ -109,22 +154,42 @@ function makeWLPromise(data,paymentMethodType) {
 	
 	if(paymentMethodType=="card"){
 	    return new Promise(function (resolve, reject) {
-	        new WLPaymentRequest()
-	            .chdForm(document.getElementById("card_details"), 'data-chd')
-	            .deviceAPIRequest(data)
-	            .onSuccess(resolve)
-	            .onError(reject)
-	            .send()
+	        new Worldline.PaymentRequest()
+	        .chdForm(document.getElementById("card_details"), 'data-chd')
+	        .deviceAPIRequest(data)
+	        .onSuccess(resolve)
+	        .onError(reject)
+	        .send()
 	    })
 	}
 	else if(paymentMethodType=="ibp"){
 		return new Promise(function (resolve, reject) {
-	        new WLRedirectPaymentRequest()
-	            .ibpForm(document.getElementById("online_banking_details"), 'data-ibp')
+	        new Worldline.AlternatePaymentRequest()
+	            .paymentForm(document.getElementById("online_banking_details"), 'data-ibp')
 	            .deviceAPIRequest(data)
 	            .onSuccess(resolve)
 	            .onError(reject)
-	            .send()
+	            .send(paymentMethodType)
+	    })
+	}
+	else if(paymentMethodType=='eft'){
+		return new Promise(function (resolve,reject){
+			 new Worldline.AlternatePaymentRequest()
+			 	.paymentForm(document.getElementById("eft_details"), 'data-eft')
+	            .deviceAPIRequest(data)
+	            .onSuccess(resolve)
+	            .onError(reject)
+	            .send(paymentMethodType)
+		})
+	}
+	else if(paymentMethodType=="ewallet"){
+		return new Promise(function (resolve, reject) {
+	        new Worldline.AlternatePaymentRequest()
+	            .paymentForm(document.getElementById("ewallet_details"), 'data-ewallet')
+	            .deviceAPIRequest(data)
+	            .onSuccess(resolve)
+	            .onError(reject)
+	            .send(paymentMethodType)
 	    })
 	}
 }
@@ -164,7 +229,6 @@ function formToJson(form,pmMethodType) {
     return object;
 }
 
-
 function unpackResponse(response){
 	makeRequest({
         method: 'POST',
@@ -190,29 +254,41 @@ function getPaymentMethods(){
 	})
 	.then(function(response){
 		var data = JSON.parse(response);
-		return new Promise(function (resolve, reject) {
-	        new WLPaymentMethodRequest()
-            .pmType("ibp")
-            .deviceAPIRequest(data)
-            .onSuccess(resolve)
-            .onError(reject)
-            .send()
+		Object.keys(pmTypes).forEach(function(key){
+			makeWLPromisePaymentMethods(data,key)
+			.then(function(response){
+			    var pMethods = response;
+				var list = document.getElementById(pmTypes[key]);
+				pMethods.forEach(function(pm){
+				var opt = document.createElement('option');
+				opt.value = pm.id;
+				opt.text = pm.name;
+				list.options.add(opt);
+			    });
+		    })
+			.catch(function(err){
+				showError(err);
+			});
 		})
-	})
-	.then(function(response){
-		var pMethods = response;
-		var list = document.getElementById('ibpList');
-		pMethods.forEach(function(pm){
-			var opt = document.createElement('option');
-			opt.value = pm.id;
-		    opt.text = pm.name;
-		    list.options.add(opt);
-		});
+	
 	})
 	.catch(function (err) {
         showError(err);
 	});
 }
+
+//Created makeWLPromisePaymentMethods function to call PaymentMethodRequest for IBP, EFT and E-wallet
+function makeWLPromisePaymentMethods(data,key){
+	return new Promise(function (resolve, reject) {
+        new Worldline.PaymentMethodRequest()
+        .pmType(key)
+        .deviceAPIRequest(data)
+        .onSuccess(resolve)
+        .onError(reject)
+        .send()
+	})
+}
+
 
 function processRedirect(res){
 	
@@ -232,30 +308,30 @@ function processRedirect(res){
 		
 		//create iframe and redirect to bank's site
 		var wlRedirectUrl = response.concat("/api/v1/redirects")
-		var ibpIframe = document.createElement('iframe');
+		var redirectIframe = document.createElement('iframe');
 
-		ibpIframe.id = "ibpFrame";
-		ibpIframe.name = "ibpFrame";
-		ibpIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999; background-color:#FFFFFF"
-		ibpIframe.sandbox =	"allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation";
+		redirectIframe.id = "redirectFrame";
+		redirectIframe.name = "redirectFrame";
+		redirectIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999; background-color:#FFFFFF"
+		redirectIframe.sandbox =	"allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation";
 			
-		var ibpDiv = document.getElementById('iframeDiv');
-		ibpDiv.appendChild(ibpIframe);
+		var redirectDiv = document.getElementById('iframeDiv');
+		redirectDiv.appendChild(redirectIframe);
 		
-		var idocument = ibpIframe.contentWindow.document;
-		var ibpForm = idocument.createElement("form");
-		ibpForm.method = "POST";
-		ibpForm.action = wlRedirectUrl;
-		ibpForm.target = "ibpFrame";
+		var idocument = redirectIframe.contentWindow.document;
+		var redirectForm = idocument.createElement("form");
+		redirectForm.method = "POST";
+		redirectForm.action = wlRedirectUrl;
+		redirectForm.target = "redirectFrame";
 		
 		var reqElement = document.createElement('input');
 		reqElement.setAttribute('type','hidden');
 		reqElement.setAttribute('name','req');
 		reqElement.setAttribute('value',req);
-		ibpForm.appendChild(reqElement);
+		redirectForm.appendChild(reqElement);
 		
-		ibpIframe.appendChild(ibpForm);
-		ibpForm.submit();
+		redirectIframe.appendChild(redirectForm);
+		redirectForm.submit();
 		
 	})
 	
@@ -265,8 +341,8 @@ window.addEventListener('message',function(e) {
     var key = e.message ? 'message' : 'data';
     var wlResponse = e[key];
     unpackResponse(wlResponse);
-    var ibpDiv = document.getElementById('iframeDiv');
-    ibpDiv.removeChild(ibpDiv.childNodes[0]);
+    var redirectDiv = document.getElementById('iframeDiv');
+    redirectDiv.removeChild(iframeDiv.childNodes[0]);
     console.log('message received');
     console.log('key', key)
     console.log('data', wlResponse)
@@ -276,11 +352,59 @@ window.addEventListener('message',function(e) {
 function toggleCardDetails(){
 	var cardDetails = document.getElementById('card_details');
 	cardDetails.style.display  = cardDetails.style.display === 'none' ? 'block' : 'none'; 
-	
+	var ibpDetails = document.getElementById('online_banking_details');
+	ibpDetails.style.display  = ibpDetails.style.display === 'block' ? 'none' : 'none'; 
+	var eftDetails = document.getElementById('eft_details');
+	eftDetails.style.display  = eftDetails.style.display === 'block' ? 'none' : 'none';
+	var ewalletDetails = document.getElementById('ewallet_details');
+	ewalletDetails.style.display  = ewalletDetails.style.display === 'block' ? 'none' : 'none'; 
 }
 
 function toggleIbpDetails(){
 	var ibpDetails = document.getElementById('online_banking_details');
 	ibpDetails.style.display  = ibpDetails.style.display === 'none' ? 'block' : 'none'; 
+	var cardDetails = document.getElementById('card_details');
+	cardDetails.style.display  = cardDetails.style.display === 'block' ? 'none' : 'none'; 
+	var eftDetails = document.getElementById('eft_details');
+	eftDetails.style.display  = eftDetails.style.display === 'block' ? 'none' : 'none';
+	var ewalletDetails = document.getElementById('ewallet_details');
+	ewalletDetails.style.display  = ewalletDetails.style.display === 'block' ? 'none' : 'none'; 
 	
+}
+
+function toggleEftDetails(){
+	var eftDetails = document.getElementById('eft_details');
+	eftDetails.style.display  = eftDetails.style.display === 'none' ? 'block' : 'none'; 
+	var cardDetails = document.getElementById('card_details');
+	cardDetails.style.display  = cardDetails.style.display === 'block' ? 'none' : 'none'; 
+	var ibpDetails = document.getElementById('online_banking_details');
+	ibpDetails.style.display  = ibpDetails.style.display === 'block' ? 'none' : 'none'; 
+	var ewalletDetails = document.getElementById('ewallet_details');
+	ewalletDetails.style.display  = ewalletDetails.style.display === 'block' ? 'none' : 'none'; 
+	
+}
+
+function toggle_eWalletDetails(){
+	var ewalletDetails = document.getElementById('ewallet_details');
+	ewalletDetails.style.display  = ewalletDetails.style.display === 'none' ? 'block' : 'none'; 
+	var cardDetails = document.getElementById('card_details');
+	cardDetails.style.display  = cardDetails.style.display === 'block' ? 'none' : 'none'; 
+	var ibpDetails = document.getElementById('online_banking_details');
+	ibpDetails.style.display  = ibpDetails.style.display === 'block' ? 'none' : 'none'; 
+	var eftDetails = document.getElementById('eft_details');
+	eftDetails.style.display  = eftDetails.style.display === 'block' ? 'none' : 'none';
+}
+
+function toggleBillingDetails(){
+	var billingDetails = document.getElementById('billing_details');
+	billingDetails.style.display  = billingDetails.style.display === 'none' ? 'block' : 'none'; 
+	var shippingDetails = document.getElementById('shipping_details');
+	shippingDetails.style.display  = shippingDetails.style.display === 'block' ? 'none' : 'none';  
+}
+
+function toggleShippingDetails(){
+	var shippingDetails = document.getElementById('shipping_details');
+	shippingDetails.style.display  = shippingDetails.style.display === 'none' ? 'block' : 'none'; 
+	var billingDetails = document.getElementById('billing_details');
+	billingDetails.style.display  = billingDetails.style.display === 'block' ? 'none' : 'none'; 
 }
