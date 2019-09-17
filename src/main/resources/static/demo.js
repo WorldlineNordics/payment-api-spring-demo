@@ -13,6 +13,9 @@ for (var i = 0; i <= 10; i++) {
 }
 
 var form;
+var formAsJson;
+var deviceEndpoint;
+var encryptedPayload;
 
 window.addEventListener("load", function () {
     form = document.getElementById("paymentForm");
@@ -25,9 +28,9 @@ window.addEventListener("load", function () {
 });
 
 function exec(pmMethodType) {
-	var formAsJson = formToJson(form);
+	formAsJson = formToJson(form);
     if(pmMethodType == 'card'){
-    	processCard(formAsJson);
+    	processAuthentication(formAsJson);
     }
     else if (pmMethodType == 'ibp' || pmMethodType == 'ewallet'){
     	initiateRedirect(formAsJson,pmMethodType);
@@ -37,6 +40,113 @@ function exec(pmMethodType) {
     }
 }
 
+async function processAuthentication(formAsJson){
+	try{
+		var response = await makeRequest({
+	        method: 'POST',
+	        url: '/api/demo/registrations',
+	        encode: false,
+	        params: JSON.stringify(formAsJson)
+	    })
+		deviceEndpoint = JSON.parse(JSON.parse(response).deviceAPIRequest).deviceEndpoint;
+		encryptedPayload = JSON.parse(JSON.parse(response).deviceAPIRequest).encryptedPayload;
+		
+	    displayResult("Processing Initiate Authentication with Worldline.", "");
+	    var initResponse = await makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"initAuth")
+	    
+		if(initResponse.tDSMethodContent) {
+			processTDSMethodContent(initResponse.tDSMethodContent);
+		}
+		await timeout(3000);
+		
+		if ('AUTHENTICATION' == initResponse.status && ('NOT_REQUIRED' == initResponse.authenticationStatus || 'SUCCESSFUL' == initResponse.authenticationStatus)) {
+			//proceed with existing payment and display result
+			displayResult("Authentication Successful. Proceed with Payment", "");
+			var paymentReq = createPaymentRequest(deviceEndpoint, encryptedPayload, initResponse.worldlineSessionData);
+	    	processCardAfterAuthentication(paymentReq);
+		} else if('AUTHENTICATION' === initResponse.status && 'CONTINUE' === initResponse.authenticationStatus ) {
+			
+			var continueReq = createPaymentRequest(deviceEndpoint, encryptedPayload, initResponse.worldlineSessionData);
+			displayResult("Processing Continue Authentication with Worldline.", "");
+		    var continueResponse = await makeWLPromise(continueReq,"continueAuth")
+			
+		    if('AUTHENTICATION' === continueResponse.status && 'SUCCESSFUL' === continueResponse.authenticationStatus ) {
+		    	//process with payment and display result
+		    	displayResult("Authentication Successful. Proceed with Payment", "");
+		    	var paymentReq = createPaymentRequest(deviceEndpoint, encryptedPayload, initResponse.worldlineSessionData);
+		    	processCardAfterAuthentication(paymentReq);
+		    } else if ('AUTHENTICATION' == continueResponse.status && 'REQUIRED' == continueResponse.authenticationStatus) {
+		    	//rediect to ACS using iFrame
+		    	displayResult("Processing Complete Authentication with Worldline.", "");
+		    	processAuthenticationRedirect(continueResponse);	    	
+		    } else {
+				//Don't proceed for payment flow and show appropriate message to user.
+		    	displayAutheticationResult(continueResponse.encResponse);
+			}
+		} else if ('AUTHENTICATION' == initResponse.status && 'REQUIRED' == initResponse.authenticationStatus) {
+	    	//rediect to ACS using iFrame
+	    	displayResult("Processing Complete Authentication with Worldline.", "");
+	    	processAuthenticationRedirect(initResponse);
+	    } else {
+			//Don't proceed for payment flow and show appropriate message to user.
+	    	displayAutheticationResult(initResponse.encResponse);
+		}
+	}
+	catch(err){
+		showError(err);
+	}
+}
+
+function createPaymentRequest(deviceEndpoint, encryptedRequest, worldlineSessionData) {
+	var paymentRequest = {};
+	var encryptedPayload = {};
+	
+	encryptedPayload.encryptedRequest = encryptedRequest;
+	encryptedPayload.worldlineSessionData = worldlineSessionData;
+	
+	paymentRequest.deviceEndpoint = deviceEndpoint;
+	paymentRequest.encryptedPayload = JSON.stringify(encryptedPayload);
+	return paymentRequest;
+}
+
+async function displayAutheticationResult(response){
+	
+    var unpackResponse = await makeRequest({
+        method: 'POST',
+        url: '/api/demo/unpackResponse',
+        encode: true,
+        params: response
+    });
+	
+    var authResponse = JSON.parse(unpackResponse);
+    displayResult("Authentication Status: " + authResponse.authenticationStatus
+			+ "<br>Authentication Status Description: " + authResponse.authenticationStatusDescription
+            + "<br>TransactionId: " + authResponse.transactionId
+            + "<br>OrderId: " + authResponse.orderId
+            + "<br>Payment Method: " + authResponse.paymentMethodName
+            , "");
+}
+
+async function processCardAfterAuthentication(paymentReq){
+	
+    displayResult("Processing Payment with Worldline.", "");
+    var response = await makeWLPromise(paymentReq,"card")
+    	
+	displayResult("Processing result with merchant.", "");
+    var unpackResponse = await makeRequest({
+        method: 'POST',
+        url: '/api/demo/unpackResponse',
+        encode: true,
+        params: response.encResponse
+    });
+	
+    var paymentResponse = JSON.parse(unpackResponse);
+    displayResult("Status: " + paymentResponse.status
+        + "<br>TransactionId: " + paymentResponse.transactionId
+        + "<br>OrderId: " + paymentResponse.orderId
+        + "<br>Payment Method: " + paymentResponse.paymentMethodName
+        , "");
+}
 
 function processCard(formAsJson){
 	makeRequest({
@@ -46,7 +156,7 @@ function processCard(formAsJson){
         params: JSON.stringify(formAsJson)
     })
     .then(function (response) {
-        displayResult("Processing with Worldline.", "");
+        displayResult("Processing Payment with Worldline.", "");
         return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"card")
     })
 	.then(function(response){
@@ -55,7 +165,7 @@ function processCard(formAsJson){
             method: 'POST',
             url: '/api/demo/unpackResponse',
             encode: true,
-            params: JSON.stringify(response)
+            params: response.encResponse
         });
 	})
 	.then(function (response) {
@@ -68,8 +178,7 @@ function processCard(formAsJson){
      })
      .catch(function (err) {
          showError(err);
-     });
-	
+     });	
 }
 
 function initiateRedirect(formAsJson, pmMethodType){
@@ -80,7 +189,7 @@ function initiateRedirect(formAsJson, pmMethodType){
         params: JSON.stringify(formAsJson)
     })
     .then(function (response) {
-        displayResult("Processing with Worldline.", "");
+        displayResult("Processing Payment with Worldline.", "");
         if(pmMethodType=='ibp'){
         	return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"ibp")
         }
@@ -112,7 +221,7 @@ function processEft(formAsJson){
         params: JSON.stringify(formAsJson)
     })
     .then(function (response) {
-        displayResult("Processing with Worldline.", "");
+        displayResult("Processing Payment with Worldline.", "");
         return makeWLPromise(JSON.parse(JSON.parse(response).deviceAPIRequest),"eft")
     })
     .then(function(response){
@@ -121,7 +230,7 @@ function processEft(formAsJson){
             method: 'POST',
             url: '/api/demo/unpackResponse',
             encode: true,
-            params: JSON.stringify(response)
+            params: response.encResponse
         });
 	})
 	.then(function (response) {
@@ -141,7 +250,7 @@ function processEft(formAsJson){
 }
 
 function showError(error) {
-    console.error(error);
+    console.log(error);
     displayResult("", "Error :" + error.status + ": " + error.statusText);
 }
 
@@ -150,8 +259,33 @@ function displayResult(result, error) {
     document.getElementById("payment-errors").innerHTML = error;
 }
 
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+} 
+
 function makeWLPromise(data,paymentMethodType) {
 	
+	if(paymentMethodType=="initAuth"){
+	    return new Promise(function (resolve, reject) {
+	        new Worldline.PaymentRequest()
+	        .chdForm(document.getElementById("card_details"), 'data-chd')
+	        .deviceAPIRequest(data)
+	        .onSuccess(resolve)
+	        .onError(reject)
+	        .setPaymentMethodType(paymentMethodType)
+	        .send()
+	    })
+	}
+	if(paymentMethodType=="continueAuth"){
+	    return new Promise(function (resolve, reject) {
+	        new Worldline.PaymentRequest()
+	        .deviceAPIRequest(data)
+	        .onSuccess(resolve)
+	        .onError(reject)
+	        .setPaymentMethodType(paymentMethodType)
+	        .send()
+	    })
+	}
 	if(paymentMethodType=="card"){
 	    return new Promise(function (resolve, reject) {
 	        new Worldline.PaymentRequest()
@@ -159,37 +293,38 @@ function makeWLPromise(data,paymentMethodType) {
 	        .deviceAPIRequest(data)
 	        .onSuccess(resolve)
 	        .onError(reject)
+	        .setPaymentMethodType(paymentMethodType)
 	        .send()
 	    })
 	}
 	else if(paymentMethodType=="ibp"){
 		return new Promise(function (resolve, reject) {
 	        new Worldline.AlternatePaymentRequest()
-	            .paymentForm(document.getElementById("online_banking_details"), 'data-ibp')
-	            .deviceAPIRequest(data)
-	            .onSuccess(resolve)
-	            .onError(reject)
-	            .send(paymentMethodType)
+	        .paymentForm(document.getElementById("online_banking_details"), 'data-ibp')
+	        .deviceAPIRequest(data)
+	        .onSuccess(resolve)
+	        .onError(reject)
+	        .send(paymentMethodType)
 	    })
 	}
 	else if(paymentMethodType=='eft'){
 		return new Promise(function (resolve,reject){
 			 new Worldline.AlternatePaymentRequest()
-			 	.paymentForm(document.getElementById("eft_details"), 'data-eft')
-	            .deviceAPIRequest(data)
-	            .onSuccess(resolve)
-	            .onError(reject)
-	            .send(paymentMethodType)
+			 .paymentForm(document.getElementById("eft_details"), 'data-eft')
+	         .deviceAPIRequest(data)
+	         .onSuccess(resolve)
+	         .onError(reject)
+	         .send(paymentMethodType)
 		})
 	}
 	else if(paymentMethodType=="ewallet"){
 		return new Promise(function (resolve, reject) {
 	        new Worldline.AlternatePaymentRequest()
-	            .paymentForm(document.getElementById("ewallet_details"), 'data-ewallet')
-	            .deviceAPIRequest(data)
-	            .onSuccess(resolve)
-	            .onError(reject)
-	            .send(paymentMethodType)
+	        .paymentForm(document.getElementById("ewallet_details"), 'data-ewallet')
+	        .deviceAPIRequest(data)
+	        .onSuccess(resolve)
+	        .onError(reject)
+	        .send(paymentMethodType)
 	    })
 	}
 }
@@ -220,7 +355,7 @@ function makeRequest(opts) {
     });
 }
 
-function formToJson(form,pmMethodType) {
+function formToJson(form) {
     var FD = new FormData(form);
     var object = {};
     FD.forEach(function (value, key) {
@@ -229,12 +364,66 @@ function formToJson(form,pmMethodType) {
     return object;
 }
 
+function createContinueRequest(form,initResponse) {
+   
+    return Object.assign(form, initResponse);;
+}
+
+function processTDSMethodContent(tDSMethodContent){
+	var hiddenIframe=document.createElement('iframe');
+	hiddenIframe.id="3dsHiddenFrame";
+	hiddenIframe.name="3dsHiddenFrame";
+	hiddenIframe.style="visibility:hidden; position:fixed; top:0px;bottom:0px;left:0px; right:0px; width:100%; height:100%; frameBorder:0;border:none; margin:0; padding:0;overflow:hidden; z-index:999999";
+	hiddenIframe.sandbox ="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation";
+	document.getElementById("hiddenIframeDiv").appendChild(hiddenIframe);
+	var iframeDoc = document.getElementById('3dsHiddenFrame').contentDocument;
+	iframeDoc.open();
+	iframeDoc.write(tDSMethodContent);
+	iframeDoc.close();
+}
+
+function processAuthenticationRedirect(response){
+	redirectParameters = JSON.parse(response.redirectParameters);
+	//create iframe and redirect to ACS
+		
+	acsIframe = document.createElement('iframe');
+	acsIframe.src = "about:blank";
+
+	acsIframe.id = "acsFrame";
+	acsIframe.name = "acsFrame";
+	acsIframe.style = "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999; background-color:#FFFFFF"
+	acsIframe.sandbox =	"allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation";
+
+	acsDiv = document.getElementById('iframeDiv')
+	acsDiv.appendChild(acsIframe);
+
+	var idocument = acsIframe.contentWindow.document;
+	acsResponse = idocument.createElement("div");
+	acsResponse.id = "acsResponse";
+	acsResponse.name = "acsResponse";
+	acsIframe.appendChild(acsResponse);
+
+	acsForm = idocument.createElement("form");
+	acsForm.target = "acsFrame";
+	acsForm.method = response.redirectMethod;
+	acsForm.action = response.redirectUrl;
+	for (var name in redirectParameters) {
+		var input = idocument.createElement('input');
+		input.type = 'hidden';
+		input.name = name;
+		input.value = redirectParameters[name];
+		acsForm.appendChild(input);
+	}
+	acsIframe.appendChild(acsForm);
+	acsForm.submit();
+}
+
 function unpackResponse(response){
 	makeRequest({
         method: 'POST',
         url: '/api/demo/unpackResponse',
         encode: true,
-        params: JSON.stringify(response)
+        params: response.encResponse
     })
     .then(function (response) {
     	response = JSON.parse(response);
@@ -339,13 +528,28 @@ function processRedirect(res){
 
 window.addEventListener('message',function(e) {
     var key = e.message ? 'message' : 'data';
-    var wlResponse = e[key];
-    unpackResponse(wlResponse);
+    var wlResponse = JSON.parse(e[key]);
+    
+    if('AUTHENTICATION' === wlResponse.type ) {
+    	var params = wlResponse.parameters;
+    	if('SUCCESSFUL' === params.authenticationStatus ) {
+    		displayResult("Authentication Successful. Proceed with Payment", "");
+    		var paymentReq = createPaymentRequest(deviceEndpoint, encryptedPayload, params.worldlineSessionData);
+	    	processCardAfterAuthentication(paymentReq);
+    	} else {
+			//Don't proceed for payment flow and show appropriate message to user.
+			displayResult("Order Id: " + params.orderId
+			+ "<br>Authentication Status Description: " + params.authenticationStatusDescription
+			+ "<br>Authentication Status: " + params.authenticationStatus
+			, "");
+		}
+	} else {    
+	    unpackResponse(wlResponse);
+	}
+    
     var redirectDiv = document.getElementById('iframeDiv');
     redirectDiv.removeChild(iframeDiv.childNodes[0]);
-    console.log('message received');
-    console.log('key', key)
-    console.log('data', wlResponse)
+    console.log('data', wlResponse);
 
 },false);
 
@@ -399,12 +603,12 @@ function toggleBillingDetails(){
 	var billingDetails = document.getElementById('billing_details');
 	billingDetails.style.display  = billingDetails.style.display === 'none' ? 'block' : 'none'; 
 	var shippingDetails = document.getElementById('shipping_details');
-	shippingDetails.style.display  = shippingDetails.style.display === 'block' ? 'none' : 'none';  
+	shippingDetails.style.display  = shippingDetails.style.display === 'block' ? 'none' : 'none';
 }
 
 function toggleShippingDetails(){
 	var shippingDetails = document.getElementById('shipping_details');
 	shippingDetails.style.display  = shippingDetails.style.display === 'none' ? 'block' : 'none'; 
 	var billingDetails = document.getElementById('billing_details');
-	billingDetails.style.display  = billingDetails.style.display === 'block' ? 'none' : 'none'; 
+	billingDetails.style.display  = billingDetails.style.display === 'block' ? 'none' : 'none';
 }

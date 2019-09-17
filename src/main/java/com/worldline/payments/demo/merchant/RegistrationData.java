@@ -111,7 +111,43 @@ public class RegistrationData {
         return shippingMobilePhone;
     }
     
-    String billingAddressLine1;
+    public String getAccId() {
+		return accId;
+	}
+
+	public String getAccType() {
+		return accType;
+	}
+
+	public String getTransType() {
+		return transType;
+	}
+
+	public String getSdkAppId() {
+		return sdkAppId;
+	}
+
+	public String getPurchaseInstallment() {
+		return purchaseInstallment;
+	}
+
+	public String getMessageCategory() {
+		return messageCategory;
+	}
+
+	public String getChallengeWindowSize() {
+		return challengeWindowSize;
+	}
+	
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public String getReferenceTransactionId() {
+		return referenceTransactionId;
+	}
+
+	String billingAddressLine1;
     String billingAddressLine2;
     String billingCity;
     String billingZipCode;
@@ -138,4 +174,13 @@ public class RegistrationData {
     String shippingZipCode;
     String shippingCountryCode;
     String shippingMobilePhone;
+    String accId;
+    String accType;
+    String transType;
+    String sdkAppId;
+    String purchaseInstallment;
+    String messageCategory;
+    String challengeWindowSize;
+    String orderId;
+    String referenceTransactionId;
 }
