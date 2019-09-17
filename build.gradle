@@ -22,7 +22,7 @@ repositories {
 dependencies {
 
 	// The Worldline Payment API that provides the encryption
-    compile 'com.worldline.payments:payment-api:4.3.1'
+    compile 'com.worldline.payments:payment-api:4.5.1'
 
 	// Provided by Spring Boot
 	compile('org.springframework.boot:spring-boot-starter-jersey')
