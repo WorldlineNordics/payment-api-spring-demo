@@ -8,6 +8,9 @@ import com.worldline.payments.demo.merchant.utils.DemoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -75,23 +78,22 @@ public class RegistrationEndpoint {
                 .setShippingMobilePhone(request.shippingMobilePhone)
                 .setShippingZipCode(request.shippingZipCode)
                 .setShippingStateProvince(request.shippingStateProvince)
-                .setReferenceTransactionId(request.referenceTransactionId)
                 .createPaymentRequest();
         
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
 
         // Return the deviceAPIRequest and custom information to the form.
-        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered);
+        return new RegistrationResponse(deviceAPIRequest, alreadyRegistered, props.requestTimeout);
     }
     
 	@POST
     @Path("/unpackResponse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public UnpackedResponse unpackResponse(String encodedReponse) {
+    public UnpackedResponse unpackResponse(EncodedResponse encodedReponse) {
         PaymentHandler handler = new PaymentHandler(new JKSKeyHandlerV6(props.keystorePath, props.keystorePwd, props.merchantKeyAlias, props.worldlineKeyAlias), props.worldlineURL);
 
-        PaymentResponse decodedResponse = handler.unpackResponse(encodedReponse);
+        PaymentResponse decodedResponse = handler.unpackResponse(encodedReponse.encResponse);
 
         // The contents of the decodedResponse can be saved in a database
         DemoUtil.printDemoResponse(decodedResponse);
@@ -99,8 +101,7 @@ public class RegistrationEndpoint {
         // Only select fields to be returned to the web page
         UnpackedResponse response = new UnpackedResponse(decodedResponse.getStatus(), decodedResponse.getTransaction() == null ? 0 : decodedResponse
                 .getTransaction().getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName(), decodedResponse.getEftPaymentSlipUrl(), 
-                decodedResponse.getAuthenticationStatus(), decodedResponse.getRefTransactionId(), decodedResponse.getAcsToken(), decodedResponse.gettDSMethodContent(),
-                decodedResponse.getRedirectUrl(), decodedResponse.getRedirectParameters(), decodedResponse.getRedirectMethod(), decodedResponse.getAuthenticationStatusDescription());
+                decodedResponse.getAuthenticationStatus(), decodedResponse.getAuthenticationStatusDescription());
         return response;
     }
 	
@@ -127,9 +128,13 @@ public class RegistrationEndpoint {
 	@GET
 	@Path("/redirectEndPoint")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getRedirectEndPoint(){
-		StringBuffer baseUrl = new StringBuffer(props.worldlineURL);
-		return baseUrl.toString();
+	public String getRedirectEndPoint() throws MalformedURLException{
+		URL baseUrl = new URL(props.worldlineURL);
+		String wlRedirectUrl = baseUrl.getProtocol() + "://" + baseUrl.getHost() + ":" + baseUrl.getPort() + "/api/v1/redirects";
+				
+		return "{ " + "\"wlRedirectUrl\": \""
+					+ wlRedirectUrl + "\""
+					+ "}";
 	} 
 
     /**
@@ -142,10 +147,12 @@ public class RegistrationEndpoint {
 
         private String deviceAPIRequest;
         private boolean alreadyRegistered;
+        private Long requestTimeout; 
 
-        RegistrationResponse(String deviceAPIRequest, boolean alreadyRegistered) {
+        RegistrationResponse(String deviceAPIRequest, boolean alreadyRegistered, Long requestTimeout) {
             this.deviceAPIRequest = deviceAPIRequest;
             this.alreadyRegistered = alreadyRegistered;
+            this.requestTimeout = requestTimeout;
         }
 
         public String getDeviceAPIRequest() {
@@ -154,6 +161,10 @@ public class RegistrationEndpoint {
 
         public boolean isAlreadyRegistered() {
             return alreadyRegistered;
+        }
+        
+        public Long getRequestTimeout() {
+            return requestTimeout;
         }
     }
 
@@ -177,17 +188,9 @@ public class RegistrationEndpoint {
         String paymentMethodName;
         String eftPaymentSlipUrl;
         String authenticationStatus;
-        Long referenceTransactionId;
-        String redirectUrl;
-        String redirectParameters;
-        String redirectMethod;
-        String acsToken;
-        String tDSMethodContent;
         String authenticationStatusDescription;
 
-        UnpackedResponse(String status, Long transactionId, String orderId, String paymentMethodName,String eftPaymentSlipUrl,String authenticationStatus,
-        				 Long referenceTransactionId, String acsToken, String tDSMethodContent,
-        				 String redirectUrl, String redirectParameters, String redirectMethod, String authenticationStatusDescription) {
+        UnpackedResponse(String status, Long transactionId, String orderId, String paymentMethodName,String eftPaymentSlipUrl,String authenticationStatus,String authenticationStatusDescription) {
                   
             this.status = status;
             this.transactionId = transactionId;
@@ -195,12 +198,6 @@ public class RegistrationEndpoint {
             this.paymentMethodName = paymentMethodName;
             this.eftPaymentSlipUrl = eftPaymentSlipUrl;
             this.authenticationStatus = authenticationStatus;
-            this.referenceTransactionId = referenceTransactionId;
-            this.redirectUrl = redirectUrl;
-            this.redirectParameters = redirectParameters;
-            this.redirectMethod = redirectMethod;
-            this.acsToken = acsToken;
-            this.tDSMethodContent = tDSMethodContent;
             this.authenticationStatusDescription = authenticationStatusDescription;
         }
 
@@ -230,30 +227,5 @@ public class RegistrationEndpoint {
 		public String getAuthenticationStatusDescription() {
 			return authenticationStatusDescription;
 		}
-
-		public Long getReferenceTransactionId() {
-			return referenceTransactionId;
-		}
-
-		public String gettDSMethodContent() {
-			return tDSMethodContent;
-		}
-
-		public String getAcsToken() {
-			return acsToken;
-		}
-
-		public String getRedirectUrl() {
-			return redirectUrl;
-		}
-
-		public String getRedirectParameters() {
-			return redirectParameters;
-		}
-
-		public String getRedirectMethod() {
-			return redirectMethod;
-		}
-
     }
  }
