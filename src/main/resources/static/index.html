@@ -422,7 +422,7 @@
                                 </div>
                                 <div class="col-xs-7 dateMargin">
                                     <div class="form-group">
-                                        <select class="form-control" id="expYear" data-chd="cardExpiryYear"
+                                        <select class="form-control" id="cardExpiryYear" data-chd="cardExpiryYear"
                                                 autocomplete="cc-exp-year">
                                         </select>
                                     </div>
@@ -445,24 +445,35 @@
                     
                 <!-- </div> -->
 
-               <!--  <div class="panel panel-heading-full credit-card-box"> -->
-                    <div>
-                        <div class="col-xs-12">
-                            <button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('card')">Start Subscription</button>
-                        </div>
-                    </div>
-
-                    
-                    <div>
-                        <div class="col-xs-12">
-                            <hr>
-                        </div>
-                        <div class="col-xs-12">
-                            <a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
-                        </div>
-                    </div>
+                <!--  <div class="panel panel-heading-full credit-card-box"> -->
+	                <div>
+	                    <div class="col-xs-12">
+	                        <button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('card')">Start Subscription</button>
+	                    </div>
+	                </div>
+	
+	                
+	                <div>
+	                    <div class="col-xs-12">
+	                        <hr>
+	                    </div>
+	                    <div class="row">
+	                    	<div class="col-xs-7">
+	                        	<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
+	                        </div>
+	                        <div class="col-xs-4">
+	                            <div class="input-group">
+			                        <div class="checkbox">
+			                            <label>
+			                                <input type="checkbox" id="authenticate" checked> Authenticate
+			                            </label>
+			                        </div>
+			                    </div>
+		                    </div>
+	                    </div>
+	                </div>
 				</div>
-             </div>
+	         </div>
              
              <!-- Online Banking -->
              <br/>
@@ -601,6 +612,7 @@
     </div>
 </form>
 
+<script src="demo-utils.js"></script>
 <script src="demo.js"></script>
 <script src="js/worldline-payments.js"></script>
 </body>
