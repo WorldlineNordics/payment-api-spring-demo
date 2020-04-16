@@ -130,7 +130,7 @@ public class RegistrationEndpoint {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getRedirectEndPoint() throws MalformedURLException{
 		URL baseUrl = new URL(props.worldlineURL);
-		String wlRedirectUrl = baseUrl.getProtocol() + "://" + baseUrl.getHost() + ":" + baseUrl.getPort() + "/api/v1/redirects";
+		String wlRedirectUrl = baseUrl.getProtocol() + "://" + baseUrl.getAuthority() + "/api/v1/redirects";
 				
 		return "{ " + "\"wlRedirectUrl\": \""
 					+ wlRedirectUrl + "\""
