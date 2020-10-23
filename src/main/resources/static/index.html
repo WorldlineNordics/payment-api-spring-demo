@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>DRWP Example Checkout</title>
+    <title>WOPA Example Checkout</title>
     <link rel="stylesheet" type="text/css" href="payment.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -21,34 +21,41 @@
             <p>On a checkout page, the currency, amount and merchant details are normally set on the server side,
                 but for the purpose of demonstration, we put a limited number of parameters
                 that controls the payment here.</p>
-            <div class="form-group">
-                <label for="currency">Currency</label>
-                <div class="input-group">
-                    <select name="demoCurrency" id="currency">
-                        <option value="BRL">BRL</option>
-                        <option value="EUR" selected>EUR</option>
-                        <option value="GBP">GBP</option>
-                        <option value="USD">USD</option>
-                        <option value="SEK">SEK</option>
-                        <option value="RUB">RUB</option>
-                        <option value="DKK">DKK</option>
-                        <option value="NOK">NOK</option>
-                        <option value="ISK">ISK</option>
-                        <option value="INR">INR</option>
-                        <option value="CLP">CLP</option>
-                        <option value="COP">COP</option>
-                        <option value="ARS">ARS</option>
-                        <option value="CNY">CNY</option>
-                        <option value="MXN">MXN</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="amount">Amount</label>
-                <div class="input-group">
-                    <input name="demoAmount" id="amount" value="100.00"/>
-                </div>
-            </div>
+            
+            <div class="row">
+	            <div class="col-xs-4">            
+		            <div class="form-group">
+		                <label for="currency">Currency</label>
+		                <div class="input-group">
+		                    <select name="demoCurrency" id="currency">
+		                        <option value="BRL">BRL</option>
+		                        <option value="EUR" selected>EUR</option>
+		                        <option value="GBP">GBP</option>
+		                        <option value="USD">USD</option>
+		                        <option value="SEK">SEK</option>
+		                        <option value="RUB">RUB</option>
+		                        <option value="DKK">DKK</option>
+		                        <option value="NOK">NOK</option>
+		                        <option value="ISK">ISK</option>
+		                        <option value="INR">INR</option>
+		                        <option value="CLP">CLP</option>
+		                        <option value="COP">COP</option>
+		                        <option value="ARS">ARS</option>
+		                        <option value="CNY">CNY</option>
+		                        <option value="MXN">MXN</option>
+		                    </select>
+		                </div>
+		            </div>            
+	            </div>
+	            <div class="col-xs-6">            
+		            <div class="form-group">
+		                <label for="amount">Amount</label>
+		                <div class="input-group">
+		                    <input name="demoAmount" id="amount" value="100.00"/>
+		                </div>
+		            </div>            
+	            </div>
+            </div>            
             <div class="form-group">
                 <label for="transactionchannel">Transaction Channel</label>
                 <div class="input-group">
@@ -60,15 +67,30 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="demoAutoCapture" checked> Auto Capture
-                        </label>
-                    </div>
-                </div>
-            </div>
+	        <div class="row">
+	            <div class="col-xs-6">
+		            <div class="form-group">
+		                <div class="input-group">
+		                    <div class="checkbox">
+		                        <label>
+		                            <input type="checkbox" name="demoAutoCapture" checked> Auto Capture
+		                        </label>
+		                    </div>
+		                </div>
+		            </div>
+	            </div>
+	            <div class="col-xs-6">
+		            <div class="form-group">
+			            <div class="input-group">
+				            <div class="checkbox">
+				                <label>
+				                    <input type="checkbox" id="authenticate" checked> Strong Customer Authentication
+				                </label>
+				            </div>
+				        </div>
+			        </div>
+			    </div>
+			</div>
             <div class="form-group">
                 <label for="tokenization">Tokenization</label>
                 <div class="input-group">
@@ -85,145 +107,217 @@
 
     <div class="col-xs-12 col-md-2"></div>
    	<div class="container">
-    	<div class="col-xs-12 col-md-4">
+    	<div class="col-xs-12 col-md-5">
         	<div class="panel panel-default credit-card-box">
                 <div class="panel-heading panel-heading-full display-table" onclick='toggleBillingDetails()'>
                     <div class="row display-tr">
                         <h3 class="panel-title display-td">Billing Information</h3>
                     </div>
                 </div>
-                <div class="panel-body" id="billing_details" style = "display:none;">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingBuyerType">BUYER TYPE</label>
-                            <div class="input-group">
-                                <select name="billingBuyerType" id="billingBuyerType" class="form-control"
-                                        autocomplete="billing type">
-                                    <option value="INDIVIDUAL" selected>Individual</option>
-                                    <option value="BUSINESS">Business</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingFullName">FULL NAME</label>
-                            <div class="input-group">
-                                <input type="text" name="billingFullName" id="billingFullName"
-                                       placeholder="Full name"
-                                       class="form-control"
-                                       autocomplete="billing name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingEmailAddress">EMAIL</label>
-                            <div class="input-group">
-                                <input type="email" name="billingEmailAddress" id="billingEmailAddress"
-                                       placeholder="name@example.com" 
-                                       class="form-control"
-                                       autocomplete="billing email">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="birthDate">BIRTH DATE</label>
-                            <div class="input-group">
-                                <input type="text" name="birthDate" id="birthDate" placeholder="yyyyMMdd"
-                                       class="form-control"
-                                       autocomplete="billing bday">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingBuyerVATNumber">BUYER VAT NUMBER</label>
-                            <div class="input-group">
-                                <input type="text" name="billingBuyerVATNumber" id="billingBuyerVATNumber"
-                                       placeholder="12345678901" 
-                                       class="form-control"
-                                       autocomplete="billing vat">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingAddressLine1">ADDRESS LINE 1</label>
-                            <div class="input-group">
-                                <input type="text" name="billingAddressLine1" id="billingAddressLine1"
-                                       placeholder="AV MIRACATU"
-                                       class="form-control"
-                                       autocomplete="billing address-line1">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingAddressLine2">ADDRESS LINE 2</label>
-                            <div class="input-group">
-                                <input type="text" name="billingAddressLine2" id="billingAddressLine2"
-                                       placeholder="Number and street name"
-                                       class="form-control"
-                                       autocomplete="billing address-line2">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingCity">CITY</label>
-                            <div class="input-group">
-                                <input type="text" name="billingCity" id="billingCity" placeholder="City"
-                                       class="form-control"
-                                       autocomplete="billing address-level2">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingStateProvince">STATE</label>
-                            <div class="input-group">
-                                <input type="text" name="billingStateProvince" id="billingStateProvince"
-                                       placeholder="SP"
-                                       class="form-control"
-                                       autocomplete="billing address-level1">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingZipCode">ZIP CODE</label>
-                            <div class="input-group">
-                                <input type="text" name="billingZipCode" id="billingZipCode" placeholder="zip code"
-                                       class="form-control"
-                                       autocomplete="billing zip">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingCountryCode">COUNTRY CODE</label>
-                            <div class="input-group">
-                                <input type="text" name="billingCountryCode" id="billingCountryCode"
-                                       placeholder="BR" 
-                                       pattern="[A-Za-z]{2}"
-                                       class="form-control"
-                                       autocomplete="billing country">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="billingMobilePhone">MOBILE PHONE</label>
-                            <div class="input-group">
-                                <input type="text" name="billingMobilePhone" id="billingMobilePhone"
-                                       placeholder="9988776655"
-                                       class="form-control"
-                                       autocomplete="billing mobile">
-                            </div>
-                        </div>
-                    </div>
+                <div class="panel-body" id="billing_details">
+	                <div class="row">
+		            	<div class="col-xs-5">
+		            		<div class="form-group">
+		            			<label for="billingBuyerType">BUYER TYPE</label>
+		            		</div>
+		            	</div>
+		            	<div class="col-xs-7">
+		            		<div class="form-group">
+		            			<div class="input-group">
+		            				<select name="billingBuyerType" id="billingBuyerType" class="form-control"
+		            						autocomplete="billing type">
+		            					<option value="INDIVIDUAL" selected>Individual</option>
+		            					<option value="BUSINESS">Business</option>
+		            				</select>
+		            			</div>
+		            		</div>
+		            	</div>
+		            </div>
+		            <div class="row">
+			        	<div class="col-xs-5">
+			        		<div class="form-group">
+			        			<label for="billingFullName">FULL NAME</label>
+			        		</div>
+			        	</div>
+			        	<div class="col-xs-7">
+			        		<div class="form-group">
+			        			<div class="input-group">
+			        				<input type="text" name="billingFullName" id="billingFullName"
+			        				   placeholder="Full name"
+			        				   class="form-control"
+			        				   autocomplete="billing name">
+			        			</div>
+			        		</div>
+			        	</div>
+			        </div>
+			        <div class="row">
+				    	<div class="col-xs-5">
+				    		<div class="form-group">
+				    			<label for="billingEmailAddress">EMAIL</label>
+				    		</div>
+				    	</div>
+				    	<div class="col-xs-7">
+				    		<div class="form-group">
+				    			<div class="input-group">
+				    				<input type="email" name="billingEmailAddress" id="billingEmailAddress"
+				    				   placeholder="name@example.com" 
+				    				   class="form-control"
+				    				   autocomplete="billing email">
+				    			</div>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="birthDate">BIRTH DATE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="birthDate" id="birthDate" placeholder="yyyyMMdd"
+									   class="form-control"
+									   autocomplete="billing bday">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingBuyerVATNumber">BUYER VAT NUMBER</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingBuyerVATNumber" id="billingBuyerVATNumber"
+									   placeholder="12345678901" 
+									   class="form-control"
+									   autocomplete="billing vat">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingAddressLine1">ADDRESS LINE 1</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingAddressLine1" id="billingAddressLine1"
+									   placeholder="AV MIRACATU"
+									   class="form-control"
+									   autocomplete="billing address-line1">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingAddressLine2">ADDRESS LINE 2</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingAddressLine2" id="billingAddressLine2"
+									   placeholder="Number and street name"
+									   class="form-control"
+									   autocomplete="billing address-line2">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingCity">CITY</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingCity" id="billingCity" placeholder="City"
+									   class="form-control"
+									   autocomplete="billing address-level2">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingStateProvince">STATE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingStateProvince" id="billingStateProvince"
+									   placeholder="SP"
+									   class="form-control"
+									   autocomplete="billing address-level1">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingZipCode">ZIP CODE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingZipCode" id="billingZipCode" placeholder="zip code"
+									   class="form-control"
+									   autocomplete="billing zip">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingCountryCode">COUNTRY CODE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingCountryCode" id="billingCountryCode"
+									   placeholder="BR" 
+									   pattern="[A-Za-z]{2}"
+									   class="form-control"
+									   autocomplete="billing country">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="billingMobilePhone">MOBILE PHONE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="billingMobilePhone" id="billingMobilePhone"
+									   placeholder="9988776655"
+									   class="form-control"
+									   autocomplete="billing mobile">
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
         	</div>
         	<div class="panel panel-default credit-card-box">
@@ -233,115 +327,175 @@
                     </div>
                 </div>
                 <div class="panel-body" id="shipping_details" style = "display:none;">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingFullName">FULL NAME</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingFullName" id="shippingFullName"
-                                       placeholder="Full name"
-                                       class="form-control"
-                                       autocomplete="shipping name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingCompanyName">COMPANY NAME</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingCompanyName" id="shippingCompanyName"
-                                       placeholder="Full name"
-                                       class="form-control"
-                                       autocomplete="shipping company name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingEmailAddress">EMAIL</label>
-                            <div class="input-group">
-                                <input type="email" name="shippingEmailAddress" id="shippingEmailAddress"
+	                <div class="row">
+		            	<div class="col-xs-5">
+		            		<div class="form-group">
+		            			<label for="shippingFullName">FULL NAME</label>
+		            		</div>
+		            	</div>
+		            	<div class="col-xs-7">
+		            		<div class="form-group">
+		            			<div class="input-group">
+		            				<input type="text" name="shippingFullName" id="shippingFullName"
+		            				   placeholder="Full name"
+		            				   class="form-control"
+		            				   autocomplete="shipping name">
+		            			</div>
+		            		</div>
+		            	</div>
+		            </div>
+		            <div class="row">
+			        	<div class="col-xs-5">
+			        		<div class="form-group">
+			        			<label for="shippingCompanyName">COMPANY NAME</label>
+			        		</div>
+			        	</div>
+			        	<div class="col-xs-7">
+			        		<div class="form-group">
+			        			<div class="input-group">
+			        				<input type="text" name="shippingCompanyName" id="shippingCompanyName"
+			        				   placeholder="Company name"
+			        				   class="form-control"
+			        				   autocomplete="shipping company name">
+			        			</div>
+			        		</div>
+			        	</div>
+			        </div>
+			        <div class="row">
+				    	<div class="col-xs-5">
+				    		<div class="form-group">
+				    			<label for="shippingEmailAddress">EMAIL</label>
+				    		</div>
+				    	</div>
+				    	<div class="col-xs-7">
+				    		<div class="form-group">
+				    			<div class="input-group">
+				    				<input type="email" name="shippingEmailAddress" id="shippingEmailAddress"
                                        placeholder="name@example.com" 
                                        class="form-control"
                                        autocomplete="shipping email">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingAddressLine1">ADDRESS LINE 1</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingAddressLine1" id="shippingAddressLine1"
-                                       placeholder="AV MIRACATU"
-                                       class="form-control"
-                                       autocomplete="shipping address-line1">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingAddressLine2">ADDRESS LINE 2</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingAddressLine2" id="shippingAddressLine2"
-                                       placeholder="Number and street name"
-                                       class="form-control"
-                                       autocomplete="shipping address-line2">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingCity">CITY</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingCity" id="shippingCity" placeholder="City"
-                                       class="form-control"
-                                       autocomplete="shipping address-level2">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingStateProvince">STATE</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingStateProvince" id="shippingStateProvince"
-                                       placeholder="SP"
-                                       class="form-control"
-                                       autocomplete="shipping address-level1">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingZipCode">ZIP CODE</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingZipCode" id="shippingZipCode" placeholder="zip code"
-                                       class="form-control"
-                                       autocomplete="shipping zip">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingCountryCode">COUNTRY CODE</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingCountryCode" id="shippingCountryCode"
-                                       placeholder="BR" 
-                                       pattern="[A-Za-z]{2}"
-                                       class="form-control"
-                                       autocomplete="shipping country">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label for="shippingMobilePhone">MOBILE PHONE</label>
-                            <div class="input-group">
-                                <input type="text" name="shippingMobilePhone" id="shippingMobilePhone"
-                                       placeholder="9988776655"
-                                       class="form-control"
-                                       autocomplete="shipping mobile">
-                            </div>
-                        </div>
-                    </div>
+				    			</div>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingAddressLine1">ADDRESS LINE 1</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingAddressLine1" id="shippingAddressLine1"
+									   placeholder="AV MIRACATU"
+									   class="form-control"
+									   autocomplete="shipping address-line1">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingAddressLine2">ADDRESS LINE 2</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingAddressLine2" id="shippingAddressLine2"
+									   placeholder="Number and street name"
+									   class="form-control"
+									   autocomplete="shipping address-line2">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingCity">CITY</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingCity" id="shippingCity" placeholder="City"
+									   class="form-control"
+									   autocomplete="shipping address-level2">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingStateProvince">STATE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingStateProvince" id="shippingStateProvince"
+									   placeholder="SP"
+									   class="form-control"
+									   autocomplete="shipping address-level1">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingZipCode">ZIP CODE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingZipCode" id="shippingZipCode" placeholder="zip code"
+									   class="form-control"
+									   autocomplete="shipping zip">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingCountryCode">COUNTRY CODE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingCountryCode" id="shippingCountryCode"
+									   placeholder="BR" 
+									   pattern="[A-Za-z]{2}"
+									   class="form-control"
+									   autocomplete="shipping country">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div class="form-group">
+								<label for="shippingMobilePhone">MOBILE PHONE</label>
+							</div>
+						</div>
+						<div class="col-xs-7">
+							<div class="form-group">
+								<div class="input-group">
+									<input type="text" name="shippingMobilePhone" id="shippingMobilePhone"
+									   placeholder="9988776655"
+									   class="form-control"
+									   autocomplete="shipping mobile">
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
         	</div>        	      	
         </div>
@@ -356,7 +510,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body" id="card_details" style = "display:none;">
+                    <div class="panel-body" id="card_details">
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
@@ -451,27 +605,6 @@
 	                        <button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('card')">Start Subscription</button>
 	                    </div>
 	                </div>
-	
-	                
-	                <div>
-	                    <div class="col-xs-12">
-	                        <hr>
-	                    </div>
-	                    <div class="row">
-	                    	<div class="col-xs-7">
-	                        	<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
-	                        </div>
-	                        <div class="col-xs-4">
-	                            <div class="input-group">
-			                        <div class="checkbox">
-			                            <label>
-			                                <input type="checkbox" id="authenticate" checked> Authenticate
-			                            </label>
-			                        </div>
-			                    </div>
-		                    </div>
-	                    </div>
-	                </div>
 				</div>
 	         </div>
              
@@ -495,26 +628,18 @@
                                         <select class="form-control" data-ibp="ibpId" id = "ibpList">
                                         </select>
                                     </div>
+                                    <div class="input-group">
+                                    	<p class="success display-result" id="ibpListResult">No IBP Payment Methods Configured</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
-                            	<button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('ibp')">Submit</button>
+                            	<button type="submit" id="ibpListSubmit" class="btn btn-success btn-lg btn-block" onclick="exec('ibp')">Submit</button>
                         	</div>
-                        	<div>
-                        		<div class="col-xs-12" id = "ibp-result">
-                            	</div>
-                            </div>
-                            <div>
-                        		<div class="col-xs-12">
-                            		<hr>
-                        		</div>
-                        		<div class="col-xs-12">
-                            		<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
-                        		</div>
-							</div>
                         </div>
                     </div>
              </div>
+             
              <!-- EFT -->
              <br/>
               <div class="panel panel-default credit-card-box">
@@ -535,30 +660,21 @@
                                         <select class="form-control" data-eft="eftId" id = "eftList">
                                         </select>
                                     </div>
+                                    <div class="input-group">
+	                                	<p class="success display-result" id="eftListResult">No EFT Payment Methods Configured</p>
+	                                </div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
-                            	<button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('eft')">Submit</button>
+                            	<button type="submit" id="eftListSubmit" class="btn btn-success btn-lg btn-block" onclick="exec('eft')">Submit</button>
                         	</div>
-                        	<div>
-                        		<div class="col-xs-12">
-                            	</div>
-                            </div>
-                            <div>
-                        		<div class="col-xs-12">
-                            		<hr>
-                        		</div>
-                        		<div class="col-xs-12">
-                            		<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
-                        		</div>
-							</div>
                         </div>
                     </div>
                     
              </div>
              <br/>
-             <!-- E-wallets -->
              
+             <!-- E-wallets -->             
               <div class="panel panel-default credit-card-box">
                     <div class="panel-heading display-table" id = "ewallet_header" onclick='toggle_eWalletDetails()'>
                         <div class="row display-tr">
@@ -577,26 +693,25 @@
                                         <select class="form-control" data-ewallet="ewalletId" id = "ewalletList">
                                         </select>
                                     </div>
+                                    <div class="input-group">
+	                                	<p class="success display-result" id="ewalletListResult">No eWallet Payment Methods Configured</p>
+	                                </div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
-                            	<button type="submit" class="btn btn-success btn-lg btn-block" onclick="exec('ewallet')">Submit</button>
+                            	<button type="submit" id="ewalletListSubmit" class="btn btn-success btn-lg btn-block" onclick="exec('ewallet')">Submit</button>
                         	</div>
-                        	<div>
-                        		<div class="col-xs-12">
-                            	</div>
-                            </div>
-                            <div>
-                        		<div class="col-xs-12">
-                            		<hr>
-                        		</div>
-                        		<div class="col-xs-12">
-                            		<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
-                        		</div>
-							</div>
                         </div>
                     </div>
-             </div>
+             </div>             
+             <div>
+	     		<div class="col-xs-12">
+	         		<a class="btn btn-default" href="#openModal">Change Demo Parameters</a>
+	     		</div>
+	     		<div class="col-xs-12">
+	         		<hr>
+	     		</div>
+			 </div>			
              <div class="">
              	<div>
                 	<div class="col-xs-12">
