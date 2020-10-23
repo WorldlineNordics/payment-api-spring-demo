@@ -9,24 +9,21 @@ async function processAuthentication() {
       processTDSMethodContent(initResponse.tDSMethodContent);
       await timeout(3000);
     }
-    if (
-      'AUTHENTICATION' == initResponse.status &&
-      ('NOT_REQUIRED' == initResponse.authenticationStatus || 'SUCCESSFUL' == initResponse.authenticationStatus)
-    ) {
+    if ('NOT_REQUIRED' == initResponse.authenticationStatus || 'SUCCESSFUL' == initResponse.authenticationStatus) {
       //proceed with existing payment and display result
       displayResult('Authentication Successful. Proceed with Payment', '');
       processCardAfterAuthentication(deviceAPIRequest, initResponse.worldlineSessionData);
-    } else if ('AUTHENTICATION' === initResponse.status && 'CONTINUE' === initResponse.authenticationStatus) {
+    } else if ('CONTINUE' === initResponse.authenticationStatus) {
       displayResult('Processing Continue Authentication with Worldline.', '');
       var continueResponse = await service
         .continueAuth()
         .setWorldlineSessionData(initResponse.worldlineSessionData)
         .send();
-      if ('AUTHENTICATION' === continueResponse.status && 'SUCCESSFUL' === continueResponse.authenticationStatus) {
+      if ('SUCCESSFUL' === continueResponse.authenticationStatus) {
         //process with payment and display result
         displayResult('Authentication Successful. Proceed with Payment', '');
         processCardAfterAuthentication(deviceAPIRequest, continueResponse.worldlineSessionData);
-      } else if ('AUTHENTICATION' == continueResponse.status && 'REQUIRED' == continueResponse.authenticationStatus) {
+      } else if ('REQUIRED' == continueResponse.authenticationStatus) {
         //rediect to ACS using iFrame
         displayResult('Processing Complete Authentication with Worldline.', '');
         processAuthenticationRedirect(continueResponse);
@@ -34,7 +31,7 @@ async function processAuthentication() {
         //Don't proceed for payment flow and show appropriate message to user.
         unpackResponse(continueResponse);
       }
-    } else if ('AUTHENTICATION' == initResponse.status && 'REQUIRED' == initResponse.authenticationStatus) {
+    } else if ('REQUIRED' == initResponse.authenticationStatus) {
       //rediect to ACS using iFrame
       displayResult('Processing Complete Authentication with Worldline.', '');
       processAuthenticationRedirect(initResponse);
@@ -138,13 +135,22 @@ async function getPaymentMethods() {
 }
 
 function populateOptions(paymentMethodList, paymentMethods) {
-  paymentMethods.forEach(function(paymentMethod) {
-    var list = document.getElementById(paymentMethodList);
-    var opt = document.createElement('option');
-    opt.value = paymentMethod.id;
-    opt.text = paymentMethod.name;
-    list.options.add(opt);
-  });
+  if (paymentMethods == null) {
+	var emptyList = document.getElementById(paymentMethodList);
+	emptyList.style.display = "none";
+	var submitButton = document.getElementById(paymentMethodList + 'Submit');
+	submitButton.disabled = true;
+  } else {
+	var emptyListResult = document.getElementById(paymentMethodList + 'Result');
+	emptyListResult.style.display = "none";
+	paymentMethods.forEach(function(paymentMethod) {
+      var list = document.getElementById(paymentMethodList);
+      var opt = document.createElement('option');
+      opt.value = paymentMethod.id;
+      opt.text = paymentMethod.name;
+      list.options.add(opt);
+	});
+  }
 }
 
 window.addEventListener(
