@@ -14,6 +14,7 @@ async function processAuthentication() {
       displayResult('Authentication Successful. Proceed with Payment', '');
       processCardAfterAuthentication(deviceAPIRequest, initResponse.worldlineSessionData);
     } else if ('CONTINUE' === initResponse.authenticationStatus) {
+      //process with continue authentication
       displayResult('Processing Continue Authentication with Worldline.', '');
       var continueResponse = await service
         .continueAuth()
@@ -27,6 +28,10 @@ async function processAuthentication() {
         //rediect to ACS using iFrame
         displayResult('Processing Complete Authentication with Worldline.', '');
         processAuthenticationRedirect(continueResponse);
+      }	else if (checkForPaymentAuthLevel(continueResponse.authenticationResult)) {
+    	//process with payment for Non-authentication cases like ATTEMPTED, UNAVAILABLE and display result
+    	displayResult('Authentication Attempted. Proceed with Payment', '');
+        processCardAfterAuthentication(deviceAPIRequest, continueResponse.worldlineSessionData);
       } else {
         //Don't proceed for payment flow and show appropriate message to user.
         unpackResponse(continueResponse);
@@ -35,6 +40,10 @@ async function processAuthentication() {
       //rediect to ACS using iFrame
       displayResult('Processing Complete Authentication with Worldline.', '');
       processAuthenticationRedirect(initResponse);
+    } else if (checkForPaymentAuthLevel(initResponse.authenticationResult)) {
+    	//process with payment for Non-authentication cases like ATTEMPTED, UNAVAILABLE and display result
+    	displayResult('Authentication Attempted. Proceed with Payment', '');
+        processCardAfterAuthentication(deviceAPIRequest, initResponse.worldlineSessionData);
     } else {
       //Don't proceed for payment flow and show appropriate message to user.
       unpackResponse(initResponse);
@@ -163,6 +172,10 @@ window.addEventListener(
       var params = wlResponse.parameters;
       if ('SUCCESSFUL' === params.authenticationStatus) {
         displayResult('Authentication Successful. Proceed with Payment', '');
+        processCardAfterAuthentication(deviceAPIRequest, params.worldlineSessionData);
+      } else if (checkForPaymentAuthLevel(params.authenticationResult)) {
+    	//process with payment for Non-authentication cases like ATTEMPTED, UNAVAILABLE and display result
+    	displayResult('Authentication Attempted. Proceed with Payment', '');
         processCardAfterAuthentication(deviceAPIRequest, params.worldlineSessionData);
       } else {
         //Don't proceed for payment flow and show appropriate message to user.
