@@ -4,6 +4,12 @@ var year = new Date().getFullYear(),
   option = null,
   next_year = null;
 
+const paymentAuthenticationLevel = {
+		SUCCESSFUL : 'Proceed when SCA Successful',
+    	ATTEMPTED : 'Proceed when SCA Attempted',
+    	WITHOUT_SCA : 'Proceed without SCA'
+}
+
 for (var i = 0; i <= 10; i++) {
   option = document.createElement('option');
   next_year = parseInt(year, 10) + i;
@@ -199,6 +205,22 @@ async function processRedirect(res) {
 
   redirectIframe.appendChild(redirectForm);
   redirectForm.submit();
+}
+
+function checkForPaymentAuthLevel(authenticationResult) {
+	var authLevel = document.getElementById('paymentAuthenticationLevel').value;
+	var isValidAuthLevel;
+	switch(authenticationResult){
+	    case 'A':
+	    	isValidAuthLevel = authLevel == paymentAuthenticationLevel.ATTEMPTED || authLevel == paymentAuthenticationLevel.WITHOUT_SCA;
+	    	break;
+	    case 'U':
+	    	isValidAuthLevel = authLevel == paymentAuthenticationLevel.WITHOUT_SCA;
+	    	break;
+	    default:
+	    	isValidAuthLevel = false;
+    }
+	return isValidAuthLevel;
 }
 
 function getRedirectIFrame(redirectFrame) {

@@ -78,6 +78,7 @@ public class RegistrationEndpoint {
                 .setShippingMobilePhone(request.shippingMobilePhone)
                 .setShippingZipCode(request.shippingZipCode)
                 .setShippingStateProvince(request.shippingStateProvince)
+                .setPaymentAuthenticationLevel(request.paymentAuthenticationLevel)
                 .createPaymentRequest();
         
         final String deviceAPIRequest = handler.createDeviceAPIRequest(details);
@@ -101,7 +102,7 @@ public class RegistrationEndpoint {
         // Only select fields to be returned to the web page
         UnpackedResponse response = new UnpackedResponse(decodedResponse.getStatus(), decodedResponse.getTransaction() == null ? 0 : decodedResponse
                 .getTransaction().getTransactionId(), decodedResponse.getOrderId(), decodedResponse.getPaymentMethodName(), decodedResponse.getEftPaymentSlipUrl(), 
-                decodedResponse.getAuthenticationStatus(), decodedResponse.getAuthenticationStatusDescription());
+                decodedResponse.getAuthenticationStatus(), decodedResponse.getAuthenticationResult(), decodedResponse.getAuthenticationStatusDescription());
         return response;
     }
 	
@@ -135,8 +136,8 @@ public class RegistrationEndpoint {
 		return "{ " + "\"wlRedirectUrl\": \""
 					+ wlRedirectUrl + "\""
 					+ "}";
-	} 
-
+	}
+	
     /**
      * Example response with a custom field like "alreadyRegistered" that illustrates several actions are executed
      * on the server side on the first call:
@@ -188,9 +189,10 @@ public class RegistrationEndpoint {
         String paymentMethodName;
         String eftPaymentSlipUrl;
         String authenticationStatus;
+        String authenticationResult;
         String authenticationStatusDescription;
 
-        UnpackedResponse(String status, Long transactionId, String orderId, String paymentMethodName,String eftPaymentSlipUrl,String authenticationStatus,String authenticationStatusDescription) {
+        UnpackedResponse(String status, Long transactionId, String orderId, String paymentMethodName,String eftPaymentSlipUrl,String authenticationStatus,String authenticationResult,String authenticationStatusDescription) {
                   
             this.status = status;
             this.transactionId = transactionId;
@@ -198,6 +200,7 @@ public class RegistrationEndpoint {
             this.paymentMethodName = paymentMethodName;
             this.eftPaymentSlipUrl = eftPaymentSlipUrl;
             this.authenticationStatus = authenticationStatus;
+            this.authenticationResult = authenticationResult;
             this.authenticationStatusDescription = authenticationStatusDescription;
         }
 
@@ -223,7 +226,11 @@ public class RegistrationEndpoint {
 		public String getAuthenticationStatus() {
 			return authenticationStatus;
 		}
-		
+				
+		public String getAuthenticationResult() {
+			return authenticationResult;
+		}
+
 		public String getAuthenticationStatusDescription() {
 			return authenticationStatusDescription;
 		}

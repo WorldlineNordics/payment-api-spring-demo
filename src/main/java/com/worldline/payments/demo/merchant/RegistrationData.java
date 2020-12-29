@@ -3,6 +3,45 @@ package com.worldline.payments.demo.merchant;
 import java.math.BigDecimal;
 
 public class RegistrationData {
+	
+	String billingAddressLine1;
+    String billingAddressLine2;
+    String billingCity;
+    String billingZipCode;
+    String billingStateProvince;
+    String billingCountryCode;
+    String billingEmailAddress;
+    String billingBuyerType;
+    String billingFullName;
+    String birthDate;
+    String billingBuyerVATNumber;
+    String billingMobilePhone;
+    String demoCurrency;
+    BigDecimal demoAmount;
+    String demoTransactionChannel;
+    String demoAutoCapture;
+    String demoTokenization;
+    String shippingFullName;
+    String shippingCompanyName;
+    String shippingEmailAddress;
+    String shippingAddressLine1;
+    String shippingAddressLine2;
+    String shippingCity;
+    String shippingStateProvince;
+    String shippingZipCode;
+    String shippingCountryCode;
+    String shippingMobilePhone;
+    String accId;
+    String accType;
+    String transType;
+    String sdkAppId;
+    String purchaseInstallment;
+    String messageCategory;
+    String challengeWindowSize;
+    String orderId;
+    String referenceTransactionId;
+    String paymentAuthenticationLevel;
+    
     public String getBillingAddressLine1() {
         return billingAddressLine1;
     }
@@ -146,41 +185,8 @@ public class RegistrationData {
 	public String getReferenceTransactionId() {
 		return referenceTransactionId;
 	}
-
-	String billingAddressLine1;
-    String billingAddressLine2;
-    String billingCity;
-    String billingZipCode;
-    String billingStateProvince;
-    String billingCountryCode;
-    String billingEmailAddress;
-    String billingBuyerType;
-    String billingFullName;
-    String birthDate;
-    String billingBuyerVATNumber;
-    String billingMobilePhone;
-    String demoCurrency;
-    BigDecimal demoAmount;
-    String demoTransactionChannel;
-    String demoAutoCapture;
-    String demoTokenization;
-    String shippingFullName;
-    String shippingCompanyName;
-    String shippingEmailAddress;
-    String shippingAddressLine1;
-    String shippingAddressLine2;
-    String shippingCity;
-    String shippingStateProvince;
-    String shippingZipCode;
-    String shippingCountryCode;
-    String shippingMobilePhone;
-    String accId;
-    String accType;
-    String transType;
-    String sdkAppId;
-    String purchaseInstallment;
-    String messageCategory;
-    String challengeWindowSize;
-    String orderId;
-    String referenceTransactionId;
+	
+	public String getPaymentAuthenticationLevel() {
+		return paymentAuthenticationLevel;
+	}
 }
