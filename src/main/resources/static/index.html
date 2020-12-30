@@ -33,14 +33,6 @@
 		                        <option value="GBP">GBP</option>
 		                        <option value="USD">USD</option>
 		                        <option value="SEK">SEK</option>
-		                        <option value="RUB">RUB</option>
-		                        <option value="DKK">DKK</option>
-		                        <option value="NOK">NOK</option>
-		                        <option value="ISK">ISK</option>
-		                        <option value="INR">INR</option>
-		                        <option value="CLP">CLP</option>
-		                        <option value="COP">COP</option>
-		                        <option value="ARS">ARS</option>
 		                        <option value="CNY">CNY</option>
 		                        <option value="MXN">MXN</option>
 		                    </select>
@@ -91,6 +83,16 @@
 			        </div>
 			    </div>
 			</div>
+			<div class="form-group">
+	            <label for="paymentAuthenticationLevel">Payment Authentication Level</label>
+	            <div class="input-group">
+	                <select name="paymentAuthenticationLevel" id="paymentAuthenticationLevel">
+	                    <option value="Proceed when SCA Successful" selected>Proceed when SCA Successful</option>
+	                    <option value="Proceed when SCA Attempted">Proceed when SCA Attempted</option>
+	                    <option value="Proceed without SCA">Proceed without SCA</option>
+	                </select>
+	            </div>
+	        </div>
             <div class="form-group">
                 <label for="tokenization">Tokenization</label>
                 <div class="input-group">
